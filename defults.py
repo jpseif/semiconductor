@@ -40,9 +40,9 @@ class Constants(object):
 
 
 if __name__ == "__main__":
-    a = semiconductor.matterial.ni.IntrinsicCarrierDensity()
+    a = semiconductor.material.ni.IntrinsicCarrierDensity()
     a.check_models()
     # temp = np.linspace(0, 600)
-    # a.plot_all_models('update_ni', temp=temp)
+    # a.plot_all_models('update', temp=temp)
 
     plt.show()

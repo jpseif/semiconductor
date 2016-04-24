@@ -19,31 +19,43 @@ class DOS(HelperFunctions):
     number of free states for electrons and holes in the conduction
     and valance band
     '''
-
+    cal_dts = {
+        'material': 'Si',
+        'temp': 300.,
+        'author': None,
+        'iEg_author': None
+    }
     author_list = 'DOS.models'
 
-    def __init__(self, matterial='Si', author=None, temp=300.):
-        self.Models = ConfigParser.ConfigParser()
-        self.matterial = matterial
+    def __init__(self, **kwargs):
 
-        constants_file = os.path.join(
+        # update any values in cal_dts
+        # that are passed
+        temp = locals().copy()
+        del temp['self']
+        self._update_dts(**temp)
+
+        # get the address of the authors list
+        author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            matterial,
+            self.cal_dts['material'],
             self.author_list)
 
-        self.Models.read(constants_file)
+        # get the models ready
+        self._int_model(author_file)
 
-        self.change_model(author)
-        self.temp = temp
+        # initiate the first model
+        self.change_model(self.cal_dts['author'])
 
-    def update(self, temp=None, author=None):
+    def update(self, **kwargs):
         '''
         a function to update the density of states
 
         inputs:
-            temperature: (optional)
-                         in kelvin
-            author:  (optional)
+            dictionary with values found in self.cal_dts:
+                temperature: (optional)
+                             in kelvin
+                author:  (optional)
                     the author used.
                     If not provided the last provided author is used
                     If no author has been provided,  Couderc's model is used
@@ -51,25 +63,33 @@ class DOS(HelperFunctions):
             the density of states of the valance band
             the density of states of the conduction band
         '''
-        # able to input a temperature to change
-        if temp is None:
-            temp = self.temp
+        self._update_dts(**kwargs)
 
         # a check to make sure the model hasn't changed
-        if author is not None:
-            self.change_model(author)
+        if 'author' in kwargs.keys():
+            self.change_model(self.cal_dts['author'])
 
-        if 'egi_author' in self.vals.keys():
+        if 'ieg_author' in self.vals.keys():
 
-            Eg0 = Egi(matterial=self.matterial).update_iEg(
-                temp=0, author=self.vals['egi_author'])
-            Egratio = Eg0 / Egi(matterial=self.matterial).update_iEg(
-                temp=temp, author=self.vals['egi_author'])
+            Eg0 = Egi(
+                material=self.cal_dts['material'],
+                temp=0,
+                author=self.vals['ieg_author'],
+            ).update()
+            Egratio = Eg0 / Egi(
+                material=self.cal_dts['material'],
+                temp=self.cal_dts['temp'],
+                author=self.vals['ieg_author'],
+            ).update()
         else:
             Egratio = None
 
-        self.Nc, self.Nv = getattr(dos_models, self.model)(
-            self.vals, temp=temp, Egratio=Egratio)
+        self.Nc, self.Nv = getattr(
+            dos_models, self.model
+        )(
+            self.vals,
+            temp=self.cal_dts['temp'],
+            Egratio=Egratio)
 
         return self.Nc, self.Nv
 
@@ -81,7 +101,7 @@ class DOS(HelperFunctions):
         self.plotting_colours(num, fig, ax, repeats=2)
 
         for author in self.available_models():
-            Nc, Nv = self.update(temp, author)
+            Nc, Nv = self.update(temp=temp, author=author)
             # print Nc.shape, Nv.shape, temp.shape
             ax.plot(temp, Nc, '--')
             ax.plot(temp, Nv, '.', label=author)

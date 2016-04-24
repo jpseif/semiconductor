@@ -15,17 +15,17 @@ Here is an example of how to use this module. We will look at two different band
 model.
 
 ```python
-    from semiconductor.matterial.bandgap_narrowing import BandGapNarrowing as BGN
+    from semiconductor.material.bandgap_narrowing import BandGapNarrowing as BGN
     import numpy as np
 
     # initialise the class
-    BGN_class = BGN(matterial='Si')
+    BGN_class = BGN(material='Si')
     # define the number of dopants
     Na = 0.
     Nd = np.logspace(16, 20)
     # Set the excess carriers to zero
     nxc = 0
-    bgn_yan = BGN_class.update_BGN(Na, Nd, nxc)
+    bgn_yan = BGN_class.update(Na, Nd, nxc)
 ```
 
 If a different band gap narrowing model is desired, 
@@ -50,7 +50,7 @@ an input for temperature. This is just passed to the update function, which pass
 it to the appropriate places.  
 ```python
     temp = 300
-    bgn_sch = BGN_class.update_BGN(Na, Nd, nxc, temp=300, author='Schenk1988fer')
+    bgn_sch = BGN_class.update(Na, Nd, nxc, temp=300, author='Schenk1988fer')
 ```
 
 Finally we can plot, and compare the differences in the models.

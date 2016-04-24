@@ -13,10 +13,10 @@ class TabulatedOpticalProperties():
     temp = 300
     ext_cof = False
 
-    def __init__(self, matterial='Si', abs_author=None, ref_author=None, temp=None):
+    def __init__(self, material='Si', abs_author=None, ref_author=None, temp=None):
         self.temp = temp or self.temp
-        self.tac = TabulatedAbsorptionCoefficient(matterial, abs_author, temp)
-        self.tri = TabulatedRefractiveIndex(matterial, ref_author, temp)
+        self.tac = TabulatedAbsorptionCoefficient(material, abs_author, temp)
+        self.tri = TabulatedRefractiveIndex(material, ref_author, temp)
         self.load()
 
     def load(self, abs_author=None, ref_author=None, temp=None, common_range=True):
@@ -60,17 +60,17 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
     temp = 300.
     file_for_models = r'tabulated_absorption_coefficient.const'
 
-    def __init__(self, matterial='Si', author=None, temp=None):
+    def __init__(self, material='Si', author=None, temp=None):
         self.temp = temp or self.temp
 
         self.author = author
-        self.matterial = matterial
+        self.material = material
 
         self.Models = ConfigParser.ConfigParser()
 
         constants_file = os.path.join(
             os.path.dirname(__file__),
-            matterial,
+            material,
             self.file_for_models)
 
         self.Models.read(constants_file)
@@ -90,7 +90,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
 
         # Getting the absorption coefficient from a file
         data = np.genfromtxt(os.path.join(os.path.dirname(__file__),
-                                          self.matterial,
+                                          self.material,
                                           self.model),
                              names=True, delimiter=',')
 
@@ -148,18 +148,18 @@ class TabulatedRefractiveIndex(HelperFunctions):
     temp = 300.
     file_for_models = r'tabulated_refractive_index.const'
 
-    def __init__(self, matterial='Si', author=None, temp=None):
+    def __init__(self, material='Si', author=None, temp=None):
 
         # set values
         self.author = author
-        self.matterial = matterial
+        self.material = material
         self.temp = temp or self.temp
 
         self.Models = ConfigParser.ConfigParser()
 
         constants_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            matterial,
+            material,
             self.file_for_models)
 
         self.Models.read(constants_file)
@@ -187,7 +187,7 @@ class TabulatedRefractiveIndex(HelperFunctions):
 
         # Get n
         data = np.genfromtxt(os.path.join(os.path.dirname(__file__),
-                                          self.matterial,
+                                          self.material,
                                           self.model),
                              names=True, delimiter=',')
 

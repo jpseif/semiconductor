@@ -62,13 +62,14 @@ def Varshni(vals, temp):
 def Cubic_partial(vals, temp):
     '''
     Is a cublic paramterisation for several given temp range, spliced together.
-    The first paper where this is seen for silicon is believed to be Bludau1974a.
+    The first paper where this is seen for silicon is believed to be
+    Bludau in 1974 10.1063/1.1663501.
 
     inputs:
         vals a dictionary containing the coefs for a fit in the from
             Eg = \sum_{i=0}^3 ai + bi \times temp + ci \times temp^2
-        and the temp range for each coeffieinct given by "ti". It is assumed that the ith
-        values apply up to this temperature value.
+        and the temp range for each coeffieinct given by "ti". It is assumed
+        that the ith values apply up to this temperature value.
 
     output:
         returns the band gap in eV
@@ -87,7 +88,7 @@ def Cubic_partial(vals, temp):
             vals['b' + str(i)] * temp[index] + \
             vals['c' + str(i)] * temp[index]**2.
     if np.any(temp > vals['t2']):
-        print 'Intrinsic bandgap does not cover this temperature range'
+        print '\nWarning:\n\tIntrinsic bandgap does not cover this temperature range\n'
         index = temp > vals['t2']
         Eg[index] = vals['a2'] + \
             vals['b2'] * temp[index] + \

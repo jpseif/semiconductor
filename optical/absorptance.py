@@ -15,7 +15,7 @@ class EscapeProbability():
     Reflection_front = 0.1
     Reflection_rear = 0.1
 
-    def __init__(self, matterial='Si',
+    def __init__(self, material='Si',
                  optical_constants=None, x=None):
         """
         Can provide a specific instance of:
@@ -26,10 +26,10 @@ class EscapeProbability():
             optical properties  or  ni module is provided
             These will then be used
         """
-        self.matterial = matterial
+        self.material = material
 
         if optical_constants is None:
-            self.optics = opticalproperties.TabulatedOpticalProperties(matterial=self.matterial)
+            self.optics = opticalproperties.TabulatedOpticalProperties(material=self.material)
         else:
             self.optics = optical_constants
 

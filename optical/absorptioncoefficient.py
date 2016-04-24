@@ -23,13 +23,13 @@ class absorptioncoefficient(HelperFunctions):
     beta = 0
     gamma = 0
 
-    def __init__(self, matterial='Si', author=None):
+    def __init__(self, material='Si', author=None):
         self.Models = ConfigParser.ConfigParser()
-        self.matterial = matterial
+        self.material = material
 
         constants_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            matterial,
+            material,
             r'absorptioncoefficient.const')
 
         self.Models.read(constants_file)

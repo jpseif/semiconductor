@@ -36,8 +36,6 @@ def Green_full(vals, temp, Egratio):
     coef /= 10000
     coef = 2 * np.power(coef, 3. / 2)
 
-    # print Egratio
-
     mdcdme = 6.**(2. / 3.) * (
         (vals['mt']*Egratio)**2. * (vals['ml'])) ** (1. / 3.)
 

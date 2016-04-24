@@ -15,13 +15,13 @@ class Mobility(HelperFunctions):
     ni = 1e10
     temp = 300
 
-    def __init__(self, matterial='Si', author=None, temp=300.):
+    def __init__(self, material='Si', author=None, temp=300.):
         self.Models = ConfigParser.ConfigParser()
-        self.matterial = matterial
+        self.material = material
 
         constants_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            matterial,
+            material,
             self.model_file)
 
         self.Models.read(constants_file)

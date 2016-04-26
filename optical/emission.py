@@ -4,10 +4,10 @@ import sys
 import os
 import scipy.constants as Const
 
-sys.path.append('../matterial')
+sys.path.append('../material')
 sys.path.append('./Si')
 
-import semiconductor.matterial.ni as ni
+import semiconductor.material.ni as ni
 import semiconductor.optical.opticalproperties as opticalproperties
 import semiconductor.optical.absorptance as absorptance
 
@@ -21,7 +21,7 @@ class SpontaneousRadiativeMeission(object):
 
     defult_QF_split = .1 * Const.e
 
-    def __init__(self, matterial='Si',
+    def __init__(self, material='Si',
                  optical_properties=None,
                  intrinsic_carrier_concentration=None,
                  temp=None):
@@ -34,16 +34,16 @@ class SpontaneousRadiativeMeission(object):
             optical properties  or  ni module is provided
             These will then be used
         """
-        self.matterial = matterial
+        self.material = material
 
         if optical_properties is None:
             self.optics = opticalproperties.TabulatedOpticalProperties(
-                self.matterial)
+                self.material)
         else:
             self.optics = optical_properties
 
         if intrinsic_carrier_concentration is None:
-            self.ni = ni.IntrinsicCarrierDensity(self.matterial)
+            self.ni = ni.IntrinsicCarrierDensity(self.material)
             self.ni.update()
         else:
             self.ni = intrinsic_carrier_concentration
@@ -176,7 +176,7 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
 
     alpha_version = 'Schinke2015'
 
-    def __init__(self, matterial='Si', optical_constants=None, excess_carriers_array=None, width=None):
+    def __init__(self, material='Si', optical_constants=None, excess_carriers_array=None, width=None):
         super(Simulated_PL_emission, self).__init__()
 
         if width is None:
@@ -188,7 +188,7 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
             self.np = np.ones(self.x.shape) * 1e12 * self.doping  # cm^-6
 
         self.Esc = absorptance.EscapeProbability(
-            matterial=matterial, optical_constants=optical_constants, x=self.x)
+            material=material, optical_constants=optical_constants, x=self.x)
 
     #     self.initalise_EmittedPL()
 
@@ -220,7 +220,7 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
         self.optics.abs_cof_bb = self.optics.abs_cof_bb[index]
         self.optics.ref_ind = self.optics.ref_ind[index]
 
-        self.ni.update(temp = temp)
+        self.ni.update(temp=temp)
 
         # The wafter thickiness is taken as the last value in the x-direction
         self.update_escape()

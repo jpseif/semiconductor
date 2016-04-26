@@ -2,23 +2,28 @@
 import numpy as np
 
 
+def Roosbroeck(vals, nxc, nh0, ne0, B, **kwargs):
+    '''
+    The classic roosbroeck function
+        It simply states that the radiaative recombiation rate is
+        proportional to the produce of the carrier, correct to the
+        background conccentraion of carriers.
+    '''
+    if np.all(nxc == 0):
+        nxc += 1
 
+    nh = nh0 + nxc
+    ne = ne0 + nxc
 
-def Roosbroeck(vals, nxc, Nh_0, Ne_0,  temp = None, B=None):
-
-    # B = Roosbroeck_B(vals, B)
-
-    Nh = Nh_0 + nxc
-    Ne = Ne_0 + nxc
-
-    R = B * (Ne * Nh - Ne_0 * Nh_0)
-
+    R = B * (ne * nh - ne0 * nh0)
+    print R
     return nxc / R
 
 
 def Roosbroeck_with_screening_B(vals, nxc, doping, temp, Blow):
     """
-    This is the roosbroeck model that accounts for many things
+    This is the roosbroeck model that accounts for many things, 
+    such as band gap narrowing.
     It needs temperature, nxc, doping and blow to be defined
     """
 
@@ -40,28 +45,23 @@ def Roosbroeck_with_screening_B(vals, nxc, doping, temp, Blow):
     return B
 
 
-def Roosbroeck_with_screening(vals, nxc, Nh_0, Ne_0, temp, B):
+def Roosbroeck_with_screening(vals, nxc, nh0, ne0, Blow, temp):
     """
     This is the roosbroeck model that accounts for many things
     It needs temperature, nxc, doping and blow to be defined
     """
-
-    Roosbroeck_with_screening_B(vals, nxc, np.amax(Nh_0, Ne_0), temp, B)
-
-    return Roosbroeck(nxc, Nh_0, Ne_0, B)
+    B = Roosbroeck_with_screening_B(vals, nxc, np.amax([nh0, ne0]), temp, Blow)
+    tau = Roosbroeck(vals, nxc, nh0, ne0, B=B)
+    return tau
 
 
 def cubic_loglog_parm(vals, temp):
-
-    if np.any(temp > vals['temp_limit']):
-        # print temp
-        print 'Out of Blow model temperature range'
-        print 'the ', vals['temp_limit'], 'is provided'
+    '''
+    a cubic fit to tabulated data at different temperatures
+    '''
 
     B = vals['a'] * np.log10(temp)**3 +\
         vals['b'] * np.log10(temp)**2 \
         + vals['c'] * np.log10(temp)**1 \
         + vals['d']
     return 10**B
-
-

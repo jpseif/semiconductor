@@ -8,7 +8,7 @@ import ConfigParser
 
 from semiconductor.helper.helper import HelperFunctions
 import impurity_ionisation_models as IIm
-import semiconductor.matterial.densityofstates as DOS
+from semiconductor.material.densityofstates import DOS
 import semiconductor.general_functions.carrierfunctions as CF
 
 
@@ -19,23 +19,41 @@ class Ionisation(HelperFunctions):
     energy available, a dopant is electrical active (donating or
     accepting an electron to the band)  or inactive. 
     '''
+    cal_dts = {
+        'material': 'Si',
+        'temp': 300,
+        'author': None,
+    }
 
     author_list = 'ionisation.models'
 
-    def __init__(self, matterial='Si', author=None, temp=300):
-        self.Models = ConfigParser.ConfigParser()
-        self.matterial = matterial
+    def __init__(self, **kwargs):
 
-        constants_file = os.path.join(
+        # update any values in cal_dts
+        # that are passed
+        self._update_dts(**kwargs)
+        self._init_links()
+
+        # get the address of the authors list
+        author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            matterial,
+            self.cal_dts['material'],
             self.author_list)
 
-        self.Models.read(constants_file)
-        self.change_model(author)
-        self.temp = temp
+        # get the models ready
+        self._int_model(author_file)
 
-    def update(self, N_imp, ne, nh, impurity, temp=None, author=None):
+        # initiate the first model
+        self.change_model(self.cal_dts['author'])
+
+    def _init_links(self):
+
+        self.Dos = DOS(material=self.cal_dts['material'],
+                  temp=self.cal_dts['temp'],
+                  author=None
+                  )
+
+    def update(self, N_imp, ne, nh, impurity, **kwargs):
         '''
         Calculates the number of ionisied impurities
 
@@ -56,35 +74,38 @@ class Ionisation(HelperFunctions):
         output:
             the number of ionised impurities
         '''
-        if temp is None:
-            temp = self.temp
+        self._update_dts(**kwargs)
 
         # a check to make sure the model hasn't changed
-        if author is not None:
-            self.change_model(author)
-        # this should be change an outside function alter
+        if 'author' in kwargs.keys():
+            self.change_model(self.cal_dts['author'])
 
         # checks if and get the required density of states model
         if 'dos_author' in self.vals.keys():
-            Nc, Nv = DOS.DOS('Si').update(
-                temp=temp, author=self.vals['dos_author'])
+            Nc, Nv = self.Dos.update(material=self.cal_dts['material'],
+                                temp=self.cal_dts['temp'],
+                                author=self.vals['dos_author']
+                                )
         else:
             Nc, Nv = 0, 0
 
-        #
         if impurity in self.vals.keys():
+            # get the ionisation fraction
             iN_imp = getattr(IIm, self.model)(
-                self.vals, N_imp, ne, nh, temp, Nc, Nv, self.vals[impurity])
+                self.vals, N_imp, ne, nh,
+                self.cal_dts['temp'], Nc, Nv,
+                self.vals[impurity])
+            # multiply it by the number of dopants
             iN_imp *= N_imp
         else:
-            print 'No such impurity, please check your model and spelling'
-            print 'Returning zero array'
+            print ('''\nWarning:\n\t'''
+                   '''No such impurity, please check your model'''
+                   '''and spelling.\n\tReturning zero array\n''')
             iN_imp = np.zeros(np.asarray(N_imp).flatten().shape[0])
 
         return iN_imp
 
-    def update_dopant_ionisation(self, N_dop, nxc, impurity,
-                                 temp=None, author=None):
+    def update_dopant_ionisation(self, N_dop, nxc, impurity, **kwargs):
         '''
         This is a special function used to determine the number of
         ionised dopants given a number of excess carriers, and a
@@ -104,11 +125,11 @@ class Ionisation(HelperFunctions):
                 The number of ionised dopants
         '''
 
-        if temp is None:
-            temp = self.temp
+        self._update_dts(**kwargs)
 
-        if author is not None:
-            self.change_model(author)
+        # a check to make sure the model hasn't changed
+        if 'author' in kwargs.keys():
+            self.change_model(self.cal_dts['author'])
 
         N_idop = N_dop
 
@@ -123,10 +144,11 @@ class Ionisation(HelperFunctions):
                     Nd = 0
 
                 ne, nh = CF.get_carriers(
-                    Na, Nd, nxc, temp=temp, matterial='Si')
+                    Na, Nd, nxc, temp=self.cal_dts['temp'],
+                    material=self.cal_dts['material'])
 
                 N_idop = self.update(
-                    N_dop, ne, nh, impurity, temp=temp, author=None)
+                    N_dop, ne, nh, impurity)
         else:
             print r'Not a valid impurity, returning 100% ionisation'
 

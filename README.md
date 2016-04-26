@@ -15,11 +15,11 @@ Here is an example of how to use this module. We will look at two different band
 model.
 
 ```python
-    from semiconductor.matterial.bandgap_narrowing import BandGapNarrowing as BGN
+    from semiconductor.material.bandgap_narrowing import BandGapNarrowing as BGN
     import numpy as np
 
     # initialise the class
-    BGN_class = BGN(matterial='Si')
+    BGN_class = BGN(material='Si')
     # define the number of dopants
     Na = 0.
     Nd = np.logspace(16, 20)

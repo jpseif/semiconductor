@@ -4,7 +4,7 @@ import matplotlib.pylab as plt
 import os
 import ConfigParser
 
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import HelperFunctions, change_model
 from semiconductor.general_functions.carrierfunctions import get_carriers
 import radiative_models as radmdls
 import auger_models as augmdls
@@ -12,107 +12,171 @@ import auger_models as augmdls
 
 class Intrinsic():
 
-    def __init__(self, matterial='Si', rad_author=None, aug_author=None, **kwargs):
+    cal_dts = {
+        'material': 'Si',
+        'temp': 300.,
+        'ni_author': None,
+        'rad_author': None,
+        'aug_author': None,
+    }
 
-        self.Radiative = Radiative(matterial, rad_author, **kwargs)
-        self.Auger = Auger(matterial, aug_author, **kwargs)
+    def __init__(self, **kwargs):
+        # update any values in cal_dts
+        # that are passed
+        self._update_dts(**kwargs)
 
-    def intrisic_carrier_lifetime(self, nxc, Na, Nd, inverse=False):
-        itau = 1. / \
-            self.Radiative.tau(nxc, Na, Nd) + 1. / \
-            self.Auger.tau(nxc, Na, Nd)
-        if inverse is False:
-            itau = 1. / itau
+        # pass values to models
+        self._update_links()
+
+    def _update_links(self):
+
+        self.Radiative = Radiative(
+            material=self.cal_dts['material'],
+            author=self.cal_dts['rad_author'],
+            temp=self.cal_dts['temp'],
+            ni_author=self.cal_dts['ni_author']
+        )
+
+        self.Auger = Auger(
+            material=self.cal_dts['material'],
+            author=self.cal_dts['aug_author'],
+            temp=self.cal_dts['temp'],
+            ni_author=self.cal_dts['ni_author']
+        )
+
+    def tau(self, nxc, Na, Nd, **kwargs):
+        '''
+        Returns the intrinsic carrier lifetime
+        '''
+        return 1. / self.itau(nxc, Na, Nd, **kwargs)
+
+    def itau(self, nxc, Na, Nd, **kwargs):
+        '''
+        Returns the inverse of the intrinsic carrier lifetime
+        '''
+        self._update_dts(**kwargs)
+        if 'author' in ''.join(kwargs.keys()):
+            self._update_links()
+
+        itau = self.Radiative.itau(nxc, Na, Nd, **kwargs) +\
+            self.Auger.itau(nxc, Na, Nd, **kwargs)
+
         return itau
 
 
 class Radiative(HelperFunctions):
-    model_file = 'radiative.model'
 
-    def __init__(self, matterial='Si', author=None, temp=300., ni=9.65e9):
-        self.Models = ConfigParser.ConfigParser()
-        self.matterial = matterial
+    author_list = 'radiative.model'
 
-        constants_file = os.path.join(
+    cal_dts = {
+        'material': 'Si',
+        'temp': 300.,
+        'author': None,
+        'ni_author': None
+    }
+
+    def __init__(self, **kwargs):
+
+        # update any values in cal_dts
+        # that are passed
+        self._update_dts(**kwargs)
+
+        # get the address of the authors list
+        author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            matterial,
-            self.model_file)
+            self.cal_dts['material'],
+            self.author_list)
 
-        self.Models.read(constants_file)
+        # get the models ready
+        self._int_model(author_file)
 
-        self.change_model(author)
+        # initiate the first model
+        self.change_model(self.cal_dts['author'])
 
-        'sets the temp for the thing'
-        self.temp = temp
+    def tau(self, nxc, Na, Nd, **kwargs):
+        self._update_dts(**kwargs)
+        self.change_model(self.cal_dts['author'])
 
-        'This is ni not the effective ni'
-        self.ni = ni
+        ne0, nh0 = get_carriers(
+            Na,
+            Nd,
+            nxc=0,
+            ni_author=self.cal_dts['ni_author'],
+            temp=self.cal_dts['temp']
+        )
 
-    def tau(self, nxc, Na, Nd, temp=None):
-        self.Nh_0, self.Ne_0 = self.check_doping(Na, Nd)
+        B = self._get_B()
 
+        return getattr(radmdls, self.model)(
+            self.vals, nxc, nh0, ne0, B, temp=self.cal_dts['temp']
+        )
+
+    def itau(self, nxc, Na, Nd, **kwargs):
+        return 1. / self.tau(nxc, Na, Nd, **kwargs)
+
+    def _get_B(self):
+
+        # if there is a model for blow, apply it
         if 'blow_model' in self.vals.keys():
-            B = getattr(radmdls, self.blow_model)(self.vals, temp)
+            vals, model = change_model(self.Models, self.vals['blow_vals'])
+
+            B = getattr(radmdls, self.vals['blow_model'])(
+                vals, self.cal_dts['temp']
+            )
+
+        # else use the constant value
         else:
             B = self.vals['b']
-
-        doping = np.amax([Na, Nd])
-        return getattr(radmdls, self.model)(self.vals, nxc, self.Nh_0, self.Ne_0, temp, B=B)
-#
-
-    def itau(self, nxc, Na, Nd, temp=None):
-        return 1. / self.tau(nxc, Na, Nd, temp)
-
-    def B(self, nxc, doping, temp):
-        if 'blow_model' in self.vals.keys():
-            self.change_model(self.vals['blow_model'])
-            B = getattr(radmdls, model)(vals, temp)
-            temp_tt = np.array([77, 90, 112, 170, 195, 249, 300])
-            plt.figure()
-            B_tt = np.array(
-                [8.01e-14, 4.57e-14, 2.14e-14, 8.84e-15, 7.35e-15, 5.48e-15, 4.73e-15])
-            plt.semilogy()
-            plt.plot(temp_tt, B_tt, 'o')
-            plt.plot(temp, B)
-            plt.plot()
-
-            B = getattr(
-                radmdls, self.model + '_B')(self.vals, nxc, doping, temp, B)
-
-        else:
-            B = self.vals['B']
-
         return B
 
 
 class Auger(HelperFunctions):
-    model_file = 'auger.model'
+    author_list = 'auger.model'
 
-    def __init__(self, matterial='Si', author=None, temp=300, ni=9.65e9):
+    cal_dts = {
+        'material': 'Si',
+        'temp': 300.,
+        'author': None,
+        'ni_author': None
+    }
 
-        self.Models = ConfigParser.ConfigParser()
-        self.matterial = matterial
+    def __init__(self, **kwargs):
 
-        constants_file = os.path.join(
+        # update any values in cal_dts
+        # that are passed
+        self._update_dts(**kwargs)
+
+        # get the address of the authors list
+        author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            matterial,
-            self.model_file)
+            self.cal_dts['material'],
+            self.author_list)
 
-        self.Models.read(constants_file)
+        # get the models ready
+        self._int_model(author_file)
 
-        self.change_model(author, self.Models)
-        self.temp = temp
-        self.ni = ni
+        # initiate the first model
+        self.change_model(self.cal_dts['author'])
 
-    def tau(self, nxc, Na, Nd, temp=300):
+    def tau(self, nxc, Na, Nd, **kwargs):
+        self._update_dts(**kwargs)
+
+        if 'author' in kwargs.keys():
+            self.change_model(self.cal_dts['author'])
 
         ne0, nh0 = get_carriers(
-            Na, Nd, nxc=0, ni_author=None, temp=temp)
+            Na,
+            Nd,
+            nxc=0,
+            ni_author=self.cal_dts['ni_author'],
+            temp=self.cal_dts['temp']
+        )
 
-        return getattr(augmdls, self.model)(self.vals, nxc, ne0, nh0, temp)
+        return getattr(augmdls, self.model)(
+            self.vals, nxc, ne0, nh0, temp=self.cal_dts['temp'])
 
-    def itau_aug(self, nxc, Na, Nd):
-        return 1 / self.tau(nxc, Na, Nd)
+    def itau_aug(self, nxc, Na, Nd, **kwargs):
+        return 1. / self.tau(nxc, Na, Nd, **kwargs)
 
     def check(self, author, fig=None, ax=None):
         if ax is None:

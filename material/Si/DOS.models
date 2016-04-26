@@ -31,7 +31,7 @@ g: 0.2286895e-3
 h: 0.7469271e-6
 i: 0.1727481e-8
 doi:10.1063/1.345414
-Egi_author: Green1990
+iEg_author: Green1990
 notes: measurements taken at low temp from cyclon resonance. Then using a fit to
 	the energy band-gap with temp to determine the change in the masses with temp
 	to provide the finial change in the DOS. Valid up to 400 K.

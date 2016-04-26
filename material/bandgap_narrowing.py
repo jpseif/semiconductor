@@ -7,7 +7,7 @@ import os
 import ConfigParser
 
 from semiconductor.helper.helper import HelperFunctions
-import semiconductor.matterial.bandgap_narrowing_models as Bgn
+import semiconductor.material.bandgap_narrowing_models as Bgn
 import semiconductor.general_functions.carrierfunctions as GF
 
 
@@ -25,9 +25,10 @@ class BandGapNarrowing(HelperFunctions):
         is much larger than the impact of the carrier distribution
     '''
     cal_dts = {
-        'matterial': 'Si',
+        'material': 'Si',
         'temp': 300.,
         'author': None,
+        'nxc': None,
     }
 
     author_list = 'bandgap_narrowing.models'
@@ -36,14 +37,12 @@ class BandGapNarrowing(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        temp = locals().copy()
-        del temp['self']
-        self._update_dts(**temp)
+        self._update_dts(**kwargs)
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['matterial'],
+            self.cal_dts['material'],
             self.author_list)
 
         # get the models ready
@@ -52,7 +51,7 @@ class BandGapNarrowing(HelperFunctions):
         # initiate the first model
         self.change_model(self.cal_dts['author'])
 
-    def update(self, Na, Nd, nxc=None, **kwargs):
+    def update(self, Na, Nd, **kwargs):
         '''
         Calculates the band gap narrowing
 
@@ -72,10 +71,11 @@ class BandGapNarrowing(HelperFunctions):
         # this should be change an outside function alter
         ne, nh = GF.get_carriers(Na,
                                  Nd,
-                                 nxc,
+                                 self.cal_dts['nxc'],
+
                                  temp=self.cal_dts['temp'])
 
-        doping = np.abs(Na - Nd)
+        doping = np.array(np.abs(Na - Nd))
 
         return getattr(Bgn, self.model)(
             self.vals,
@@ -121,7 +121,7 @@ class BandGapNarrowing(HelperFunctions):
 
 def check_Schenk(fig, ax):
     '''compared to values taken from XXX'''
-    BGN = BandGapNarrowing(matterial='Si', author='Schenk1988fer')
+    BGN = BandGapNarrowing(material='Si', author='Schenk1988fer')
 
     folder = os.path.join(
         os.path.dirname(__file__), 'Si', r'check data')

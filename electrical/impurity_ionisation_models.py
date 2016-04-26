@@ -6,7 +6,7 @@ import scipy.constants as C
 import matplotlib.pylab as plt
 # from semiconductor.helper.helper import HelperFunctions
 # import dopant_ionisation_models
-# import semiconductor.matterial.bandgap_narrowing_models as Bgn
+# import semiconductor.material.bandgap_narrowing_models as Bgn
 # import semiconductor.general_functions.carrierfunctions as GF
 from glob import glob
 

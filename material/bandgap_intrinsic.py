@@ -3,7 +3,7 @@ import matplotlib.pylab as plt
 import os
 import ConfigParser
 import numpy as np
-import semiconductor.matterial.bandgap_intrinsic_models as iBg
+import semiconductor.material.bandgap_intrinsic_models as iBg
 from semiconductor.helper.helper import HelperFunctions
 
 
@@ -15,7 +15,7 @@ class IntrinsicBandGap(HelperFunctions):
              different effective carrier mass (band strucutre)
     '''
     cal_dts = {
-        'matterial': 'Si',
+        'material': 'Si',
         'temp': 300.,
         'author': None,
         'multiplier' : 1.,
@@ -26,14 +26,12 @@ class IntrinsicBandGap(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        temp = locals().copy()
-        del temp['self']
-        self._update_dts(**temp)
+        self._update_dts(**kwargs)
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['matterial'],
+            self.cal_dts['material'],
             self.author_list)
 
         # get the models ready

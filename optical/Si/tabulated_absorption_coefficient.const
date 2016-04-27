@@ -9,7 +9,6 @@ notes: determined from the combination of ellipometry, spectral luminescence,
     The uncertainty in the absorption coefficienct was also caculated
 
 [Schinke2014]
-; Ap1, and Ap2 for phonon emission and absorption
 model: Si_Schinke2014 
 doi: 10.1063/1.4866916
 temp: 295

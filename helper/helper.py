@@ -32,7 +32,6 @@ def change_model(Models, author=None):
         except:
             try:
                 vals[k] = [float(i) for i in v.split(';')]
-                # print self.vals[k]
             except:
                 pass
 
@@ -73,10 +72,8 @@ class HelperFunctions():
                 variables to be passed to the update function. 
         '''
         fig, ax = plt.subplots(1)
-        # ax = plt.add_subplot(111)
         for model in self.available_models():
-            print update_function, model
-        # ax.plot(np.inf,np.inf,'k-',label = 'Auger')
+
             self.change_model(model)
             result = getattr(self, update_function)(**kwargs)
             if xvalues is None:
@@ -130,11 +127,8 @@ class HelperFunctions():
 
         # remove modles that are not implimented
         for author in list(author_list):
-            # print  dict(self.Models.items(author))['model']
-            # print 'not_implimented' in dict(self.Models.items(author))['model']
-            # print author
+
             if 'not_implimented' in dict(self.Models.items(author))['model']:
-                # print author, 'removed'
                 author_list.remove(author)
 
         # does the filtering

@@ -28,7 +28,7 @@ class BandGapNarrowing(HelperFunctions):
         'material': 'Si',
         'temp': 300.,
         'author': None,
-        'nxc': None,
+        'nxc': 1e10,
     }
 
     author_list = 'bandgap_narrowing.models'
@@ -69,10 +69,9 @@ class BandGapNarrowing(HelperFunctions):
             self.change_model(self.cal_dts['author'])
 
         # this should be change an outside function alter
-        ne, nh = GF.get_carriers(Na,
-                                 Nd,
-                                 self.cal_dts['nxc'],
-
+        ne, nh = GF.get_carriers(Na=Na,
+                                 Nd=Nd,
+                                 nxc=self.cal_dts['nxc'],
                                  temp=self.cal_dts['temp'])
 
         doping = np.array(np.abs(Na - Nd))

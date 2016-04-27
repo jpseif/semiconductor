@@ -76,7 +76,7 @@ class SRH(HelperFunctions):
         self._update_dts(**kwargs)
 
         if 'defect' in kwargs:
-            self.change_model(self._update_dts['defect'])
+            self.change_model(self.cal_dts['defect'])
             self._cal_taun_taup()
 
         # if change ni, calculate it

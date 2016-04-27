@@ -10,7 +10,7 @@ import radiative_models as radmdls
 import auger_models as augmdls
 
 
-class Intrinsic():
+class Intrinsic(HelperFunctions):
 
     cal_dts = {
         'material': 'Si',
@@ -175,7 +175,7 @@ class Auger(HelperFunctions):
         return getattr(augmdls, self.model)(
             self.vals, nxc, ne0, nh0, temp=self.cal_dts['temp'])
 
-    def itau_aug(self, nxc, Na, Nd, **kwargs):
+    def itau(self, nxc, Na, Nd, **kwargs):
         return 1. / self.tau(nxc, Na, Nd, **kwargs)
 
     def check(self, author, fig=None, ax=None):

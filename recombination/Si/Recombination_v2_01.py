@@ -455,9 +455,9 @@ class fit_tau(SRH, Auger, Radiative):
                                self.itau_aug() + self.itau_rad()) / 1e3, '--', label='Fitted')
 #        ax2.plot(self.Deltan,itau_SRH,label='itau_SRH')
 
-        print '\t\t\t  tau_n \t\t tau_p \t\t E_t'
-        print 'Inverse tau fitting \t {0:.2e} \t {1:.2e}\t {2:.2e}'.format(ipopt[0], ipopt[1], ipopt[2])
-        print 'tau fitting \t\t {0:.2e} \t {1:.2e}\t {2:.2e}'.format(popt[0], popt[1], popt[2])
+        print ('\t\t\t  tau_n \t\t tau_p \t\t E_t')
+        print ('Inverse tau fitting \t {0:.2e} \t {1:.2e}\t {2:.2e}'.format(ipopt[0], ipopt[1], ipopt[2]))
+        print ('tau fitting \t\t {0:.2e} \t {1:.2e}\t {2:.2e}'.format(popt[0], popt[1], popt[2]))
 
         ax1.set_xlabel('$\Delta$ n (cm$^{-3}$)')
         ax2.set_xlabel('$\Delta$ n (cm$^{-3}$)')
@@ -505,115 +505,3 @@ def CheckFittingJ0():
     yscale('linear')
     xscale('linear')
     show()
-
-
-#A = Auger()
-#R = Radiative()
-#A.Doping= 8e15
-#R.Doping = 8e15
-# A.T = 300
-# R.T = 300
-
-# R.tau_rad()
-# print R.Doping
-
-
-# plot(A.Deltan,1./(A.itau_aug()+R.itau_rad()))
-# savetxt('Intrinsic',vstack((A.Deltan,1/(A.itau_aug()+R.itau_rad()))).T,delimiter='\t')
-# plot(R.Deltan,R.tau_rad(),'--')
-# plot(R.Deltan,A.tau_aug(),'-.')
-
-# print A.tau_aug()[0]*1e6,1./(A.itau_aug()+R.itau_rad())[0]
-# print R.tau_rad()[0]
-# loglog()
-
-
-# semilogx()
-# figure()
-# plot(A.Deltan,A.itau_aug()+R.itau_rad())
-# plot(R.Deltan,R.itau_rad(),'--')
-# plot(R.Deltan,A.itau_aug(),'-.')
-# loglog()
-# show()
-''''
-data=genfromtxt('.data_for_RecombinationFile',skip_header=2)
-index = where(data[:,2]==max(data[:,2]))[0]
-data = data[index:]
-index = where( data[:,0] > 0)
-data = data[index]
-
-Constants.Doping=1e16
-
-#a =fit_tau()
-
-wafer1 = fit_tau(data[:,0],data[:,2])
-wafer1.Width= 0.035
-wafer1.fitting()
-
-figure()
-
-for i in linspace(1e16,5e16,5):
-    This = Constants()
-    Constants.Doping = i
-    print Constants.Doping
-    print Auger().Doping
-    itau = Auger().itau_aug()+SRH().itau_SRH(Constants.Deltan,1e5,0,0)+Radiative().itau_rad()
-
-
-    plot(Constants.Deltan,1/itau,label = str(i))
-    plot(data[:,2],data[:,0],'.')
-
-
-legend(loc=0)
-loglog()
-
-Constants.Doping=1e16
-
-figure('SVR')
-plot(wafer1.Deltan,wafer1.Worst_SRV_DoubleSide())
-loglog()
-
-show()
-'''
-'''
-def GetDeltanGivenTau(W):
-
-    return  a.Deltan[abs(a.Deltan/a.tau_aug()-G/W*ones(a.Deltan.shape[0])).argmin(axis=0)]
-
-a = Auger()
-G = 2.5e17
-Width = 0.001
-wide =array([])
-carrierdensity =array([])
-#print store
-for Width in logspace(-4,-1,100):
-    wide = append(wide, array(Width))
-    carrierdensity = append(carrierdensity,array(GetDeltanGivenTau(Width)))
-    #a.Width = W
-    #a.Deltan = 1e16
-    #for i in range(50):
-
-        #tau = a.tau_aug()
-        #a.Deltan = G/a.Width*tau
-        #print tau,a.Width
-    #Voltage  = 0.02585 *2*log(G/w *
-#print a.Deltan[abs(a.Deltan/a.tau_aug()-G/Width*ones(a.Deltan.shape[0])).argmin(axis=0)]
-#plot(a.Deltan,abs(a.Deltan/a.tau_aug()-G/Width*ones(a.Deltan.shape[0])))
-#plot(a.Deltan,a.Deltan/a.tau_aug())
-#plot(a.Deltan,G/0.001*ones(a.Deltan.shape[0]))
-print wide.shape
-plot(wide,2*0.02585*log(carrierdensity/a.ni),'.')
-#plot(wide,2*0.02585*log(carrierdensity/a.ni/a.ni))
-semilogx()
-#semilogy()
-'''
-# show()
-
-"""
-FileName = 'F-FZL.txt'
-Dn = genfromtxt(FileName,usecols=(8,),delimiter='\t',skip_header=18,skip_footer=29)
-tau_m = genfromtxt(FileName,usecols=(11,),delimiter='\t',skip_header=18,skip_footer=29)
-
-wafer1 = fit_tau(tau_m,Dn)
-wafer1.fitting()
-"""

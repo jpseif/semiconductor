@@ -44,6 +44,6 @@ def get_carriers(Na, Nd, nxc,
         nh = maj_car_den
         ne = nxc
     else:
-        print 'determination of total carrier connc didn\'t work'
+        print ('determination of total carrier connc didn\'t work')
 
     return ne, nh

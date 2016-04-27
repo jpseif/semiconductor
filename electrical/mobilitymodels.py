@@ -53,7 +53,7 @@ def dorkel(vals, Na, Nd, nxc, temp, carrier, **kwargs):
                              Nd,
                              nxc,
                              temp=temp)
-    print Na, Nd, nxc, temp
+    # print Na, Nd, nxc, temp
 
     if np.all(nh < ne):
         nxc = nh
@@ -146,6 +146,8 @@ def unified_mobility(vals, Na, Nd, nxc, temp, carrier, **kwargs):
     "A unified mobility model for device simulation-II. Temperature dependence of carrier mobility and lifetime,"
     Solid. State. Electron., vol. 35, no. 7, pp. 961-967, Jul. 1992.
 
+    The model takes the sample inputs of ionised impurities and carrier concentrations
+
     This is the Klaassen's mobility model, for which the calculations  with two exceptions: 
         (i) r5 is set to -0.8552 rather than -0.01552 (see Table 2 of [1]), 
         (ii) Eq. A3 of [1] is adjusted such that PCWe is determined with Ne,sc rather than (Z^3 Ni) 
@@ -169,7 +171,7 @@ def unified_mobility(vals, Na, Nd, nxc, temp, carrier, **kwargs):
     if carrier in type_dic:
         carrier = type_dic[carrier]
     else:
-        print 'incorrect input for carrier input'
+        print ('incorrect input for carrier input')
 
     # Things to fix up
     # ni = ni
@@ -235,7 +237,7 @@ def Nsceff(carrier, vals, nh, ne, Na, Nd, temp):
         N_a = return_dopant('h', Na, Nd) * Z('h', vals, Na, Nd)
 
     else:
-        print 'Something has gone wrong in the code'
+        print ('Something has gone wrong in the code')
 
     # plt.figure('test')
     # print ' starting:'

@@ -85,7 +85,7 @@ class SpontaneousRadiativeMeission(object):
 
     def genralised_planks_PerWavelength_Carriers(self, np=None, temp=None):
         """
-        generalised planks law. 
+        generalised planks law.
         Provides emitted photons per wavelength interval
         Uses the format outlined by green`
         """
@@ -107,7 +107,7 @@ class SpontaneousRadiativeMeission(object):
 
     def genralised_planks_PerEnergy(self, QF_split=False, temp=None):
         """
-        generalised planks law. 
+        generalised planks law.
         Provides emitted photons per energy interval
         Uses the traditional form
         """
@@ -138,7 +138,7 @@ class SpontaneousRadiativeMeission(object):
 
     def genralised_planks_PerWavelength(self, QF_split=False, temp=None):
         """
-        generalised planks law. 
+        generalised planks law.
         Provides emitted photons per wavelength interval
         Is just an adjustedment to the energy interval expression
         """
@@ -201,7 +201,7 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
             self.doping = doping
 
         if deltan.shape != self.x.shape:
-            print 'number of x-values not equal to delta n values'
+            print ('number of x-values not equal to delta n values')
 
         self.np = self.doping * deltan
 
@@ -228,7 +228,7 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
     def update_temperature(self, temp=False):
         """
         Used to change the sample termpature,
-        and all constants with temrpature 
+        and all constants with temrpature
         if not provided used the defult value
         """
         if not temp:
@@ -276,7 +276,7 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
                                            axis=1)
 
         else:
-            print 'x and np are differnt lengths'
+            print ('x and np are differnt lengths')
 
     def caculate_detected_PL(self):
         """
@@ -359,7 +359,7 @@ class Alpha_from_PL():
         Does the following itteration n times:
 
         1. It assumes alpha, calcs the escape probaility, caculates PL
-        2. The calc PL is compared to the real PL and alpha is updated 
+        2. The calc PL is compared to the real PL and alpha is updated
 
 
         a note:

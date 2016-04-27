@@ -103,7 +103,7 @@ class IntrinsicCarrierDensity(HelperFunctions):
             ax.plot(np.log(temp),
                     np.log(ni * np.exp(Eg / 2. * Const.e / Const.k / temp)),
                     label=author)
-            print author, '\t {0:.2e}'.format(self.update(temp=300, author=author))
+            print (author, '\t {0:.2e}'.format(self.update(temp=300, author=author)))
 
         test_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),

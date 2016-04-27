@@ -139,7 +139,7 @@ class HelperFunctions():
 
         # prints no models available
         if not author_list:
-            print 'No authors for this models available'
+            print ('No authors for this models available')
 
         return author_list
 
@@ -172,12 +172,12 @@ class HelperFunctions():
             models = [model]
 
         for mdl in models:
-            print '{0}:\t'.format(mdl),
+            print ('{0}:\t'.format(mdl),)
             try:
-                print
-                print dict(self.Models.items(mdl))['notes']
+                # print
+                print (dict(self.Models.items(mdl))['notes'])
             except:
-                print 'No notes'
+                print ('No notes')
 
 
 class Webplotdig_JSONreader:

@@ -101,9 +101,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
             self.author_file)
 
         # get the models ready
-        print author_file
         self._int_model(author_file)
-        print self.Models.sections()
 
         # initiate the first model
         self.change_model(self.cal_dts['author'])

@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os
-import ConfigParser
+import configparser
 
 from semiconductor.helper.helper import HelperFunctions, change_model
 from semiconductor.general_functions.carrierfunctions import get_carriers

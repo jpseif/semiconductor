@@ -4,8 +4,8 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os
-import ConfigParser
-import mobilitymodels as model
+import configparser
+import semiconductor.electrical.mobilitymodels as model
 
 from semiconductor.helper.helper import HelperFunctions
 
@@ -16,7 +16,7 @@ class Mobility(HelperFunctions):
     temp = 300
 
     def __init__(self, material='Si', author=None, temp=300.):
-        self.Models = ConfigParser.ConfigParser()
+        self.Models = configparser.ConfigParser()
         self.material = material
 
         constants_file = os.path.join(

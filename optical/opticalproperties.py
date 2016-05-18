@@ -1,5 +1,5 @@
 import numpy as np
-import ConfigParser
+import configparser
 import os
 import sys
 import scipy.constants as const

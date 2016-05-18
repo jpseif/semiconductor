@@ -5,7 +5,7 @@ import numpy as np
 from pylab import *
 import os
 import scipy.constants as Const
-from bandgap_intrinsic import IntrinsicBandGap
+from semiconductor.material.bandgap_intrinsic import IntrinsicBandGap
 from semiconductor.helper.helper import HelperFunctions
 from semiconductor.material import ni_models
 

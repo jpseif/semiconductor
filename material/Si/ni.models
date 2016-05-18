@@ -8,22 +8,21 @@ model: ni_temp_eg
 A: 1.541e15
 power: 1.712
 eg_model: Passler2002 
-notes: temp range 77-375K
-notes: revaluation of sproul with sheckns band gap narrowing by couderc. 
+notes: temp range 77-375K revaluation of sproul with sheckns band gap narrowing by couderc. 
 
 [Sproul_1991]
 model: ni_temp
 A: 1.016666667e15
 power: 2
 eg: 6880 ; eV
-notes: temp range 275-375K. This version is equilivant to sprouls paper, but uses the more general form of the equation used in this paper. 
+notes: temp range 275-375K. This version is equilivant to sprouls paper, but uses t he more general form of the equation used in this paper. 
 
 [Sproul_1991_2]
 model: ni_temp
 A: 7.91124E+13
 power: 2.365
 eg: 6733 ; eV
-notes: temp range 275-375K. An alternative form presented by sproul with a larger uncertainty, as the power was not fitted.
+notes: temp range 275-375K. An alternative form presented by sproul with a larger  uncertainty, as the power was not fitted.
 
 [Misiakos_1993]
 ;ni from spectral response from 87 - 340

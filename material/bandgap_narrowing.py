@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os
-import ConfigParser
+import configparser
 
 from semiconductor.helper.helper import HelperFunctions
 import semiconductor.material.bandgap_narrowing_models as Bgn

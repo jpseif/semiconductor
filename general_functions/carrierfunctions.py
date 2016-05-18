@@ -18,16 +18,16 @@ def get_carriers(Na, Nd, nxc,
                   deltap = deltan
     temp = temperature
     ni: (optional)
-        provide  a values so this function doesn't caculate ni
+        provide  a values so this function doesn't calculate ni
 
     returns ne, nh
 
     '''
     if ni is None:
         ni = NI(material=material).update(author=ni_author, temp=temp)
-    
-    # Calculated on the assumption that at thermal equilibrium in the 
-    # dark n0p0 = ni**2, and that charge neutrality holds. Usually 
+
+    # Calculated on the assumption that at thermal equilibrium in the
+    # dark n0p0 = ni**2, and that charge neutrality holds. Usually
 
     # simplified to saying the majority carrier density ~ the doping and min
     # carrier denisty is the number of excess carriers. The below version
@@ -44,6 +44,6 @@ def get_carriers(Na, Nd, nxc,
         nh = maj_car_den
         ne = nxc
     else:
-        print ('determination of total carrier connc didn\'t work')
+        print('determination of total carrier connc didn\'t work')
 
     return ne, nh

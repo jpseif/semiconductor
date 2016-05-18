@@ -145,7 +145,7 @@ class EscapeProbability():
         Please remember this is a 9 variable fit. it should always give a good fit
         """
 
-        # caculated from law of diffraction considering angle of entry
+        # calculated from law of diffraction considering angle of entry
         # theta = gamma  - arcsin(n_air/n_si sin(gamma))
         theta1 = np.pi / 3 * 0
         # the angle light is reflected from the rear into the device

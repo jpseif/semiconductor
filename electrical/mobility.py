@@ -1,11 +1,12 @@
 #!/usr/local/bin/python
 # UTF-8
+# encoding=utf8  
 
 import numpy as np
 import matplotlib.pylab as plt
 import os
-import ConfigParser
-import mobilitymodels as model
+import configparser
+import semiconductor.electrical.mobilitymodels as model
 
 from semiconductor.helper.helper import HelperFunctions
 
@@ -16,7 +17,7 @@ class Mobility(HelperFunctions):
     temp = 300
 
     def __init__(self, material='Si', author=None, temp=300.):
-        self.Models = ConfigParser.ConfigParser()
+        self.Models = configparser.ConfigParser()
         self.material = material
 
         constants_file = os.path.join(
@@ -30,14 +31,12 @@ class Mobility(HelperFunctions):
 
     def electron_mobility(self, nxc, Na, Nd, **kwargs):
 
-        self.Nh_0, self.Ne_0 = self.check_doping(Na, Nd)
-
         return getattr(model, self.model)(
             self.vals, Na, Nd, nxc, carrier='electron', **kwargs)
 
     def hole_mobility(self, nxc, Na, Nd, **kwargs):
 
-        self.Nh_0, self.Ne_0 = self.check_doping(Na, Nd)
+        
         return getattr(model, self.model)(
             self.vals, Na, Nd, nxc, carrier='hole', **kwargs)
 
@@ -67,8 +66,9 @@ def check_klaassen():
 
     folder = os.path.join(
         os.path.dirname(__file__), 'Si', 'test_mobility_files')
-    fnames = ['Klassen_1e14_dopants.dat',
-              'Klassen_1e14_temp-450.dat']
+    fnames = [r'Klassen_1e14_dopants.dat',
+              r'Klassen_1e14_temp-450.dat']
+    print(os.path.isdir(folder))
 
     for temp, f_name in zip([300, 450], fnames):
 
@@ -81,6 +81,7 @@ def check_klaassen():
                  'b-',
                  label='electron-here')
 
+        print (f_name)
         data = np.genfromtxt(os.path.join(folder, f_name), names=True)
 
         plt.plot(data['deltan'], data['uh'], 'b--',

@@ -44,7 +44,7 @@ muL0h = 495
 #General values
 temp0 = 300
 DOI: 10.1016/0038-1101(81)90097-6 
-notes: mobility accounting for each component. Depends on dopents, carrier type and concentration. Claims that the calculated mobility deviates by an average of 5% from experimental values. Note At the time of Dorkel and Leturcq's work, most experimental work had been done at 300 K.
+notes: mobility accounting for each component. Depends on dopents, carrier type and concentration. Claims that the calculated mobility deviates by an average of 5%% from experimental values. Note At the time of Dorkel and Leturcq's work, most experimental work had been done at 300 K.
 
 
 [klaassen1992]

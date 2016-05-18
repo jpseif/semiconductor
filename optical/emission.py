@@ -15,7 +15,7 @@ import semiconductor.optical.absorptance as absorptance
 class SpontaneousRadiativeMeission(object):
 
     """
-    This class caculates the spectral spontaneous radiative emisison from the genralised planks law per wavelength or per photon interval
+    This class calculates the spectral spontaneous radiative emisison from the genralised planks law per wavelength or per photon interval
     Currents it takes in silicons properties by defult_QF_split
     """
 
@@ -257,7 +257,7 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
         self.escapeprob = getattr(self.Esc,
                                   self.PL_Dection_side_depth[self.DetectionSide])
 
-    def caculate_spectral_PL(self):
+    def calculate_spectral_PL(self):
         """
         deteries the spectral PL emitted from a sample
         """
@@ -278,12 +278,12 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
         else:
             print ('x and np are differnt lengths')
 
-    def caculate_detected_PL(self):
+    def calculate_detected_PL(self):
         """
         multiples the detected PL by an EQE
         currently this does NOTHING
         """
-        self.caculate_spectral_PL()
+        self.calculate_spectral_PL()
 
 
 class Alpha_from_PL():
@@ -344,7 +344,7 @@ class Alpha_from_PL():
 
     def update_escape(self):
         """
-        Caculates the escape probability given alpha
+        calculates the escape probability given alpha
         """
 
         getattr(self, self.wafer_optics_dic[self.wafer_opitcs])()
@@ -358,7 +358,7 @@ class Alpha_from_PL():
 
         Does the following itteration n times:
 
-        1. It assumes alpha, calcs the escape probaility, caculates PL
+        1. It assumes alpha, calcs the escape probaility, calculates PL
         2. The calc PL is compared to the real PL and alpha is updated
 
 
@@ -384,13 +384,13 @@ class Alpha_from_PL():
 if __name__ == "__main__":
     a = Simulated_PL_emission()
     a.initalise_EmittedPL()
-    a.caculate_spectral_PL()
+    a.calculate_spectral_PL()
     a.update_escape()
     plt.plot(a.optics.wavelength, a.Spectral_PL / np.amax(a.Spectral_PL))
 
     a.wafer_opitcs = 'textured'
     a.update_escape()
-    a.caculate_spectral_PL()
+    a.calculate_spectral_PL()
     plt.plot(a.optics.wavelength, a.Spectral_PL / np.amax(a.Spectral_PL))
     # plt.plot(a.optics.wavelength, a.optics.abs_cof_bb)
 

@@ -1,7 +1,7 @@
 
 import matplotlib.pylab as plt
 import os
-import ConfigParser
+import configparser
 import numpy as np
 import semiconductor.material.bandgap_intrinsic_models as iBg
 from semiconductor.helper.helper import HelperFunctions

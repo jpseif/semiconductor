@@ -4,8 +4,8 @@ import scipy.constants as const
 
 from semiconductor.general_functions.carrierfunctions import get_carriers
 from semiconductor.material.ni import IntrinsicCarrierDensity as ni
-from mobility import Mobility as Mob
-from ionisation import Ionisation as Ion
+from semiconductor.electrical.mobility import Mobility as Mob
+from semiconductor.electrical.ionisation import Ionisation as Ion
 from semiconductor.helper.helper import HelperFunctions
 
 
@@ -53,18 +53,20 @@ class Resistivity(HelperFunctions):
 
         if np.all(Nid > Nia):
             Nid = self.ion.update_dopant_ionisation(
-                Nid, nxc, impurity=self.cal_dts['dopant'])
+                Nid, self.cal_dts['nxc'], impurity=self.cal_dts['dopant'])
         elif np.all(Nia > Nid):
             Nia = self.ion.update_dopant_ionisation(
                 Nia,
                 nxc=self.cal_dts['nxc'],
                 impurity=self.cal_dts['dopant'])
 
-        ne, nh = get_carriers(Nid, Nia,
-                              nxc=self.cal_dts['nxc'],
-                              temp=self.cal_dts['temp'],
-                              ni_author=self.cal_dts['nieff_author']
-                              )
+        ne, nh = get_carriers(
+            Na=Nia,
+            Nd=Nid,
+            nxc=self.cal_dts['nxc'],
+            temp=self.cal_dts['temp'],
+            ni_author=self.cal_dts['nieff_author']
+        )
 
         mob_e = self.Mob.electron_mobility(nxc=self.cal_dts['nxc'],
                                            Na=self.cal_dts['Na'],
@@ -78,7 +80,7 @@ class Resistivity(HelperFunctions):
 
         return const.e * (mob_e * ne + mob_h * nh)
 
-    def caculate(self, **kwargs):
+    def calculate(self, **kwargs):
         '''
         calculates the resistivity
         '''

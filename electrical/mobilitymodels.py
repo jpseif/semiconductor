@@ -179,9 +179,9 @@ def unified_mobility(vals, Na, Nd, nxc, temp, carrier, **kwargs):
     # the only thing ni is used for, this can be factored out so these values
     # are passed to this function
 
-    ne, nh = GF.get_carriers(Na,
-                             Nd,
-                             nxc,
+    ne, nh = GF.get_carriers(Na=Na,
+                             Nd=Nd,
+                             nxc=nxc,
                              temp=temp)
 
     return 1. / (

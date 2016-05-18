@@ -1,5 +1,5 @@
 import numpy as np
-import ConfigParser
+import configparser
 import os
 import sys
 import scipy.constants as const
@@ -49,7 +49,7 @@ class TabulatedOpticalProperties(HelperFunctions):
         self.ref_ind = self.tri.ref_ind
 
         if self.cal_dts['ext_cof']:
-            self.ext_cof_bb = self.tac.caculate_ext_coef()
+            self.ext_cof_bb = self.tac.calculate_ext_coef()
 
         if common_range:
             # set the values
@@ -178,7 +178,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
                          self.wavelength,
                          self.abs_cof_bb)
 
-    def caculate_ext_coef(self):
+    def calculate_ext_coef(self):
         self.ext_cof_bb = self.abs_cof_bb * self.wavelength / 4 / np.pi
         return self.ext_cof_bb
 

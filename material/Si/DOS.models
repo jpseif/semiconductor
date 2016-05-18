@@ -18,8 +18,10 @@ notes: This parameterisation is obtained from a fit of ni to Eg where Nv and Nc 
 
 [Green1990_full]
 model:Green_full
-mt: .1905 ; times rest electron mass
-ml: .9163 ; times rest electron mass
+; times rest electron mass
+mt: 0.1905
+; times rest electron mass
+ml: 0.9163
 # delta: 0.0441 ;eV
 a: 0.4435870
 b: 0.3609528e-2

@@ -5,7 +5,7 @@ import numpy as np
 from pylab import *
 import os
 import scipy.constants as Const
-from bandgap_intrinsic import IntrinsicBandGap
+from semiconductor.material.bandgap_intrinsic import IntrinsicBandGap
 from semiconductor.helper.helper import HelperFunctions
 from semiconductor.material import ni_models
 
@@ -68,7 +68,7 @@ class IntrinsicCarrierDensity(HelperFunctions):
         if 'author' in kwargs.keys():
             self.change_model(self.cal_dts['author'])
 
-        # if the model required the energy gap, caculate it
+        # if the model required the energy gap, calculate it
         if self.model == 'ni_temp_eg':
             Eg = IntrinsicBandGap(
                 material=self.cal_dts['material'],

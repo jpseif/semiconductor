@@ -36,15 +36,18 @@ model: Cubic_partial
 A0: 1.1700 
 B0: 1.059e-5 
 C0: -6.05e-7
-T0: 190 ; temp limit for 0th coefs
+; temp limit for 0th coefs
+T0: 190 
 A1: 1.1785
 B1: -9.025e-5
 C1: -3.05e-7
-T1: 300 ; temp limit for 1st coefs
+; temp limit for 1st coefs
+T1: 300 
 A2: 1.206 
 B2: -2.73e-4 
 C2: 0
-T2: 415 ; temp limit for 1nd coefs
+; temp limit for 1nd coefs
+T2: 415 
 doi:10.1063/1.345414
 doi2:10.1063/1.1663501
 notes: This is really from Bludau1974, who used wavelenth modulation spectrosopy, with a 

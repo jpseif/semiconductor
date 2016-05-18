@@ -3,8 +3,8 @@
 
 import sys
 
-from bandgap_intrinsic import IntrinsicBandGap
-from bandgap_narrowing import BandGapNarrowing
+from semiconductor.material.bandgap_intrinsic import IntrinsicBandGap
+from semiconductor.material.bandgap_narrowing import BandGapNarrowing
 from semiconductor.helper.helper import HelperFunctions
 
 

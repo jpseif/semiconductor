@@ -2,12 +2,12 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os
-import ConfigParser
+import configparser
 
 from semiconductor.helper.helper import HelperFunctions, change_model
 from semiconductor.general_functions.carrierfunctions import get_carriers
-import radiative_models as radmdls
-import auger_models as augmdls
+import semiconductor.recombination.radiative_models as radmdls
+import semiconductor.recombination.auger_models as augmdls
 
 
 class Intrinsic(HelperFunctions):

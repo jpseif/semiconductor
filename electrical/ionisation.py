@@ -4,7 +4,6 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os
-import configparser
 
 from semiconductor.helper.helper import HelperFunctions
 import semiconductor.electrical.impurity_ionisation_models  as IIm

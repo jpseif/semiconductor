@@ -5,7 +5,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os
-import configparser
+import ConfigParser as configparser
 import semiconductor.electrical.mobilitymodels as model
 
 from semiconductor.helper.helper import HelperFunctions

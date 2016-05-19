@@ -5,7 +5,6 @@ import numpy as np
 import matplotlib.pylab as plt
 import sys
 import os
-import configparser
 
 from semiconductor.helper.helper import HelperFunctions
 import semiconductor.material.densityofstates_models as dos_models

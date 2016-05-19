@@ -82,13 +82,14 @@ def Cubic_partial(vals, temp):
     Eg = np.copy(temp)
 
     for i in [2, 1, 0]:
-        index = temp < vals['t' + str(i)]
+
+        index = temp < float(vals['t' + str(i)])
 
         Eg[index] = vals['a' + str(i)] + \
             vals['b' + str(i)] * temp[index] + \
             vals['c' + str(i)] * temp[index]**2.
     if np.any(temp > vals['t2']):
-        print '\nWarning:\n\tIntrinsic bandgap does not cover this temperature range\n'
+        print ('\nWarning:\n\tIntrinsic bandgap does not cover this temperature range\n')
         index = temp > vals['t2']
         Eg[index] = vals['a2'] + \
             vals['b2'] * temp[index] + \

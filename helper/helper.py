@@ -4,14 +4,7 @@
 import matplotlib.pylab as plt
 import numpy as np
 import json
-import ConfigParser
-
-"""
-To do:
-
-    Need to fix the check_doping function
-"""
-
+import configparser
 
 def change_model(Models, author=None):
 
@@ -23,12 +16,11 @@ def change_model(Models, author=None):
 
     del vals['model']
 
-    for k, v in vals.iteritems():
+    for k, v in vals.items():
 
         # checks if float or list
         try:
             vals[k] = float(v)
-
         except:
             try:
                 vals[k] = [float(i) for i in v.split(';')]
@@ -41,7 +33,7 @@ def change_model(Models, author=None):
 class HelperFunctions():
 
     def _int_model(self, fname):
-        self.Models = ConfigParser.ConfigParser()
+        self.Models = configparser.ConfigParser()
         self.Models.read(fname)
 
     def _update_dts(self, **kwargs):
@@ -139,24 +131,9 @@ class HelperFunctions():
 
         # prints no models available
         if not author_list:
-            print 'No authors for this models available'
+            print('No authors for this models available')
 
         return author_list
-
-    def check_doping(self, Na, Nd):
-        '''
-        checks that Na*Nd is at least bigger than ni^2
-        then increases it
-
-        This is rubish
-        '''
-
-        # if np.any(Na * Nd) < self.ni**2:
-            # if Na > Nd:
-                # Nd = self.ni**2 / Na
-            # else:
-                # Nd = self.ni**2 / Na
-        return Na, Nd
 
     def print_model_notes(self, model=None):
         '''
@@ -172,12 +149,12 @@ class HelperFunctions():
             models = [model]
 
         for mdl in models:
-            print '{0}:\t'.format(mdl),
+            print('{0}:\t'.format(mdl),)
             try:
-                print
-                print dict(self.Models.items(mdl))['notes']
+                # print
+                print(dict(self.Models.items(mdl))['notes'])
             except:
-                print 'No notes'
+                print('No notes')
 
 
 class Webplotdig_JSONreader:

@@ -16,13 +16,13 @@ def Roosbroeck(vals, nxc, nh0, ne0, B, **kwargs):
     ne = ne0 + nxc
 
     R = B * (ne * nh - ne0 * nh0)
-    print R
+    # print R
     return nxc / R
 
 
 def Roosbroeck_with_screening_B(vals, nxc, doping, temp, Blow):
     """
-    This is the roosbroeck model that accounts for many things, 
+    This is the roosbroeck model that accounts for many things,
     such as band gap narrowing.
     It needs temperature, nxc, doping and blow to be defined
     """

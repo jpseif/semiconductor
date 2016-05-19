@@ -75,6 +75,8 @@ class SRH(HelperFunctions):
         '''
         self._update_dts(**kwargs)
 
+        # TO DO:
+        # this check does not work
         if 'defect' in kwargs:
             self.change_model(self.cal_dts['defect'])
             self._cal_taun_taup()

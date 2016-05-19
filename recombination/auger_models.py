@@ -213,7 +213,7 @@ def Altermatt1997_check(vals, func, fig, ax):
     This is incomplete
     """
 
-    print 'Have not placed in check data for Altermatt\'s model yet'
+    print ('Have not placed in check data for Altermatt\'s model yet')
     nxc = np.logspace(13, 20)
     for Nd in [1e15, 1e18, 1e20]:
 

@@ -4,10 +4,10 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os
-import ConfigParser
+import configparser
 
 from semiconductor.helper.helper import HelperFunctions
-import impurity_ionisation_models as IIm
+import semiconductor.electrical.impurity_ionisation_models  as IIm
 from semiconductor.material.densityofstates import DOS
 import semiconductor.general_functions.carrierfunctions as CF
 
@@ -150,7 +150,7 @@ class Ionisation(HelperFunctions):
                 N_idop = self.update(
                     N_dop, ne, nh, impurity)
         else:
-            print r'Not a valid impurity, returning 100% ionisation'
+            print (r'Not a valid impurity, returning 100% ionisation')
 
         return N_idop
 
@@ -184,7 +184,7 @@ class Ionisation(HelperFunctions):
         data = np.genfromtxt(test_file, delimiter=',', skip_header=1)
 
         for i in range(0, (data.shape[1] + 2) / 2, 2):
-            print i
+            # print i
             plt.plot(
                 data[:, i], data[:, i + 1] * 100, 'r.',
                 label='Digitised data')

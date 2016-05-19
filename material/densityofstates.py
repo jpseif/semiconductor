@@ -5,11 +5,11 @@ import numpy as np
 import matplotlib.pylab as plt
 import sys
 import os
-import ConfigParser
+import configparser
 
 from semiconductor.helper.helper import HelperFunctions
-import densityofstates_models as dos_models
-from bandgap_intrinsic import IntrinsicBandGap as Egi
+import semiconductor.material.densityofstates_models as dos_models
+from semiconductor.material.bandgap_intrinsic import IntrinsicBandGap as Egi
 
 
 class DOS(HelperFunctions):

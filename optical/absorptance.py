@@ -139,13 +139,13 @@ class EscapeProbability():
          in the from
         f(x) =  scale * [A * exp(-x) + B exp(W-x) + C (exp(-x)+D)]
 
-        this paramterisation was also used by 
+        this paramterisation was also used by
         R. Brendel, M. Hirsch, R. Plieninger, and J.H. Werner, IEEE Trans. Electron Devices 43, 1104 (1996).
 
         Please remember this is a 9 variable fit. it should always give a good fit
         """
 
-        # caculated from law of diffraction considering angle of entry
+        # calculated from law of diffraction considering angle of entry
         # theta = gamma  - arcsin(n_air/n_si sin(gamma))
         theta1 = np.pi / 3 * 0
         # the angle light is reflected from the rear into the device
@@ -191,7 +191,7 @@ class EscapeProbability():
         C = T1 * Rb1 * T2 * Rf1 / (1. - Tn * Tn * Rfn * Rbn) / np.cos(thetan)
         D = Tn * Rbn
 
-        print A, B, C, D
+        # print A, B, C, D
 
         xd_W =  self.optics.abs_cof_bb * \
             ((np.ones([self.x.shape[0], self.optics.abs_cof_bb.shape[0]]).T)

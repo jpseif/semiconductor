@@ -6,7 +6,7 @@ model: Si_Schinke2015
 temp: 295
 notes: determined from the combination of ellipometry, spectral luminescence, 
     and spectral response measurements all measured specifcally for this project.
-    The uncertainty in the absorption coefficienct was also caculated
+    The uncertainty in the absorption coefficienct was also calculated
 
 [Schinke2014]
 model: Si_Schinke2014 

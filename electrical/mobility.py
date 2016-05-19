@@ -1,11 +1,14 @@
 #!/usr/local/bin/python
 # UTF-8
-# encoding=utf8  
+# encoding=utf8
 
 import numpy as np
 import matplotlib.pylab as plt
 import os
-import configparser
+try:
+    import ConfigParser as configparser
+except:
+    import configparser
 import semiconductor.electrical.mobilitymodels as model
 
 from semiconductor.helper.helper import HelperFunctions
@@ -36,7 +39,6 @@ class Mobility(HelperFunctions):
 
     def hole_mobility(self, nxc, Na, Nd, **kwargs):
 
-        
         return getattr(model, self.model)(
             self.vals, Na, Nd, nxc, carrier='hole', **kwargs)
 
@@ -81,7 +83,7 @@ def check_klaassen():
                  'b-',
                  label='electron-here')
 
-        print (f_name)
+        print(f_name)
         data = np.genfromtxt(os.path.join(folder, f_name), names=True)
 
         plt.plot(data['deltan'], data['uh'], 'b--',

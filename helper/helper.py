@@ -4,7 +4,11 @@
 import matplotlib.pylab as plt
 import numpy as np
 import json
-import configparser
+
+try:
+    import ConfigParser as configparser
+except:
+    import configparser
 
 def change_model(Models, author=None):
 

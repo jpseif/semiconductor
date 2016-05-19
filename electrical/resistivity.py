@@ -4,8 +4,13 @@ import scipy.constants as const
 
 from semiconductor.general_functions.carrierfunctions import get_carriers
 from semiconductor.material.ni import IntrinsicCarrierDensity as ni
+<<<<<<< HEAD
 from semiconductor.electrical.mobility import Mobility as Mob
 from semiconductor.electrical.ionisation import Ionisation as Ion
+=======
+from semiconductor.electrical.mobility  import Mobility as Mob
+from semiconductor.electrical.ionisation  import Ionisation as Ion
+>>>>>>> 967bc03a1c25e9dbcc31735c10ddf2f29867f5e5
 from semiconductor.helper.helper import HelperFunctions
 
 

@@ -5,6 +5,15 @@ import matplotlib.pylab as plt
 import numpy as np
 import json
 import configparser
+<<<<<<< HEAD
+=======
+
+"""
+To do:
+
+    Need to fix the check_doping function
+"""
+>>>>>>> 967bc03a1c25e9dbcc31735c10ddf2f29867f5e5
 
 
 def change_model(Models, author=None):
@@ -136,6 +145,24 @@ class HelperFunctions():
 
         return author_list
 
+<<<<<<< HEAD
+=======
+    def check_doping(self, Na, Nd):
+        '''
+        checks that Na*Nd is at least bigger than ni^2
+        then increases it
+
+        This is rubish
+        '''
+
+        # if np.any(Na * Nd) < self.ni**2:
+        # if Na > Nd:
+        # Nd = self.ni**2 / Na
+        # else:
+        # Nd = self.ni**2 / Na
+        return Na, Nd
+
+>>>>>>> 967bc03a1c25e9dbcc31735c10ddf2f29867f5e5
     def print_model_notes(self, model=None):
         '''
          prints the notes about the modells

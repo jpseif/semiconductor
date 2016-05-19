@@ -6,7 +6,6 @@ import numpy as np
 import json
 import configparser
 
-
 def change_model(Models, author=None):
 
     author = author or Models.get('default', 'model')

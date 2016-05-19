@@ -5,10 +5,12 @@
 import numpy as np
 import matplotlib.pylab as plt
 import os
+
 try:
     import ConfigParser as configparser
 except:
     import configparser
+
 import semiconductor.electrical.mobilitymodels as model
 
 from semiconductor.helper.helper import HelperFunctions

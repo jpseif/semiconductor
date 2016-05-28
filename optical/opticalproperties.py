@@ -21,19 +21,24 @@ class TabulatedOpticalProperties(HelperFunctions):
 
     def __init__(self, **kwargs):
         self._update_dts(**kwargs)
+        self._update_links()
 
     def _update_links(self):
+        print('here')
         self.tac = TabulatedAbsorptionCoefficient(
             material=self.cal_dts['material'],
             author=self.cal_dts['abs_author'],
             temp=self.cal_dts['temp'],
         )
 
-        self.tri = TabulatedRefractiveIndex(
-            material=self.cal_dts['material'],
-            author=self.cal_dts['ref_author'],
-            temp=self.cal_dts['temp'],
-        )
+        try:
+            self.tri = TabulatedRefractiveIndex(
+                material=self.cal_dts['material'],
+                author=self.cal_dts['ref_author'],
+                temp=self.cal_dts['temp'],
+            )
+        except:
+            print('No reactive index data found')
 
         self.load()
 
@@ -43,10 +48,14 @@ class TabulatedOpticalProperties(HelperFunctions):
         if 'author' in ''.join(kwargs.keys()):
             self._update_links()
 
-        self.tri.load()
+        try:
+            self.tri.load()
+            self.ref_ind = self.tri.ref_ind
+        except:
+            pass
+
         self.tac.load()
         self.abs_cof_bb = self.tac.abs_cof_bb
-        self.ref_ind = self.tri.ref_ind
 
         if self.cal_dts['ext_cof']:
             self.ext_cof_bb = self.tac.calculate_ext_coef()
@@ -57,7 +66,10 @@ class TabulatedOpticalProperties(HelperFunctions):
             self.energy = self.tac.energy
 
             # update the refractive index
-            self.ref_ind = self.tri.ref_ind_at_wls(self.wavelength)
+            try:
+                self.ref_ind = self.tri.ref_ind_at_wls(self.wavelength)
+            except:
+                pass
 
             # remove unused variables
             self.wl_abs_cof_bb = None
@@ -136,7 +148,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
                                                       self.cal_dts['temp'],
                                                       self.vals['temp'])
                 except:
-                    print (
+                    print(
                         '''Warning:'''
                         '''\n\tNo tabulated data, or temp cofs for'''
                         ''' {0:.0f} K'''.format(self.cal_dts['temp']) +
@@ -154,7 +166,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
                 self.abs_cof_bb = data[name]
             else:
                 # if doesn't work just use the stipulated default
-                print (
+                print(
                     'Warning:'
                     '\n\tTabulated data at {0} K does not exist.'.format(
                         self.cal_dts['temp']) +
@@ -244,7 +256,7 @@ class TabulatedRefractiveIndex(HelperFunctions):
                                                self.cal_dts['temp'],
                                                self.vals['temp'])
             except:
-                print (
+                print(
                     'Temp Warning:'
                     '\tNo tabulated data, or temp cofs for {0:.0f} K'.format(
                         self.cal_dts['temp']) +

@@ -38,12 +38,12 @@ class SpontaneousRadiativeMeission(object):
 
         if optical_properties is None:
             self.optics = opticalproperties.TabulatedOpticalProperties(
-                self.material)
+                material=self.material)
         else:
             self.optics = optical_properties
 
         if intrinsic_carrier_concentration is None:
-            self.ni = ni.IntrinsicCarrierDensity(self.material)
+            self.ni = ni.IntrinsicCarrierDensity(material=self.material)
             self.ni.update()
         else:
             self.ni = intrinsic_carrier_concentration
@@ -120,7 +120,10 @@ class SpontaneousRadiativeMeission(object):
             QF_split = self.defult_QF_split
 
         # speed of light in medium
-        c = Const.c / self.optics.ref_ind
+        try:
+            c = Const.c / self.optics.ref_ind
+        except:
+            c = Const.c
 
         # Density of state of phtons
         D = E**2 / c**3 * 2**2 * Const.pi / Const.h**3
@@ -201,7 +204,7 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
             self.doping = doping
 
         if deltan.shape != self.x.shape:
-            print ('number of x-values not equal to delta n values')
+            print('number of x-values not equal to delta n values')
 
         self.np = self.doping * deltan
 
@@ -268,15 +271,15 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
 
         if self.np.shape == self.x.shape:
             # print self.np[0], self.ni
-# print self.rsp.shape, self.escapeprob.shape, self.ni.ni, self.np.shape,
-# '\n\n'
+            # print self.rsp.shape, self.escapeprob.shape, self.ni.ni, self.np.shape,
+            # '\n\n'
             self.Spectral_PL = numpy.trapz((self.rsp * self.escapeprob).T
                                            * self.np / self.ni.ni**2,
                                            self.x,
                                            axis=1)
 
         else:
-            print ('x and np are differnt lengths')
+            print('x and np are differnt lengths')
 
     def calculate_detected_PL(self):
         """

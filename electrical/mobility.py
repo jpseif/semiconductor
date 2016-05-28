@@ -17,37 +17,49 @@ from semiconductor.helper.helper import HelperFunctions
 
 
 class Mobility(HelperFunctions):
-    model_file = 'mobility.models'
-    ni = 1e10
-    temp = 300
+    author_list = 'mobility.models'
 
-    def __init__(self, material='Si', author=None, temp=300.):
-        self.Models = configparser.ConfigParser()
-        self.material = material
+    cal_dts = {
+        'material': 'Si',
+        'temp': 300,
+        'author': None,
+        'Na': 1e16,
+        'Nd': 0,
+        'nxc': 1e10,
+    }
 
-        constants_file = os.path.join(
+    def __init__(self, **kwargs):
+
+        # update any values in cal_dts
+        # that are passed
+        self._update_dts(**kwargs)
+
+        # get the address of the authors list
+        author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            material,
-            self.model_file)
+            self.cal_dts['material'],
+            self.author_list)
 
-        self.Models.read(constants_file)
+        # get the models ready
+        self._int_model(author_file)
 
-        self.change_model(author)
+        # initiate the first model
+        self.change_model(self.cal_dts['author'])
 
-    def electron_mobility(self, nxc, Na, Nd, **kwargs):
-
+    def electron_mobility(self,  **kwargs):
+        self._update_dts(**kwargs)
         return getattr(model, self.model)(
-            self.vals, Na, Nd, nxc, carrier='electron', **kwargs)
+            self.vals, Na=self.cal_dts['Na'], Nd=self.cal_dts['Nd'], nxc=self.cal_dts['nxc'], carrier='electron', temp=self.cal_dts['temp'])
 
-    def hole_mobility(self, nxc, Na, Nd, **kwargs):
-
+    def hole_mobility(self, **kwargs):
+        self._update_dts(**kwargs)
         return getattr(model, self.model)(
-            self.vals, Na, Nd, nxc, carrier='hole', **kwargs)
+            self.vals, Na=self.cal_dts['Na'], Nd=self.cal_dts['Nd'], nxc=self.cal_dts['nxc'], carrier='hole', temp=self.cal_dts['temp'])
 
-    def mobility_sum(self, nxc, Na, Nd, **kwargs):
-
-        return self.hole_mobility(nxc, Na, Nd, **kwargs) +\
-            self.electron_mobility(nxc, Na, Nd, **kwargs)
+    def mobility_sum(self,  **kwargs):
+        self._update_dts(**kwargs)
+        return self.hole_mobility() +\
+            self.electron_mobility()
 
     def check_models(self):
         check_klaassen()

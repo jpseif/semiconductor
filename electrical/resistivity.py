@@ -1,6 +1,7 @@
 
 import numpy as np
 import scipy.constants as const
+import scipy.optimize as opt
 
 from semiconductor.general_functions.carrierfunctions import get_carriers
 from semiconductor.material.ni import IntrinsicCarrierDensity as ni
@@ -19,7 +20,8 @@ class Resistivity(HelperFunctions):
         'dopant': 'boron',
         'Na': 1e16,
         'Nd': 0,
-        'nxc': 1e10
+        'nxc': 1e10,
+        'resistivity': 1.
     }
 
     def __init__(self, **kwargs):
@@ -43,6 +45,9 @@ class Resistivity(HelperFunctions):
         return self.Mob.model, self.ni.model, self.ion.model
 
     def _conductivity(self, **kwargs):
+
+        self._update_dts(**kwargs)
+        self._update_links()
 
         Nid, Nia = get_carriers(nxc=0,
                                 Na=self.cal_dts['Na'],
@@ -78,6 +83,7 @@ class Resistivity(HelperFunctions):
                                        Nd=self.cal_dts['Nd'],
                                        temp=self.cal_dts['temp'])
 
+        # print (ne, nh)
         return const.e * (mob_e * ne + mob_h * nh)
 
     def calculate(self, **kwargs):
@@ -85,9 +91,81 @@ class Resistivity(HelperFunctions):
         calculates the resistivity
         '''
 
+        self.cal_dts['resistivity'] = 1. / self._conductivity(**kwargs)
+
+        return self.cal_dts['resistivity']
+
+class DarkConductance(HelperFunctions):
+    cal_dts = {
+        'material': 'Si',
+        'temp': 300,
+        'mob_author': None,
+        'nieff_author': None,
+        'ionis_author': None,
+        'dopant_type': 'p',
+        'nxc': 1,
+        'dark_resistivity': 1.
+    }
+
+    def __init__(self, **kwargs):
+        self._update_dts(**kwargs)
+
+    def _update_links(self):
+
+        # setting downstream values, this should change from initalisation
+        # to just updating through the update function
+        self.Mob = Mob(material=self.cal_dts['material'],
+                       author=self.cal_dts['mob_author'],
+                       temp=self.cal_dts['temp'])
+
+    def query_used_authors(self):
+        return self.Mob.model, self.ni.model, self.ion.model
+
+    def dark_resistivity2doping(self, dark_resistivity, **kwargs):
+        '''
+        cacluate the number of ionised dopoants
+        given the resistivity of the sample in the dark
+        '''
+
+        return self.dark_conductivity2doping(1./dark_resistivity, **kwargs)
+
+    def dark_conductivity2doping(self, dark_conductivity, **kwargs):
+        '''
+        cacluate the number of ionised dopoants
+        given the conductivity of the sample in the dark
+        '''
+
         self._update_dts(**kwargs)
         self._update_links()
 
-        res = 1. / self._conductivity(**kwargs)
+        mob_e = self.Mob.electron_mobility(nxc=1,
+                                           Na=0,
+                                           Nd=0,
+                                           temp=self.cal_dts['temp']
+                                           )
+        # # get an inital guess
+        Na = dark_conductivity/const.e / mob_e
 
-        return res
+        res = Resistivity(**self.cal_dts)
+
+        def cal_dop(N, dopant_type,dark_conductivity):
+            if dopant_type =='p':
+                Na = N
+                Nd = 0
+            elif dopant_type =='n':
+                Na = 0
+                Nd = N
+            cond =  (res._conductivity(Na=Na, Nd=Nd))
+            return  cond - dark_conductivity
+
+
+
+        dop= (opt.newton(cal_dop,
+         x0 =Na,
+          tol=0.001,
+           args=(self.cal_dts['dopant_type'],dark_conductivity),
+           ))
+
+
+        # print ("Error:",cal_dop(dop,self.cal_dts['dopant_type'],dark_conductivity))
+        return dop

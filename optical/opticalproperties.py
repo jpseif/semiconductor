@@ -22,9 +22,9 @@ class TabulatedOpticalProperties(HelperFunctions):
     def __init__(self, **kwargs):
         self._update_dts(**kwargs)
         self._update_links()
+        self.load()
 
     def _update_links(self):
-        print('here')
         self.tac = TabulatedAbsorptionCoefficient(
             material=self.cal_dts['material'],
             author=self.cal_dts['abs_author'],
@@ -40,21 +40,20 @@ class TabulatedOpticalProperties(HelperFunctions):
         except:
             print('No reactive index data found')
 
-        self.load()
 
     def load(self, common_range=True, **kwargs):
         self._update_dts(**kwargs)
 
-        if 'author' in ''.join(kwargs.keys()):
+        if 'author' or 'material' in ''.join(kwargs.keys()):
             self._update_links()
 
         try:
-            self.tri.load()
+            self.tri.load(temp=self.cal_dts['temp'])
             self.ref_ind = self.tri.ref_ind
         except:
             pass
 
-        self.tac.load()
+        self.tac.load(temp=self.cal_dts['temp'])
         self.abs_cof_bb = self.tac.abs_cof_bb
 
         if self.cal_dts['ext_cof']:
@@ -126,6 +125,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
         # check to see if its set here out outside of this function
         self._update_dts(**kwargs)
 
+        # if change the model, update it.
         if 'author' in kwargs.keys():
             self.change_model(self.cal_dts['author'])
 
@@ -139,6 +139,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
         self.wavelength, self.energy = data[
             'wavelength'], data['energy']
 
+        # if the temp is a float
         if type(self.vals['temp']) is float:
             self.abs_cof_bb = data['alpha']
             if self.cal_dts['temp'] != self.vals['temp']:
@@ -159,6 +160,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
                     )
 
         else:
+
             # this happens when there are several alpha values, so lets try a
             # specif temp
             name = 'alpha_{0:.0f}K'.format(self.cal_dts['temp'])
@@ -179,7 +181,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
                 self.abs_cof_bb = data[name]
 
         try:
-            # get the uncertainty
+            # try to get the uncertainty
             self.U = data['U']
 
         except:
@@ -281,7 +283,10 @@ class TabulatedRefractiveIndex(HelperFunctions):
 
 
 def _temp_power_law(ref_vairable, coef, temp, ref_temp):
-    return ref_vairable * np.power(temp / ref_temp, coef)
+    '''
+    The coefficient is assumed to be times by 1e-4
+    '''
+    return ref_vairable * np.power(temp / ref_temp, coef*1e-4*ref_temp)
 
 
 class ModelledAbsorptionCoefficient(HelperFunctions):
@@ -367,7 +372,7 @@ class ModelledAbsorptionCoefficient(HelperFunctions):
         inputs:
             f is the photon energy in hz
             Eth is the threshold energy in eV
-            A is the probability coefficient 
+            A is the probability coefficient
             power is the power its applied to
 
         '''
@@ -414,7 +419,7 @@ class ModelledAbsorptionCoefficient(HelperFunctions):
 
     def alpha_indirect(self, Eg, Ephonon, A, T):
         """
-        The change in phonon absorption probability between emission 
+        The change in phonon absorption probability between emission
         and absorption is just e^{E_p / kt}, taken from MacFarlane
         """
 

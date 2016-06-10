@@ -16,11 +16,11 @@ class BandGapNarrowing(HelperFunctions):
     '''
     Bang gap narrowing accounts for a reduction in bandgap that
     occurs as a result from no thermal effects. These include:
-        doping 
+        doping
         excess carrier density (non thermal distribution)
 
-    As it depends ont eh excess carriers, it also depends on the 
-    intrinsic carrier density. 
+    As it depends ont eh excess carriers, it also depends on the
+    intrinsic carrier density.
     Note: I currently believed that the impact of dopants
         is much larger than the impact of the carrier distribution
     '''

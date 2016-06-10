@@ -86,6 +86,7 @@ def Schenk(vals, Nd, Na, ne, nh, temp, **args):
     delta_EV = ridged_shift(vals, n_sum, n_p, nh, 'h')\
         + ionic_shift(vals, n_sum, n_p, n_ionic, 'h')
 
+    # print(delta_Ec, delta_EV)
     return delta_Ec + delta_EV
 
 

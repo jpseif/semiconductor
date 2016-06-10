@@ -4,6 +4,7 @@
 import matplotlib.pylab as plt
 import numpy as np
 import json
+import inspect
 try:
     import ConfigParser as configparser
 except:
@@ -51,6 +52,18 @@ class HelperFunctions():
         for item in items:
             self.cal_dts[item] = kwargs[item]
 
+    def _update_vars(self, **kwargs):
+        '''
+        assignes the inputted values that are requrired,
+        befor calling a function to pass it to the downstream
+        classes
+        '''
+        self.__dict__.update(kwargs)
+
+    def caculation_details(self):
+        return {key: value for key, value in self.__dict__.items()
+                if not key.startswith('_') and not callable(key)}
+
     def change_model(self, author, Models=None):
 
         Models = Models or self.Models
@@ -65,7 +78,7 @@ class HelperFunctions():
                  the name of the specific function used to update the author
                 i.e 'update_Eg'
             **kwargs:
-                variables to be passed to the update function. 
+                variables to be passed to the update function.
         '''
         fig, ax = plt.subplots(1)
         for model in self.available_models():
@@ -81,7 +94,7 @@ class HelperFunctions():
     def plotting_colours(self, n_colours, fig, ax, repeats=None):
         '''
         a function to help with plotting
-        Lets you get a unique range of colours, 
+        Lets you get a unique range of colours,
         and have repeats of colours
         '''
 
@@ -107,11 +120,12 @@ class HelperFunctions():
     def available_models(self, Filter=None, Filter_value=None):
         '''
         Returns a list of all authors for a given parameter this a class of.
-        The returned list can be filtered in field "Filter" by the value "Filter_value"
+        The returned list can be filtered in field "Filter" by the value
+        "Filter_value"
 
         inputs: (all optional)
             Filter: (str)
-                The model field that is to be checked        
+                The model field that is to be checked
             Filter_value:
                 The value to be checked for
         returns:
@@ -143,8 +157,9 @@ class HelperFunctions():
         '''
          prints the notes about the modells
          inputs:
-            model: str 
-                prints notes on model, if not model is seltecte prints all model notes
+            model: str
+                prints notes on model, if not model is seltecte prints
+                all model notes
         '''
 
         if model is None:
@@ -163,7 +178,7 @@ class HelperFunctions():
 
 class Webplotdig_JSONreader:
     '''
-    A class to handel the JSON output from 
+    A class to handel the JSON output from
         http://arohatgi.info/WebPlotDigitizer/
     It is taken from here
         https://github.com/ankitrohatgi/wpd-python
@@ -180,7 +195,8 @@ class Webplotdig_JSONreader:
         return self.data['wpd']['dataSeries'][index]
 
     def getDatasetByName(self, name):
-        return [x for x in self.data['wpd']['dataSeries'] if x['name'] == name][0]
+        return [x for x in self.data['wpd']['dataSeries']
+                if x['name'] == name][0]
 
     def getDatasetNames(self):
         return [x['name'] for x in self.data['wpd']['dataSeries']]

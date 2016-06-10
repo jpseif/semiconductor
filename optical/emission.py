@@ -1,30 +1,26 @@
-import numpy
-from pylab import *
+import numpy as np
+from matplotlib.pylab import *
 import sys
 import os
-import scipy.constants as Const
-
-sys.path.append('../material')
-sys.path.append('./Si')
+import scipy.constants as const
 
 import semiconductor.material.ni as ni
 import semiconductor.optical.opticalproperties as opticalproperties
 import semiconductor.optical.absorptance as absorptance
+from semiconductor.helper.helper import HelperFunctions
+
+import inspect
 
 
-class SpontaneousRadiativeMeission(object):
+class SpontaneousRadiativeEmission(HelperFunctions):
 
     """
-    This class calculates the spectral spontaneous radiative emisison from the genralised planks law per wavelength or per photon interval
+    This class calculates the spectral spontaneous radiative emisison from
+    the genralised planks law per wavelength or per photon interval
     Currents it takes in silicons properties by defult_QF_split
     """
 
-    defult_QF_split = .1 * Const.e
-
-    def __init__(self, material='Si',
-                 optical_properties=None,
-                 intrinsic_carrier_concentration=None,
-                 temp=None):
+    def __init__(self, **kwargs):
         """
         Can provide a specific instance of:
             A material. then it will attempt to look up the optical constants
@@ -34,132 +30,137 @@ class SpontaneousRadiativeMeission(object):
             optical properties  or  ni module is provided
             These will then be used
         """
-        self.material = material
+        self.material = 'Si'
+        self.ni_author = None
+        self.temp = 300.
+        self.optics_abs_author = 'Green2008'
+        self.optics_ref_author = 'Green2008'
 
-        if optical_properties is None:
-            self.optics = opticalproperties.TabulatedOpticalProperties(
-                material=self.material)
-        else:
-            self.optics = optical_properties
+        self._update_vars(**kwargs)
+        self._update_links()
 
-        if intrinsic_carrier_concentration is None:
-            self.ni = ni.IntrinsicCarrierDensity(material=self.material)
-            self.ni.update()
-        else:
-            self.ni = intrinsic_carrier_concentration
+    def _update_links(self):
+        '''
+        updates the models used, or takes a passed class
+        '''
 
-        if temp is None:
-            self.temp = 300.
-        else:
-            self.temp = temp
+        self._optics = opticalproperties.TabulatedOpticalProperties(
+            material=self.material, temp=self.temp,
+            abs_author=self.optics_abs_author,
+            ref_author=self.optics_ref_author)
+        self._ni = ni.IntrinsicCarrierDensity(material=self.material,
+                                              author=self.ni_author,
+                                              temp=self.temp)
 
-        self.optics.load(temp=temp)
-
-    def blackbody_photon_per_wavelength(self, emn_wavelegnth=None, temp=None):
+    def blackbody_photon_per_wavelength(self, emn_wavelegnth=None, **kwargs):
         """
-        Returns photon emission per wavelength interval per solid angle for a black body emission at:
-         temperature T (can be provide)
-         for wavelengths  (entered as nm)
+        Returns photon emission per wavelength interval per solid angle for a
+        black body emission.
 
         sometimes is is obsrved is with a factor of 4 pi,
         this is when integrated for emission in all direction
 
+        input:
+            wavelength: (np array)
+                    wavelength in nm
+            kwargs: (optional)
+                anything returned by the cal_dts function
+
         Currently:
          1. I divided by 10000, for some reaon? I have temp commented it out,
-         2.  I have no just multiplied by 1000 for NO reason
+         2. I have no just multiplied by 1000 for NO reason
         """
 
         if emn_wavelegnth is None:
-            emn_wavelegnth = self.optics.wavelength
+            emn_wavelegnth = self._optics.wavelength
+        # wavelength to meters
         emn_wavelegnth = emn_wavelegnth * 1e-9
 
-        if temp is None:
-            temp = self.temp
+        return 2 * const.c / emn_wavelegnth**4 * 1. / (
+            np.exp(const.h * const.c / emn_wavelegnth / const.k / self.temp) -
+            1.) * 1000
 
-        return 2 * Const.c / emn_wavelegnth**4 * 1. / (np.exp(Const.h * Const.c / emn_wavelegnth / Const.k / temp) - 1.) * 1000
-
-    def update_tempature(self, temp):
-        self.temp = temp
-        self.change_temp_Green2008()
-        self.ni.temp = self.temp
-
-    def genralised_planks_PerWavelength_Carriers(self, np=None, temp=None):
+    def genralised_planks_PerWavelength_Carriers(self, np=1e16, **kwargs):
         """
         generalised planks law.
         Provides emitted photons per wavelength interval
-        Uses the format outlined by green`
+        Uses the format outlined by green
+
+        inputs:
+                ni (float, optional):
+                    the product of carriers in cm^6
+        returns:
+                The black body emission spectrum
         """
-        if temp is None:
-            temp = self.temp
+        if bool(kwargs):
+            self._update_vars(**kwargs)
+            self._update_links()
 
         # black body here is per solid angle
-        BB = self.blackbody_photon_per_wavelength(temp=temp)
+        BB = self.blackbody_photon_per_wavelength(temp=self.temp)
 
         # The PL spectrum with no QF splitting
-        self.rsp_thermal = (
-            BB * self.optics.abs_cof_bb) / self.optics.ref_ind**2
+        rsp_thermal = (
+            BB * self._optics.abs_cof_bb) / self._optics.ref_ind**2
 
-        if np is None:
-            self.rsp = self.rsp_thermal
-        else:
-            self.rsp = self.rsp_thermal * (np) / self.ni.update()**2
-        # The spectrum with QF splitting
+        return rsp_thermal * ((np) / self._ni.update()**2)
 
-    def genralised_planks_PerEnergy(self, QF_split=False, temp=None):
+    def genralised_planks_PerEnergy(self, QF_split=0.1, **kwargs):
         """
         generalised planks law.
         Provides emitted photons per energy interval
         Uses the traditional form
+
+        inputs:
+                QF_split (float, optional):
+                    Quasi fermi energly level splitting in eV
+        returns:
+                The black body emission spectrum
         """
-        if temp is None:
-            temp = self.temp
 
-        E = Const.h * Const.c / (self.optics.wavelength * 1e-9)
+        if bool(kwargs):
+            self._update_vars(**kwargs)
+            self._update_links()
 
-        if not QF_split:
-            QF_split = self.defult_QF_split
+        QF_split *= const.e
+
+        E = const.h * const.c / (self._optics.wavelength * 1e-9)
 
         # speed of light in medium
         try:
-            c = Const.c / self.optics.ref_ind
+            c = const.c / self._optics.ref_ind
         except:
-            c = Const.c
+            c = const.c
 
         # Density of state of phtons
-        D = E**2 / c**3 * 2**2 * Const.pi / Const.h**3
+        D = E**2 / c**3 * 2**2 * const.pi / const.h**3
 
-        # A note that in Gesikers phd he droped from the denumerator
-        # The spectrum with QF=0 splitting
-        self.rsp_thermal = self.optics.abs_cof_bb * c * D / (
-            numpy.exp(E / Const.k / self.temp) - 1)
-
+        # Note that in Gesikers phd he droped from the denumerator
         # The spectrum with QF splitting
-        self.rsp = self.optics.abs_cof_bb * c * D / (
-            numpy.exp(E / Const.k / self.temp) *
-            numpy.exp(-QF_split / Const.k / self.temp) - 1
+        return self._optics.abs_cof_bb * c * D / (
+            np.exp(E / const.k / self.temp) *
+            np.exp(-QF_split / const.k / self.temp) - 1
         )
 
-    def genralised_planks_PerWavelength(self, QF_split=False, temp=None):
+    def genralised_planks_PerWavelength(self, **kwargs):
         """
         generalised planks law.
         Provides emitted photons per wavelength interval
         Is just an adjustedment to the energy interval expression
         """
-        if temp is None:
-            temp = self.temp
+
+        if bool(kwargs):
+            self._update_vars(**kwargs)
+            self._update_links()
 
         # we just need to multip the per energy by the derivative below
-
-        dEdwl = Const.h * Const.c / (self.optics.wavelength * 1e-9)**2
-
-        self.genralised_planks_PerEnergy(QF_split)
+        dEdwl = const.h * const.c / (self._optics.wavelength * 1e-9)**2
 
         # Adjust the values
-        self.rsp *= dEdwl
-        self.rsp_thermal *= dEdwl
+        return self.genralised_planks_PerEnergy(**kwargs) * dEdwl
 
 
-class Simulated_PL_emission(SpontaneousRadiativeMeission):
+class luminescence_emission(HelperFunctions):
 
     """
     A class that simualted the PL emitted by a device
@@ -174,26 +175,65 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
                         'textured': 'double_side_lambertian'}
     PL_Dection_side_depth = {'rear': 'Escape_rear',
                              'front': 'Escape_front'}
-    wafer_opitcs = 'polished'
-    DetectionSide = 'front'
 
-    alpha_version = 'Schinke2015'
+    def __init__(self, **kwargs):
 
-    def __init__(self, material='Si', optical_constants=None, excess_carriers_array=None, width=None):
-        super(Simulated_PL_emission, self).__init__()
+        self.wafer_opitcs = 'polished'
+        self.DetectionSide = 'front'
+        # self.alpha_version = 'Schinke2015'
+        self.material = 'Si'
+        self.temp = 300.  # temp in kelvin
+        self.width = 0.018  # width in cm
+        self.ni_author = None  # author of intrinsic carrier density
+        self.optics_abs_author = 'Green2008'
+        self.optics_ref_author = 'Green2008'
+        self.nxc = None  # the number of excess carrier with depth
+        self.doping = 1e16  # the doping in cm^-3
+        self._index = None
 
-        if width is None:
-            width = 0.018  # in cm
+        self._update_vars(**kwargs)
+        self._update_x_dist()
+        self._update_links()
 
-        if excess_carriers_array is None:
-            self.x = np.linspace(0, width, 100)  # cm
-            self.doping = 1e16                   # cm^-3
-            self.np = np.ones(self.x.shape) * 1e12 * self.doping  # cm^-6
+    def _update_x_dist(self):
+        '''
+        updates the distance
+        '''
+        self.nxc = np.ones(10)
+        self._x = np.linspace(0, self.width, self.nxc.shape[0])
 
-        self.Esc = absorptance.EscapeProbability(
-            material=material, optical_constants=optical_constants, x=self.x)
+    def _update_links(self):
+        '''
+        A function where the links to other
+        instances's is completely refreshed.
+        '''
+        self._sre = SpontaneousRadiativeEmission(
+            temp=self.temp,
+            optics_abs_author=self.optics_abs_author,
+            optics_ref_author=self.optics_ref_author,
+            material=self.material,
+            ni_author=self.ni_author,
+            )
 
-    #     self.initalise_EmittedPL()
+        # I got lasy, so i'm using the previous classes stuff
+        self._optics = self._sre._optics
+
+        if self._index is None:
+            self._index = self._optics.wavelength > 0
+
+        self._optics.wavelength = self._optics.wavelength[self._index]
+        self._optics.abs_cof_bb = self._optics.abs_cof_bb[self._index]
+        self._optics.ref_ind = self._optics.ref_ind[self._index]
+
+        self._sre._optics = self._optics
+
+        self._esc = absorptance.EscapeProbability(
+            material=self.material,
+            x=self._x)
+
+        self._esc._optics = self._optics
+
+        self._update_escape()
 
     def update_carrierdensity(self, deltan, doping=None):
         """
@@ -208,98 +248,76 @@ class Simulated_PL_emission(SpontaneousRadiativeMeission):
 
         self.np = self.doping * deltan
 
-    def initalise_EmittedPL(self, temp=None, wl_min=None, wl_max=None):
+    def limit_wavelegnths(self, wl_min=None, wl_max=None):
         """
         Used for obtained the basic values required for this caculation
         i.e. optical cosntants, ni, an escape fraction
         """
 
-        self.optics.load()
+        self._index = self._optics.wavelength > wl_min
+        self._index *= self._optics.wavelength < wl_max
 
-        index = self.optics.wavelength > wl_min
-        index *= self.optics.wavelength < wl_max
-
-        self.optics.wavelength = self.optics.wavelength[index]
-        self.optics.abs_cof_bb = self.optics.abs_cof_bb[index]
-        self.optics.ref_ind = self.optics.ref_ind[index]
-
-        self.ni.update(temp=temp)
-
-        # The wafter thickiness is taken as the last value in the x-direction
-        self.update_escape()
-
-    def update_temperature(self, temp=False):
-        """
-        Used to change the sample termpature,
-        and all constants with temrpature
-        if not provided used the defult value
-        """
-        if not temp:
-            temp = self.temp
-
-        self.temp = temp
-
-        # This updates the other classes, need to update
-        # The optics
-        # ni
-        # Escape
-
-        self.optics.change_temp_Green2008(temp)
-        self.Esc.optics = self.optics
-        self.ni.update()
-        self.update_escape()
-
-    def update_escape(self):
+    def _update_escape(self):
         """
         Can be used to update the escape fraction, no inputs
         """
 
-        self.Esc.optics = self.optics
-        getattr(self.Esc, self.wafer_optics_dic[self.wafer_opitcs])()
+        getattr(self._esc, self.wafer_optics_dic[self.wafer_opitcs])()
 
-        self.escapeprob = getattr(self.Esc,
-                                  self.PL_Dection_side_depth[self.DetectionSide])
+        self._escapeprob = getattr(
+            self._esc,
+            self.PL_Dection_side_depth[self.DetectionSide])
 
-    def calculate_spectral_PL(self):
+    def calculate_spectral(self, **kwargs):
         """
         deteries the spectral PL emitted from a sample
+
+        don't think this is correct at the moment
         """
-        self.genralised_planks_PerWavelength_Carriers()
+        # ensure inputs are good
+        if bool(kwargs):
+            self._update_vars(**kwargs)
+            self._update_x_dist()
+            self._update_links()
+
+        # cacualte the generated PL
+        sre = self._sre.genralised_planks_PerWavelength_Carriers(
+            self._sre._ni.update()**2)
 
         # this is the spectral distribution from each point
         # Normalised to deltan = 1, so we can just multi this by deltan
+        assert self.nxc.shape == self._x.shape, (
+            "nxc is different length to x spacing")
 
-        if self.np.shape == self.x.shape:
-            # print self.np[0], self.ni
-            # print self.rsp.shape, self.escapeprob.shape, self.ni.ni, self.np.shape,
-            # '\n\n'
-            self.Spectral_PL = numpy.trapz((self.rsp * self.escapeprob).T
-                                           * self.np / self.ni.ni**2,
-                                           self.x,
-                                           axis=1)
+        Spectral_PL = np.trapz(
+            (sre * self._escapeprob).T * self.nxc * self.doping /
+            self._sre._ni.update()**2,
+            self._x,
+            axis=1)
 
-        else:
-            print('x and np are differnt lengths')
+        return Spectral_PL
 
-    def calculate_detected_PL(self):
+    def calculate_emitted(self, **kwargs):
         """
         multiples the detected PL by an EQE
         currently this does NOTHING
         """
-        self.calculate_spectral_PL()
+        spectral = self.calculate_spectral(**kwargs)
+        return np.trapz(spectral, self._optics.wavelength)
 
 
 class Alpha_from_PL():
 
     """
-    This class is for given a PL spectrum trying to determine the absorption coefficents
+    This class is for given a PL spectrum trying to
+    determine the absorption coefficents
     """
 
     Temp = 300
     known_alpha = 1
     known_wavelength = 1
-    wavelength_measured = numpy.array([1])
-    PL = numpy.array([1])
+    wavelength_measured = np.array([1])
+    PL = np.array([1])
 
     W = 0.018
     # Dictionaries
@@ -322,12 +340,12 @@ class Alpha_from_PL():
 
     def Guess_alpha(self):
         """
-        Used to align the realtive PL measurement to calibrated alpha at a known wavelength
-        Then does a first guess at to what alpha is
+        Used to align the realtive PL measurement to calibrated alpha at
+        a known wavelength. Then does a first guess at to what alpha is.
         """
 
         self.PL_normtoBB()
-        norm_PL = numpy.interp(
+        norm_PL = np.interp(
             self.known_wavelength, self.wavelength_measured, self.PLnBB)
 
         # Find the proportionality in PL for the known alpha
@@ -340,8 +358,8 @@ class Alpha_from_PL():
         # plt.figure('test')
         # plt.plot(self.x, self.escapeprob[:,0])
         # plt.show()
-        self.CalibrationConstant = norm_PL / self.known_alpha / \
-            numpy.trapz(self.np * self.escapeprob[:, 0], self.x)
+        self.Calibrationconstant = norm_PL / self.known_alpha / \
+            np.trapz(self.np * self.escapeprob[:, 0], self.x)
 
         self.PL_alpha = self.PLnBB / norm_PL * self.known_alpha
 
@@ -357,7 +375,8 @@ class Alpha_from_PL():
 
     def Iterate_alpha(self, n=10):
         """
-        A function (not verified) to determine determine alpha from a PL spectrum itterativly
+        A function (not verified) to determine determine alpha from a PL
+        spectrum itterativly
 
         Does the following itteration n times:
 
@@ -366,7 +385,8 @@ class Alpha_from_PL():
 
 
         a note:
-        Kramers Kronig could be used here to provide a relationship for how alpha should behave
+        Kramers Kronig could be used here to provide a relationship for how
+        alpha should behave
         "http://www.doria.fi/bitstream/handle/10024/96800/Conventional%20and%20nonconventional%20Kramers-Kronig%20analysis%20in%20optical%20spectroscopy.pdf?sequence=3"
         """
 
@@ -376,12 +396,12 @@ class Alpha_from_PL():
             self.optics_abs_cof_bb = self.PL_alpha
 
             self.update_escape()
-            # print self.PLnBB.shape, self.PL.shape, numpy.trapz(self.np*self.escapeprob.T,
-            #                                     self.x,
-            #                                     axis=1).shape
-            self.PL_alpha = self.PLnBB / self.CalibrationConstant / numpy.trapz(self.np * self.escapeprob.T,
-                                                                                self.x,
-                                                                                axis=1)
+
+            self.PL_alpha = self.PLnBB /
+            self.Calibrationconstant /
+            np.trapz(self.np * self.escapeprob.T,
+                     self.x,
+                     axis=1)
 
 
 if __name__ == "__main__":

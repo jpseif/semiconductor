@@ -6,7 +6,7 @@ import matplotlib.pylab as plt
 import os
 
 from semiconductor.helper.helper import HelperFunctions
-import semiconductor.electrical.impurity_ionisation_models  as IIm
+import semiconductor.electrical.impurity_ionisation_models as IIm
 from semiconductor.material.densityofstates import DOS
 import semiconductor.general_functions.carrierfunctions as CF
 
@@ -14,14 +14,15 @@ import semiconductor.general_functions.carrierfunctions as CF
 class Ionisation(HelperFunctions):
 
     '''
-    Depending on a dopant level from a band, and the thermal 
+    Depending on a dopant level from a band, and the thermal
     energy available, a dopant is electrical active (donating or
-    accepting an electron to the band)  or inactive. 
+    accepting an electron to the band)  or inactive.
     '''
     cal_dts = {
         'material': 'Si',
         'temp': 300,
         'author': None,
+        'ni_author': None
     }
 
     author_list = 'ionisation.models'
@@ -48,9 +49,9 @@ class Ionisation(HelperFunctions):
     def _init_links(self):
 
         self.Dos = DOS(material=self.cal_dts['material'],
-                  temp=self.cal_dts['temp'],
-                  author=None
-                  )
+                       temp=self.cal_dts['temp'],
+                       author=None
+                       )
 
     def update(self, N_imp, ne, nh, impurity, **kwargs):
         '''
@@ -82,9 +83,9 @@ class Ionisation(HelperFunctions):
         # checks if and get the required density of states model
         if 'dos_author' in self.vals.keys():
             Nc, Nv = self.Dos.update(material=self.cal_dts['material'],
-                                temp=self.cal_dts['temp'],
-                                author=self.vals['dos_author']
-                                )
+                                     temp=self.cal_dts['temp'],
+                                     author=self.vals['dos_author']
+                                     )
         else:
             Nc, Nv = 0, 0
 
@@ -97,9 +98,9 @@ class Ionisation(HelperFunctions):
             # multiply it by the number of dopants
             iN_imp *= N_imp
         else:
-            print ('''\nWarning:\n\t'''
-                   '''No such impurity, please check your model'''
-                   '''and spelling.\n\tReturning zero array\n''')
+            print('''\nWarning:\n\t'''
+                  '''No such impurity, please check your model'''
+                  '''and spelling.\n\tReturning zero array\n''')
             iN_imp = np.zeros(np.asarray(N_imp).flatten().shape[0])
 
         return iN_imp
@@ -136,20 +137,27 @@ class Ionisation(HelperFunctions):
             # TO DO, change this from just running 10 times to a proper check
             for i in range(10):
                 if self.vals['tpe_' + self.vals[impurity]] == 'donor':
-                    Nd = N_idop
-                    Na = 0
+                    Nd = np.array(N_idop)
+                    Na = np.zeros(Nd.shape)
                 elif self.vals['tpe_' + self.vals[impurity]] == 'acceptor':
-                    Na = N_idop
-                    Nd = 0
+                    Na = np.array(N_idop)
+                    Nd = np.zeros(Na.shape)
+                else:
+                    print('something went wrong in ionisation model')
 
+                # print('here:', Na, Nd, nxc)
                 ne, nh = CF.get_carriers(
-                    Na, Nd, nxc, temp=self.cal_dts['temp'],
-                    material=self.cal_dts['material'])
+                    Na,
+                    Nd,
+                    nxc,
+                    temp=self.cal_dts['temp'],
+                    material=self.cal_dts['material'],
+                    ni=self.cal_dts['ni_author'])
 
                 N_idop = self.update(
                     N_dop, ne, nh, impurity)
         else:
-            print (r'Not a valid impurity, returning 100% ionisation')
+            print(r'Not a valid impurity, returning 100% ionisation')
 
         return N_idop
 
@@ -174,7 +182,7 @@ class Ionisation(HelperFunctions):
 
             if not np.all(iN_imp == 0):
                 plt.plot(
-                    N_imp, iN_imp / N_imp * 100, label='Altermatt: ' + impurity)
+                 N_imp, iN_imp / N_imp * 100, label='Altermatt: ' + impurity)
 
         test_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),

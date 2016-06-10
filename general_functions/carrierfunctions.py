@@ -35,14 +35,14 @@ def get_carriers(Na, Nd, nxc,
     # for temperature dependent measurements.
     maj_car_den = (0.5 * (np.abs(Nd - Na) + np.sqrt((Nd - Na)**2 + 4 * ni**2
                                                     ))) + nxc
-    nxc = (ni**2 / maj_car_den) + nxc
+    min_car_den = (ni**2 / maj_car_den) + nxc
 
     if np.all(Na < Nd):
         ne = maj_car_den
-        nh = nxc
+        nh = min_car_den
     elif np.all(Na >= Nd):
         nh = maj_car_den
-        ne = nxc
+        ne = min_car_den
     else:
         print('determination of total carrier connc didn\'t work')
 

@@ -8,6 +8,7 @@ import matplotlib.pylab as plt
 from semiconductor.helper.helper import HelperFunctions
 from semiconductor.general_functions.carrierfunctions import get_carriers
 from semiconductor.material.ni import IntrinsicCarrierDensity as ni
+from semiconductor.material.thermal_velocity import ThermalVelocity as Vel_th
 
 sys.path.append(
     os.path.abspath(os.path.join(os.getcwd(), os.pardir, os.pardir)))
@@ -19,7 +20,7 @@ class SRH(HelperFunctions):
         'material': 'Si',
         'defect': None,
         'temp': 300.,
-        'vth': 2.05E+7,  # taken from PVlighthouse at 300 K
+        'vth_model': None,
         'Nt': 1e10,  # the number of traps
         'Nd': 0,
         'Na': 1e16,
@@ -56,6 +57,16 @@ class SRH(HelperFunctions):
                      temp=self.cal_dts['temp'],
                      )
         self.ni.update()
+
+        # To Do
+        # need to get the correct thermal velocity
+        # for the correct carrier.
+        # currently just taken the first outtpued value
+        self.vel_th = Vel_th(
+            material=self.cal_dts['material'],
+            author=self.cal_dts['vth_model'],
+            temp=self.cal_dts['temp']).update()[0]
+
 
     def _cal_taun_taup(self):
         '''

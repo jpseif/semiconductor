@@ -397,11 +397,10 @@ class Alpha_from_PL():
 
             self.update_escape()
 
-            self.PL_alpha = self.PLnBB /
-            self.Calibrationconstant /
-            np.trapz(self.np * self.escapeprob.T,
-                     self.x,
-                     axis=1)
+            self.PL_alpha = self.PLnBB / self.Calibrationconstant /\
+                np.trapz(self.np * self.escapeprob.T,
+                         self.x,
+                         axis=1)
 
 
 if __name__ == "__main__":

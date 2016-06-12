@@ -13,7 +13,10 @@ def Green_1990(vals, temp, Egratio, **kargs):
             the temperature in kelvin
 
     outputs:
-        the termal velocity for the conduction and valance band
+        vel_th_c: (float)
+            the termal velocity for the conduction in cm/s
+        vel_th_v: (float)
+            the termal velocity for the valance band in cm/s
     """
 
     # the values relative to the rest mass
@@ -32,7 +35,8 @@ def Green_1990(vals, temp, Egratio, **kargs):
 
     vel_th_v = np.sqrt(8*const.k * temp / np.pi / mth_v)
 
-    return vel_th_c, vel_th_v
+    # adjust the values from m/s to cm/s and return
+    return vel_th_c * 100, vel_th_v * 100
 
 
 def constants(vals):

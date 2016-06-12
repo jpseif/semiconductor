@@ -16,6 +16,12 @@ sys.path.append(
 
 class SRH(HelperFunctions):
 
+    ## ToDo:
+    # need to assign which thermal velocity values
+    # were used for each value of capture cross section
+    # then need to look this value up from the model.
+    # currently just have this as an input. 
+
     cal_dts = {
         'material': 'Si',
         'defect': None,
@@ -27,6 +33,9 @@ class SRH(HelperFunctions):
         'nxc': 1e10,
         'ni_author': None
     }
+
+    vel_th_e = None
+    vel_th_h = None
 
     author_list = 'SRH.defects'
 
@@ -47,8 +56,9 @@ class SRH(HelperFunctions):
 
         # initiate the a defect
         self.change_model(self.cal_dts['defect'])
-        self._cal_taun_taup()
         self._update_links()
+        self._cal_taun_taup()
+        
 
     def _update_links(self):
 
@@ -58,14 +68,10 @@ class SRH(HelperFunctions):
                      )
         self.ni.update()
 
-        # To Do
-        # need to get the correct thermal velocity
-        # for the correct carrier.
-        # currently just taken the first outtpued value
-        self.vel_th = Vel_th(
+        self.vel_th_e, self.vel_th_h = Vel_th(
             material=self.cal_dts['material'],
             author=self.cal_dts['vth_model'],
-            temp=self.cal_dts['temp']).update()[0]
+            temp=self.cal_dts['temp']).update()
 
 
     def _cal_taun_taup(self):
@@ -75,9 +81,9 @@ class SRH(HelperFunctions):
         '''
 
         self.vals['tau_e'] = 1. / self.cal_dts['Nt']\
-            / self.vals['sigma_e'] / self.cal_dts['vth']  # s
+            / self.vals['sigma_e'] / self.vel_th_e # s
         self.vals['tau_h'] = 1. / self.cal_dts['Nt']\
-            / self.vals['sigma_h'] / self.cal_dts['vth']  # s
+            / self.vals['sigma_h'] / self.vel_th_h # s
 
     def tau(self, **kwargs):
         '''

@@ -82,7 +82,7 @@ class ThermalVelocity(HelperFunctions):
             Egratio = None
 
         # if the model required the energy gap, calculate it
-        self.vel_th = getattr(vel_th_models, self.model)(
+        self.vel_th_e, self.vel_th_h  = getattr(vel_th_models, self.model)(
             self.vals, temp=self.cal_dts['temp'],Egratio=Egratio)
 
-        return self.vel_th
+        return self.vel_th_e, self.vel_th_h

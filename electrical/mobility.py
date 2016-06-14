@@ -12,7 +12,7 @@ except:
     import configparser
 
 import semiconductor.electrical.mobilitymodels as model
-from semiconductor.general_functions import get_carriers
+from semiconductor.general_functions.carrierfunctions import get_carriers
 
 from semiconductor.helper.helper import HelperFunctions
 
@@ -130,7 +130,11 @@ class Mobility(HelperFunctions):
 
         mob_h = self.hole_mobility()
         mob_e = self.electron_mobility()
-        mob_ambi = mob_h*mob_e/(mob_e*ne + mob_h*nh)*(ne+nh)
+
+        # caculate the ambipolar mobility according to 
+        mob_ambi = (ne+nh)/(nh/mob_e + ne/mob_h)
+
+        return mob_ambi
 
     def check_models(self):
         check_klaassen()

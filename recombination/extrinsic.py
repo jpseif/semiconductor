@@ -138,7 +138,7 @@ class SRH(HelperFunctions):
         return self.cal_dts['nxc'] / U
 
     def usr_vals(self, Et=None, sigma_e=None, sigma_h=None,
-                 tau_e=None, tau_h=None):
+                 tau_e=None, tau_h=None, Nt=None):
         '''
         a function to provide arbitory values for SRH lifetime.
         inputs:
@@ -162,6 +162,7 @@ class SRH(HelperFunctions):
             'tau_h': np.array([tau_h]) or temp['tau_h'],
             }
 
+        self.cal_dts['Nt'] = Nt or self.cal_dts['Nt']
         # it tau_n or tau_p's values passed,
         # do dont' caculate them
         if tau_e is None and tau_h is None:

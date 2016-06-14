@@ -16,11 +16,11 @@ sys.path.append(
 
 class SRH(HelperFunctions):
 
-    ## ToDo:
+    # ToDo:
     # need to assign which thermal velocity values
     # were used for each value of capture cross section
     # then need to look this value up from the model.
-    # currently just have this as an input. 
+    # currently just have this as an input.
 
     cal_dts = {
         'material': 'Si',
@@ -58,7 +58,6 @@ class SRH(HelperFunctions):
         self.change_model(self.cal_dts['defect'])
         self._update_links()
         self._cal_taun_taup()
-        
 
     def _update_links(self):
 
@@ -73,7 +72,6 @@ class SRH(HelperFunctions):
             author=self.cal_dts['vth_model'],
             temp=self.cal_dts['temp']).update()
 
-
     def _cal_taun_taup(self):
         '''
         Determines the SRH lifetime values
@@ -81,16 +79,17 @@ class SRH(HelperFunctions):
         '''
 
         self.vals['tau_e'] = 1. / self.cal_dts['Nt']\
-            / self.vals['sigma_e'] / self.vel_th_e # s
+            / self.vals['sigma_e'] / self.vel_th_e  # s
         self.vals['tau_h'] = 1. / self.cal_dts['Nt']\
-            / self.vals['sigma_h'] / self.vel_th_h # s
+            / self.vals['sigma_h'] / self.vel_th_h  # s
 
     def tau(self, **kwargs):
         '''
         reports the lifetime of the current defect for the given
         excess carrier density.
         '''
-        self._update_dts(**kwargs)
+        if bool(kwargs):
+            self._update_dts(**kwargs)
 
         # TO DO:
         # this check does not work
@@ -137,6 +136,43 @@ class SRH(HelperFunctions):
             (tau_h * (ne + ne1) + tau_e * (nh + nh1))
 
         return self.cal_dts['nxc'] / U
+
+    def usr_vals(self, Et=None, sigma_e=None, sigma_h=None,
+                 tau_e=None, tau_h=None):
+        '''
+        a function to provide arbitory values for SRH lifetime.
+        inputs:
+            Et: (optional float)
+                The energy level from the intrinsic level in eV
+            sigma_e: (optional float)
+                The capture cross section for electrons in seconds
+            sigma_h: (optional float)
+                The capture cross section for holes in seconds
+        '''
+
+        temp = self.vals
+        # assign the new values
+        self.vals = {
+            'et': Et or temp['et'],
+            'sigma_e': sigma_e or temp['sigma_e'],
+            'sigma_h': sigma_h or temp['sigma_h'],
+            'doi':  None,
+            'notes': 'User defined value',
+            'tau_e': np.array([tau_e]) or temp['tau_e'],
+            'tau_h': np.array([tau_h]) or temp['tau_h'],
+            }
+
+        # it tau_n or tau_p's values passed,
+        # do dont' caculate them
+        if tau_e is None and tau_h is None:
+            self._cal_taun_taup()
+        else:
+            self.vals.update(
+                {'sigma_e': None,
+                 'sigma_h': None,
+                 }
+            )
+
 
     def _plot_all(self):
         fig, ax = plt.subplots(1, 2, figsize=(16, 6))

@@ -12,11 +12,16 @@ except:
     import configparser
 
 import semiconductor.electrical.mobilitymodels as model
+from semiconductor.general_functions import get_carriers
 
 from semiconductor.helper.helper import HelperFunctions
 
 
 class Mobility(HelperFunctions):
+    '''
+    A class to provide the mobility in a semiconductor
+    carriers
+    '''
     author_list = 'mobility.models'
 
     cal_dts = {
@@ -47,31 +52,99 @@ class Mobility(HelperFunctions):
         self.change_model(self.cal_dts['author'])
 
     def electron_mobility(self,  **kwargs):
-        self._update_dts(**kwargs)
+        '''
+        returns the electron mobility
+
+        inputs:
+            kwargs: (optinal)
+                any value with cal_dts, for which the mobility depends on
+
+        output:
+            The electron mobility cm^2 V^-1 s^-1
+        '''
+        if bool(kwargs):
+            self._update_dts(**kwargs)
         return getattr(model, self.model)(
-            self.vals, Na=self.cal_dts['Na'], Nd=self.cal_dts['Nd'], nxc=self.cal_dts['nxc'], carrier='electron', temp=self.cal_dts['temp'])
+            self.vals, Na=self.cal_dts['Na'], Nd=self.cal_dts['Nd'],
+            nxc=self.cal_dts['nxc'], carrier='electron',
+            temp=self.cal_dts['temp'])
 
     def hole_mobility(self, **kwargs):
-        self._update_dts(**kwargs)
+        '''
+        returns the hole mobility
+
+        inputs:
+            kwargs: (optinal)
+                any value with cal_dts, for which the mobility depends on
+
+        output:
+            The hole mobility cm^2 V^-1 s^-1
+        '''
+        if bool(kwargs):
+            self._update_dts(**kwargs)
         return getattr(model, self.model)(
-            self.vals, Na=self.cal_dts['Na'], Nd=self.cal_dts['Nd'], nxc=self.cal_dts['nxc'], carrier='hole', temp=self.cal_dts['temp'])
+            self.vals, Na=self.cal_dts['Na'], Nd=self.cal_dts['Nd'],
+            nxc=self.cal_dts['nxc'], carrier='hole', temp=self.cal_dts['temp'])
 
     def mobility_sum(self,  **kwargs):
-        self._update_dts(**kwargs)
+        '''
+        returns the sum of the electron and hole mobilities
+
+        inputs:
+            kwargs: (optinal)
+                any value with cal_dts, for which the mobility depends on
+
+        output:
+            The sum of the electron and hole mobilities cm^2 V^-1 s^-1
+        '''
+        if bool(kwargs):
+            self._update_dts(**kwargs)
         return self.hole_mobility() +\
             self.electron_mobility()
+
+    def ambipolar(self, ni_author=None, **kwargs):
+        '''
+        returns the ambipolar mobility
+
+        inputs:
+            ni_author: (optional, str)
+                an author for the intrinsic carrier density
+            kwargs: (optinal)
+                any value with cal_dts, for which the mobility depends on
+
+        output:
+            ambipolar mobility in cm^2 V^-1 s^-1
+        '''
+
+        if bool(kwargs):
+            self._update_dts(**kwargs)
+
+        # get the number of carriers
+        ne, nh = get_carriers(
+            Na=self.cal_dts['Na'],
+            Nd=self.cal_dts['Nd'],
+            nxc=self.cal_dts['nxc'],
+            temp=self.cal_dts['temp'],
+            material=self.cal_dts['material'],
+            ni_author=ni_author)
+
+        mob_h = self.hole_mobility()
+        mob_e = self.electron_mobility()
+        mob_ambi = mob_h*mob_e/(mob_e*ne + mob_h*nh)*(ne+nh)
 
     def check_models(self):
         check_klaassen()
         check_dorkel()
 
 
+# these checks should not be here, but rather be in the models class
 def check_klaassen():
+
     '''compares to values taken from www.PVlighthouse.com.au'''
     a = Mobility('Si')
     a.change_model('klaassen1992')
 
-    print ('''The model disagrees at low tempeature owing to dopant ionisation'''
+    print('''The model disagrees at low tempeature owing to dopant ionisation'''
            '''I am unsure if mobility should take ionisated dopants or non ionisaed'''
            '''most likley it should take both, currently it only takes one''')
 

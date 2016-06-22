@@ -174,7 +174,6 @@ class SRH(HelperFunctions):
                  }
             )
 
-
     def _plot_all(self):
         fig, ax = plt.subplots(1, 2, figsize=(16, 6))
         # ax = plt.add_subplot(111)

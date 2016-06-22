@@ -17,6 +17,6 @@ meth_v5: -3.919169e-12
 meth_v6: 5.410849e-15
 meth_v7: -2.959797e-18
 doi: 10.1063/1.345414
-notes: Determines the thermal velocity from the effective mass. Eqns 8-12 and
-      also a 7 order poly fit to the valance band thermal mass from
-      Table 4 in 10.1088/0022-3719/14/21/011.
+notes: Determines the thermal velocity from the effective mass. It uses
+      Eqns 8-12 and also a 7 order poly fit to the valance band thermal mass
+      from Table 4 in 10.1088/0022-3719/14/21/011.

@@ -39,9 +39,9 @@ def Green_1990(vals, temp, Egratio, **kargs):
     return vel_th_c * 100, vel_th_v * 100
 
 
-def constants(vals):
+def constants(vals, **kwargs):
     """
     Returns a constant value
     """
 
-    return vals['vel_th']
+    return vals['vth_e'], vals['vth_h']

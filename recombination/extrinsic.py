@@ -55,7 +55,7 @@ class SRH(HelperFunctions):
         self._int_model(author_file)
 
         # initiate the a defect
-        self.change_model(self.cal_dts['defect'])
+        self._change_model(self.cal_dts['defect'])
         self._update_links()
         self._cal_taun_taup()
 
@@ -83,23 +83,39 @@ class SRH(HelperFunctions):
         self.vals['tau_h'] = 1. / self.cal_dts['Nt']\
             / self.vals['sigma_h'] / self.vel_th_h  # s
 
+    def _change_model(self, defect):
+        '''
+        A stage to update the thermal velocity model,
+        if one way provided with the SRH defect model
+        '''
+
+        # load the defect
+        self.change_model(self.cal_dts['defect'])
+
+        # check is a model was provided
+        if 'vth_model' in self.vals.keys():
+            self.cal_dts['vth_model'] = self.vals['vth_model']
+
+        # get the values from the model
+        self._update_links()
+
     def tau(self, **kwargs):
         '''
         reports the lifetime of the current defect for the given
         excess carrier density.
         '''
+
         if bool(kwargs):
             self._update_dts(**kwargs)
 
-        # TO DO:
-        # this check does not work
         if 'defect' in kwargs:
-            self.change_model(self.cal_dts['defect'])
+            self._change_model(self.cal_dts['defect'])
             self._cal_taun_taup()
 
-        # if change ni, calculate it
+        # if change in a model update the values
         if 'author' in ''.join(kwargs.keys()):
             self._update_links()
+            self._cal_taun_taup()
 
         return self._tau(self.cal_dts['nxc'],
                          self.vals['tau_e'],
@@ -118,9 +134,9 @@ class SRH(HelperFunctions):
 
         # the escape from defects
         nh1 = self.ni.ni * \
-            np.exp(-Et / (const.k * self.cal_dts['temp'] / const.e))
+            np.exp(-Et * const.e / (const.k * self.cal_dts['temp']))
         ne1 = self.ni.ni *\
-            np.exp(Et / (const.k * self.cal_dts['temp'] / const.e))
+            np.exp(Et * const.e / (const.k * self.cal_dts['temp']))
 
         # get the number of carriers
         ne, nh = get_carriers(Na=self.cal_dts['Na'],

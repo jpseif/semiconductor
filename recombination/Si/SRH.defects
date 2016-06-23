@@ -65,23 +65,54 @@ notes: Taken from the computer program Qscell6
        Co (sub. donor), dominant in p-Si
        Diez et al., J.Appl. Phys. 101,033710, 2007.
 
-[Cr_d]
+[Cr_d_Scmidt2010]
 model:none
 Et = 0.32230116
 sigma_e = 2.0E-14
 sigma_h = 4.0E-15
+vth_model = Bullis_1996
 notes: Taken from the computer program Qscell6
        Cr (int. donor) dominant in n-Si
-       Scmidt et al., J.Appl. Phys. 102, 123701, 2007, and Habenicht et al. J. Appl. Phys.  108, 043909 (2010)
+       Scmidt et al., J.Appl. Phys. 102, 123701, 2007
+       Habenicht et al. J. Appl. Phys.  108, 043909 (2010)
 
-[CrB_d]
+[Cr_d_Sun2015]
+model:none
+Et = 0.322
+sigma_e = 2.4E-14
+# error of -0.1 +0.3
+sigma_h = 0.8E-14
+# error of -0.3 +0.2
+vth_model = Bullis_1996
+notes:Cr (int. donor) dominant in n-Si. The thermal velocity used in this paper
+      was that of Bullis_1996. This has a large impact on capture cross
+      sections of the defect.
+      Taken from:
+      Sun, C., Rougieux, F. E., & MacDonald, D. (2014). 10.1063/1.4881497
+
+[CrB_d_Habenicht2010]
 model:none
 Et = -0.29269884
 sigma_e = 2.0E-14
 sigma_h = 1.0E-14
+vth_model = Bullis_1996
 notes: Taken from the computer program Qscell6
        CrB (donor) dominant in p-Si
-       Habenicht et al. J. Appl. Phys.  108, 043909 (2010)
+       Habenicht et al. J. Appl. Phys.  108, 043909 (2010) 10.1063/1.3459892
+
+[CrB_d_Sun2015]
+model:none
+Et = -0.288
+sigma_e = 3.8E-14
+# error of -1.6,5
+sigma_h = 0.7E-14
+# error of -.3 +.6
+vth_model = Bullis_1996
+notes: CrB (donor) dominant in p-Si
+       Taken from:
+       Sun, C., Rougieux, F. E., & MacDonald, D. (2014). 10.1063/1.4881497
+
+
 
 [Fei_d]
 model:none

@@ -26,7 +26,7 @@ class SRH(HelperFunctions):
         'material': 'Si',
         'defect': None,
         'temp': 300.,
-        'vth_model': None,
+        'vth_author': None,
         'Nt': 1e10,  # the number of traps
         'Nd': 0,
         'Na': 1e16,
@@ -69,7 +69,7 @@ class SRH(HelperFunctions):
 
         self.vel_th_e, self.vel_th_h = Vel_th(
             material=self.cal_dts['material'],
-            author=self.cal_dts['vth_model'],
+            author=self.cal_dts['vth_author'],
             temp=self.cal_dts['temp']).update()
 
     def _cal_taun_taup(self):
@@ -91,10 +91,10 @@ class SRH(HelperFunctions):
 
         # load the defect
         self.change_model(self.cal_dts['defect'])
-
+        print(self.vals.keys(), 'insdie')
         # check is a model was provided
-        if 'vth_model' in self.vals.keys():
-            self.cal_dts['vth_model'] = self.vals['vth_model']
+        if 'vth_author' in self.vals.keys():
+            self.cal_dts['vth_author'] = self.vals['vth_author']
 
         # get the values from the model
         self._update_links()
@@ -177,6 +177,9 @@ class SRH(HelperFunctions):
             'tau_e': np.array([tau_e]) or temp['tau_e'],
             'tau_h': np.array([tau_h]) or temp['tau_h'],
             }
+
+        if 'vth_author' in self.vals:
+            del self.vals['vth_author']
 
         self.cal_dts['Nt'] = Nt or self.cal_dts['Nt']
         # it tau_n or tau_p's values passed,

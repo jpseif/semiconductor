@@ -26,4 +26,5 @@ model: constants
 vth_e = 1.1e7
 vth_h = 1.1e7
 doi: 10.1149/1.1836650
-notes: An estimate of the thermal velocity, no motivation or justification given
+notes: An estimate of the thermal velocity at 300 k,
+       no motivation or justification given.

@@ -37,32 +37,37 @@ def change_model(Models, author=None):
 
 class HelperFunctions():
 
+    _cal_dts = {
+        'material': 'Si',
+        'temp': 300,
+        }
+
+    def __init__(self):
+        pass
+
+    @property
+    def caculationdetails(self):
+        print('kwargs being viewed')
+        return self._cal_dts
+
+    @caculationdetails.setter
+    def caculationdetails(self, kwargs):
+        '''
+        assignes the inputted values that are requrired,
+        befor calling a function to pass it to the downstream
+        classes
+        '''
+        if kwargs:
+            items = [i for i in kwargs.keys() if i in self._cal_dts.keys()]
+            for item in items:
+                self._cal_dts[item] = kwargs[item]
+    #         self._update_links()
+    # def _update_links(self):
+    #     pass
+
     def _int_model(self, fname):
         self.Models = configparser.ConfigParser()
         self.Models.read(fname)
-
-    def _update_dts(self, **kwargs):
-        '''
-        assignes the inputted values that are requrired,
-        befor calling a function to pass it to the downstream
-        classes
-        '''
-
-        items = [i for i in kwargs.keys() if i in self.cal_dts.keys()]
-        for item in items:
-            self.cal_dts[item] = kwargs[item]
-
-    def _update_vars(self, **kwargs):
-        '''
-        assignes the inputted values that are requrired,
-        befor calling a function to pass it to the downstream
-        classes
-        '''
-        self.__dict__.update(kwargs)
-
-    def caculation_details(self):
-        return {key: value for key, value in self.__dict__.items()
-                if not key.startswith('_') and not callable(key)}
 
     def change_model(self, author, Models=None):
 

@@ -3,7 +3,8 @@
 
 import numpy as np
 from semiconductor.material.ni import IntrinsicCarrierDensity as NI
-
+# import fdint as fd
+import scipy.constants as const
 
 def get_carriers(Na, Nd, nxc,
                  temp=300, material='Si', ni_author=None, ni=None):
@@ -23,6 +24,12 @@ def get_carriers(Na, Nd, nxc,
     returns ne, nh
 
     '''
+
+    if not isinstance(Na, np.ndarray):
+        Na = np.asarray([Na])
+    if not isinstance(Nd, np.ndarray):
+        Nd = np.array([Nd])
+
     if ni is None:
         ni = NI(material=material).update(author=ni_author, temp=temp)
 
@@ -33,17 +40,123 @@ def get_carriers(Na, Nd, nxc,
     # carrier denisty is the number of excess carriers. The below version
     # more accurately incorporates ni though, which is particularly important
     # for temperature dependent measurements.
-    maj_car_den = (0.5 * (np.abs(Nd - Na) + np.sqrt((Nd - Na)**2 + 4 * ni**2
-                                                    ))) + nxc
-    min_car_den = (ni**2 / maj_car_den) + nxc
 
-    if np.all(Na < Nd):
-        ne = maj_car_den
-        nh = min_car_den
-    elif np.all(Na >= Nd):
-        nh = maj_car_den
-        ne = min_car_den
-    else:
-        print('determination of total carrier connc didn\'t work')
+    maj_car_den = (0.5 * (np.abs(Nd - Na) +
+                          np.sqrt((Nd - Na)**2 + 4 * ni**2)))
+    min_car_den = ni**2 / maj_car_den
+
+    # assign the minority carriers
+    ne = min_car_den
+    nh = min_car_den
+
+    # check the doping and assign
+    index = Na < Nd
+
+    ne[~index] = maj_car_den[~index]
+    nh[index] = maj_car_den[index]
+
+    ne += nxc
+    nh += nxc
 
     return ne, nh
+
+def fermi2carrier_fermi(Ef, ni_author=None, eg_author=None, temp=300, material='Si', Ei=0):
+    '''
+    This does not work.
+
+    determines the number of carriers from the fermi energy level
+
+    inputs:
+        Ef: (array like)
+            The Fermi energy level referenced to the intrinsic level
+
+    '''
+
+    # this may have to be the effective ni, i'm not sure
+    ni = NI(material=material).update(author=ni_author, temp=temp)
+    ni = 2.831801e10
+    print(ni)
+    Nc = 2.857082e19
+    Nv = 2.513669e19
+
+    Eg = -np.log(ni**2./Nc/Nv)*const.k*temp/const.e
+
+    Ei = (Eg*const.e/2. + 0.5*const.k*temp*np.log(Nv/Nc))/const.e
+
+    dEc = (Ef-(Eg-Ei))
+    dEv = -dEc-Eg
+
+    n0i = fd.parabolic(Ef/const.k/temp*const.e)*ni
+
+    n = fd.parabolic(dEc/const.k/temp*const.e)*Nc
+    p = fd.parabolic(dEv/const.k/temp*const.e)*Nv
+
+
+    print(dEc, dEv, Ei, Eg-Ei, )
+    print(n0i, Eg)
+
+    print('{0:.2e} {1:.2e}'.format(n*p, ni**2))
+
+    return n, p
+
+def fermi2carrier_boltz(Ef, ni_author=None, eg_author=None, temp=300, material='Si', Ei=0):
+    '''
+    This does not work.
+
+    determines the number of carriers from the fermi energy level
+
+    inputs:
+        Ef: (array like)
+            The Fermi energy level referenced to the intrinsic level
+
+    '''
+
+    # this may have to be the effective ni, i'm not sure
+    ni = 2.831801e10
+    print(ni)
+    Nc = 2.857082e19
+    Nv = 2.513669e19
+    Eg = -np.log(ni**2/Nc/Nv)*const.k*temp/const.e
+
+    Ei = (Eg*const.e/2 + 0.5*const.k*temp*np.log(Nv/Nc))/const.e
+
+    dEc = (Ef-(Eg-Ei))
+    dEv = -dEc-Eg
+
+    n = np.exp(dEc/const.k/temp*const.e)*Nc
+    p = np.exp(dEv/const.k/temp*const.e)*Nv
+
+    return n, p
+
+def carrier2fermi_fermi(ne, nh, ni_author=None, eg_author=None, temp=300, material='Si', Ei=0):
+    '''
+    This does not work.
+
+    determines the number of carriers from the fermi energy level
+
+    inputs:
+        Ef: (array like)
+            The Fermi energy level referenced to the intrinsic level
+
+    '''
+
+    # this may have to be the effective ni, i'm not sure
+    ni = 2.831801e10
+    Nc = 2.857082e19
+    Nv = 2.513669e19
+
+    # determine the band gap from the input paramters
+    Eg = -np.log(ni**2./Nc/Nv)*const.k*temp/const.e
+
+    # Valance band to Ei
+    Ei = (Eg*const.e/2. + 0.5*const.k*temp*np.log(Nv/Nc))/const.e
+
+    dEc = (Ef-(Eg-Ei))
+    dEv = -dEc-Eg
+
+    Efe = fd.iparabolic(ne/Nc) - (Eg-Ei)
+    Efh = fd.iparabolic(nh/Nv) - Ei
+
+    return Efe, Efh
+
+# fermi2carrier(0.3)

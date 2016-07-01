@@ -18,7 +18,7 @@ class Ionisation(HelperFunctions):
     energy available, a dopant is electrical active (donating or
     accepting an electron to the band)  or inactive.
     '''
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300,
         'author': None,
@@ -31,25 +31,25 @@ class Ionisation(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
         self._init_links()
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['material'],
+            self._cal_dts['material'],
             self.author_list)
 
         # get the models ready
         self._int_model(author_file)
 
         # initiate the first model
-        self.change_model(self.cal_dts['author'])
+        self.change_model(self._cal_dts['author'])
 
     def _init_links(self):
 
-        self.Dos = DOS(material=self.cal_dts['material'],
-                       temp=self.cal_dts['temp'],
+        self.Dos = DOS(material=self._cal_dts['material'],
+                       temp=self._cal_dts['temp'],
                        author=None
                        )
 
@@ -74,16 +74,16 @@ class Ionisation(HelperFunctions):
         output:
             the number of ionised impurities
         '''
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():
-            self.change_model(self.cal_dts['author'])
+            self.change_model(self._cal_dts['author'])
 
         # checks if and get the required density of states model
         if 'dos_author' in self.vals.keys():
-            Nc, Nv = self.Dos.update(material=self.cal_dts['material'],
-                                     temp=self.cal_dts['temp'],
+            Nc, Nv = self.Dos.update(material=self._cal_dts['material'],
+                                     temp=self._cal_dts['temp'],
                                      author=self.vals['dos_author']
                                      )
         else:
@@ -93,7 +93,7 @@ class Ionisation(HelperFunctions):
             # get the ionisation fraction
             iN_imp = getattr(IIm, self.model)(
                 self.vals, N_imp, ne, nh,
-                self.cal_dts['temp'], Nc, Nv,
+                self._cal_dts['temp'], Nc, Nv,
                 self.vals[impurity])
             # multiply it by the number of dopants
             iN_imp *= N_imp
@@ -125,11 +125,11 @@ class Ionisation(HelperFunctions):
                 The number of ionised dopants
         '''
 
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():
-            self.change_model(self.cal_dts['author'])
+            self.change_model(self._cal_dts['author'])
 
         N_idop = N_dop
 
@@ -150,9 +150,9 @@ class Ionisation(HelperFunctions):
                     Na,
                     Nd,
                     nxc,
-                    temp=self.cal_dts['temp'],
-                    material=self.cal_dts['material'],
-                    ni=self.cal_dts['ni_author'])
+                    temp=self._cal_dts['temp'],
+                    material=self._cal_dts['material'],
+                    ni=self._cal_dts['ni_author'])
 
                 N_idop = self.update(
                     N_dop, ne, nh, impurity)

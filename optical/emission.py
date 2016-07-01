@@ -20,6 +20,15 @@ class SpontaneousRadiativeEmission(HelperFunctions):
     Currents it takes in silicons properties by defult_QF_split
     """
 
+    _cal_dts = dict(
+        material='Si',
+        temp=300.,  # temp in kelvin
+        width=0.018,  # width in cm
+        ni_author=None,  # author of intrinsic carrier density
+        optics_k_author='Green_2008',
+        optics_n_author='Green_2008',
+        )
+
     def __init__(self, **kwargs):
         """
         Can provide a specific instance of:
@@ -30,13 +39,8 @@ class SpontaneousRadiativeEmission(HelperFunctions):
             optical properties  or  ni module is provided
             These will then be used
         """
-        self.material = 'Si'
-        self.ni_author = None
-        self.temp = 300.
-        self.optics_abs_author = 'Green2008'
-        self.optics_ref_author = 'Green2008'
 
-        self._update_vars(**kwargs)
+        self.caculationdetails = kwargs
         self._update_links()
 
     def _update_links(self):
@@ -45,12 +49,15 @@ class SpontaneousRadiativeEmission(HelperFunctions):
         '''
 
         self._optics = opticalproperties.TabulatedOpticalProperties(
-            material=self.material, temp=self.temp,
-            abs_author=self.optics_abs_author,
-            ref_author=self.optics_ref_author)
-        self._ni = ni.IntrinsicCarrierDensity(material=self.material,
-                                              author=self.ni_author,
-                                              temp=self.temp)
+            material=self._cal_dts['material'],
+            temp=self._cal_dts['temp'],
+            abs_author=self._cal_dts['optics_k_author'],
+            ref_author=self._cal_dts['optics_n_author'])
+
+        self._ni = ni.IntrinsicCarrierDensity(
+            material=self._cal_dts['material'],
+            author=self._cal_dts['ni_author'],
+            temp=self._cal_dts['temp'])
 
     def blackbody_photon_per_wavelength(self, emn_wavelegnth=None, **kwargs):
         """
@@ -77,8 +84,8 @@ class SpontaneousRadiativeEmission(HelperFunctions):
         emn_wavelegnth = emn_wavelegnth * 1e-9
 
         return 2 * const.c / emn_wavelegnth**4 * 1. / (
-            np.exp(const.h * const.c / emn_wavelegnth / const.k / self.temp) -
-            1.) * 1000
+            np.exp(const.h * const.c / emn_wavelegnth / const.k /
+                   self._cal_dts['temp']) - 1.) * 1000
 
     def genralised_planks_PerWavelength_Carriers(self, np=1e16, **kwargs):
         """
@@ -93,11 +100,11 @@ class SpontaneousRadiativeEmission(HelperFunctions):
                 The black body emission spectrum
         """
         if bool(kwargs):
-            self._update_vars(**kwargs)
+            self.caculationdetails = kwargs
             self._update_links()
 
         # black body here is per solid angle
-        BB = self.blackbody_photon_per_wavelength(temp=self.temp)
+        BB = self.blackbody_photon_per_wavelength(temp=self._cal_dts['temp'])
 
         # The PL spectrum with no QF splitting
         rsp_thermal = (
@@ -119,7 +126,7 @@ class SpontaneousRadiativeEmission(HelperFunctions):
         """
 
         if bool(kwargs):
-            self._update_vars(**kwargs)
+            self.caculationdetails = kwargs
             self._update_links()
 
         QF_split *= const.e
@@ -138,8 +145,8 @@ class SpontaneousRadiativeEmission(HelperFunctions):
         # Note that in Gesikers phd he droped from the denumerator
         # The spectrum with QF splitting
         return self._optics.abs_cof_bb * c * D / (
-            np.exp(E / const.k / self.temp) *
-            np.exp(-QF_split / const.k / self.temp) - 1
+            np.exp(E / const.k / self._cal_dts['temp']) *
+            np.exp(-QF_split / const.k / self._cal_dts['temp']) - 1
         )
 
     def genralised_planks_PerWavelength(self, **kwargs):
@@ -150,7 +157,7 @@ class SpontaneousRadiativeEmission(HelperFunctions):
         """
 
         if bool(kwargs):
-            self._update_vars(**kwargs)
+            self.caculationdetails = kwargs
             self._update_links()
 
         # we just need to multip the per energy by the derivative below
@@ -173,25 +180,28 @@ class luminescence_emission(HelperFunctions):
     # Dictionaries
     wafer_optics_dic = {'polished': 'double_side_polished',
                         'textured': 'double_side_lambertian'}
-    PL_Dection_side_depth = {'rear': 'Escape_rear',
-                             'front': 'Escape_front'}
+    PL_Dection_side_depth = {'rear': 'escape_rear',
+                             'front': 'escape_front'}
+
+    _cal_dts = dict(
+        wafer_opitcs='polished',
+        detection_side='front',
+        material='Si',
+        temp=300.,  # temp in kelvin
+        width=0.018,  # width in cm
+        ni_author=None,  # author of intrinsic carrier density
+        optics_k_author='Green_2008',
+        optics_n_author='Green_2008',
+        nxc=np.ones(10),  # the number of excess carrier with depth
+        doping=1e16,  # the doping in cm^-3
+        )
 
     def __init__(self, **kwargs):
 
-        self.wafer_opitcs = 'polished'
-        self.DetectionSide = 'front'
-        # self.alpha_version = 'Schinke2015'
-        self.material = 'Si'
-        self.temp = 300.  # temp in kelvin
-        self.width = 0.018  # width in cm
-        self.ni_author = None  # author of intrinsic carrier density
-        self.optics_abs_author = 'Green2008'
-        self.optics_ref_author = 'Green2008'
-        self.nxc = None  # the number of excess carrier with depth
-        self.doping = 1e16  # the doping in cm^-3
+        self.caculationdetails = kwargs
+
         self._index = None
 
-        self._update_vars(**kwargs)
         self._update_x_dist()
         self._update_links()
 
@@ -199,8 +209,8 @@ class luminescence_emission(HelperFunctions):
         '''
         updates the distance
         '''
-        self.nxc = np.ones(10)
-        self._x = np.linspace(0, self.width, self.nxc.shape[0])
+        self._x = np.linspace(0, self._cal_dts['width'],
+                              self._cal_dts['nxc'].shape[0])
 
     def _update_links(self):
         '''
@@ -208,17 +218,19 @@ class luminescence_emission(HelperFunctions):
         instances's is completely refreshed.
         '''
         self._sre = SpontaneousRadiativeEmission(
-            temp=self.temp,
-            optics_abs_author=self.optics_abs_author,
-            optics_ref_author=self.optics_ref_author,
-            material=self.material,
-            ni_author=self.ni_author,
+            temp=self._cal_dts['temp'],
+            optics_k_author=self._cal_dts['optics_k_author'],
+            optics_n_author=self._cal_dts['optics_n_author'],
+            material=self._cal_dts['material'],
+            ni_author=self._cal_dts['ni_author'],
             )
 
         # I got lasy, so i'm using the previous classes stuff
         self._optics = self._sre._optics
 
         if self._index is None:
+            self._index = self._optics.wavelength > 0
+        elif self._index.shape != self._optics.wavelength.shape:
             self._index = self._optics.wavelength > 0
 
         self._optics.wavelength = self._optics.wavelength[self._index]
@@ -228,7 +240,10 @@ class luminescence_emission(HelperFunctions):
         self._sre._optics = self._optics
 
         self._esc = absorptance.EscapeProbability(
-            material=self.material,
+            material=self._cal_dts['material'],
+            optics_k_author=self._cal_dts['optics_k_author'],
+            optics_n_author=self._cal_dts['optics_n_author'],
+            temp=self._cal_dts['temp'],
             x=self._x)
 
         self._esc._optics = self._optics
@@ -241,12 +256,12 @@ class luminescence_emission(HelperFunctions):
         If not doping is given, used the doping in self.doping
         """
         if doping is not None:
-            self.doping = doping
+            self._cal_dts['doping'] = doping
 
         if deltan.shape != self.x.shape:
             print('number of x-values not equal to delta n values')
 
-        self.np = self.doping * deltan
+        self.np = self._cal_dts['doping'] * deltan
 
     def limit_wavelegnths(self, wl_min=None, wl_max=None):
         """
@@ -262,11 +277,12 @@ class luminescence_emission(HelperFunctions):
         Can be used to update the escape fraction, no inputs
         """
 
-        getattr(self._esc, self.wafer_optics_dic[self.wafer_opitcs])()
+        getattr(self._esc, self.wafer_optics_dic[
+            self._cal_dts['wafer_opitcs']])()
 
         self._escapeprob = getattr(
             self._esc,
-            self.PL_Dection_side_depth[self.DetectionSide])
+            self.PL_Dection_side_depth[self._cal_dts['detection_side']])
 
     def calculate_spectral(self, **kwargs):
         """
@@ -276,7 +292,7 @@ class luminescence_emission(HelperFunctions):
         """
         # ensure inputs are good
         if bool(kwargs):
-            self._update_vars(**kwargs)
+            self.caculationdetails = kwargs
             self._update_x_dist()
             self._update_links()
 
@@ -286,12 +302,15 @@ class luminescence_emission(HelperFunctions):
 
         # this is the spectral distribution from each point
         # Normalised to deltan = 1, so we can just multi this by deltan
-        assert self.nxc.shape == self._x.shape, (
+        assert self._cal_dts['nxc'].shape == self._x.shape, (
             "nxc is different length to x spacing")
 
         Spectral_PL = np.trapz(
-            (sre * self._escapeprob).T * self.nxc * self.doping /
-            self._sre._ni.update()**2,
+            (
+                (sre * self._escapeprob).T *
+                self._cal_dts['nxc'] *
+                self._cal_dts['doping'] /
+                self._sre._ni.update()**2),
             self._x,
             axis=1)
 
@@ -304,130 +323,3 @@ class luminescence_emission(HelperFunctions):
         """
         spectral = self.calculate_spectral(**kwargs)
         return np.trapz(spectral, self._optics.wavelength)
-
-
-class Alpha_from_PL():
-
-    """
-    This class is for given a PL spectrum trying to
-    determine the absorption coefficents
-    """
-
-    Temp = 300
-    known_alpha = 1
-    known_wavelength = 1
-    wavelength_measured = np.array([1])
-    PL = np.array([1])
-
-    W = 0.018
-    # Dictionaries
-    wafer_optics_dic = {'polished': 'escprob_polished_schick1992',
-                        'textured': 'escprob_textured_rudiger2007'}
-    PL_Dection_side_depth = {'rear': 'Escape_rear',
-                             'front': 'Escape_front'}
-    wafer_opitcs = 'polished'
-    DetectionSide = 'front'
-
-    # this class should start by doing a point wise fit to the
-    def PL_normtoBB(self):
-        """
-        Just a little function to remove black body stuff
-        """
-
-        BB = BlackBody.PhotonFlux(self.wavelength_measured, self.temp)
-
-        self.PLnBB = self.PL / BB
-
-    def Guess_alpha(self):
-        """
-        Used to align the realtive PL measurement to calibrated alpha at
-        a known wavelength. Then does a first guess at to what alpha is.
-        """
-
-        self.PL_normtoBB()
-        norm_PL = np.interp(
-            self.known_wavelength, self.wavelength_measured, self.PLnBB)
-
-        # Find the proportionality in PL for the known alpha
-        self.wavelength = np.array(
-            (self.known_wavelength, self.known_wavelength))
-        self.optics_abs_cof_bb = np.array((self.known_alpha, self.known_alpha))
-        self.update_escape()
-
-        # For checking the escape probability
-        # plt.figure('test')
-        # plt.plot(self.x, self.escapeprob[:,0])
-        # plt.show()
-        self.Calibrationconstant = norm_PL / self.known_alpha / \
-            np.trapz(self.np * self.escapeprob[:, 0], self.x)
-
-        self.PL_alpha = self.PLnBB / norm_PL * self.known_alpha
-
-    def update_escape(self):
-        """
-        calculates the escape probability given alpha
-        """
-
-        getattr(self, self.wafer_optics_dic[self.wafer_opitcs])()
-
-        self.escapeprob = getattr(
-            self, self.PL_Dection_side_depth[self.DetectionSide])
-
-    def Iterate_alpha(self, n=10):
-        """
-        A function (not verified) to determine determine alpha from a PL
-        spectrum itterativly
-
-        Does the following itteration n times:
-
-        1. It assumes alpha, calcs the escape probaility, calculates PL
-        2. The calc PL is compared to the real PL and alpha is updated
-
-
-        a note:
-        Kramers Kronig could be used here to provide a relationship for how
-        alpha should behave
-        "http://www.doria.fi/bitstream/handle/10024/96800/Conventional%20and%20nonconventional%20Kramers-Kronig%20analysis%20in%20optical%20spectroscopy.pdf?sequence=3"
-        """
-
-        for i in range(n):
-            # print i
-            self.wavelength = self.wavelength_measured
-            self.optics_abs_cof_bb = self.PL_alpha
-
-            self.update_escape()
-
-            self.PL_alpha = self.PLnBB / self.Calibrationconstant /\
-                np.trapz(self.np * self.escapeprob.T,
-                         self.x,
-                         axis=1)
-
-
-if __name__ == "__main__":
-    a = Simulated_PL_emission()
-    a.initalise_EmittedPL()
-    a.calculate_spectral_PL()
-    a.update_escape()
-    plt.plot(a.optics.wavelength, a.Spectral_PL / np.amax(a.Spectral_PL))
-
-    a.wafer_opitcs = 'textured'
-    a.update_escape()
-    a.calculate_spectral_PL()
-    plt.plot(a.optics.wavelength, a.Spectral_PL / np.amax(a.Spectral_PL))
-    # plt.plot(a.optics.wavelength, a.optics.abs_cof_bb)
-
-    a.genralised_planks_PerWavelength()
-    plt.plot(a.optics.wavelength, a.rsp / np.amax(a.rsp), '--')
-
-    a.genralised_planks_PerEnergy()
-    plt.plot(a.optics.wavelength, a.rsp / np.amax(a.rsp), '--')
-
-    a.genralised_planks_PerWavelength_Carriers()
-    plt.plot(a.optics.wavelength, a.rsp / np.amax(a.rsp), ':')
-
-    # plt.plot(a.optics.wavelength,
-    #          a.blackbody_photon_per_wavelength(
-    #          ) / np.amax(a.blackbody_photon_per_wavelength()),
-    #          '--')
-    # plt.semilogy()
-    plt.show()

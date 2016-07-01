@@ -13,7 +13,7 @@ class IntrinsicBandGap(HelperFunctions):
         it changes as a result of:
              different effective carrier mass (band strucutre)
     '''
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300.,
         'author': None,
@@ -25,19 +25,19 @@ class IntrinsicBandGap(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['material'],
+            self._cal_dts['material'],
             self.author_list)
 
         # get the models ready
         self._int_model(author_file)
 
         # initiate the first model
-        self.change_model(self.cal_dts['author'])
+        self.change_model(self._cal_dts['author'])
 
     def update(self, **kwargs):
         '''
@@ -55,13 +55,13 @@ class IntrinsicBandGap(HelperFunctions):
             the intrinsic bandgap in eV
         '''
 
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         if 'author' in kwargs.keys():
-            self.change_model(self.cal_dts['author'])
-        Eg = getattr(iBg, self.model)(self.vals, temp=self.cal_dts['temp'])
+            self.change_model(self._cal_dts['author'])
+        Eg = getattr(iBg, self.model)(self.vals, temp=self._cal_dts['temp'])
 
-        return Eg * self.cal_dts['multiplier']
+        return Eg * self._cal_dts['multiplier']
 
     def check_models(self):
         '''

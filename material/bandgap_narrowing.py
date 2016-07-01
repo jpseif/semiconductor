@@ -24,7 +24,7 @@ class BandGapNarrowing(HelperFunctions):
     Note: I currently believed that the impact of dopants
         is much larger than the impact of the carrier distribution
     '''
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300.,
         'author': None,
@@ -37,19 +37,19 @@ class BandGapNarrowing(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['material'],
+            self._cal_dts['material'],
             self.author_list)
 
         # get the models ready
         self._int_model(author_file)
 
         # initiate the first model
-        self.change_model(self.cal_dts['author'])
+        self.change_model(self._cal_dts['author'])
 
     def update(self, Na, Nd, **kwargs):
         '''
@@ -62,17 +62,17 @@ class BandGapNarrowing(HelperFunctions):
             band gap narrowing in eV
         '''
 
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():
-            self.change_model(self.cal_dts['author'])
+            self.change_model(self._cal_dts['author'])
 
         # this should be change an outside function alter
         ne, nh = GF.get_carriers(Na=Na,
                                  Nd=Nd,
-                                 nxc=self.cal_dts['nxc'],
-                                 temp=self.cal_dts['temp'])
+                                 nxc=self._cal_dts['nxc'],
+                                 temp=self._cal_dts['temp'])
 
         doping = np.array(np.abs(Na - Nd))
 
@@ -82,7 +82,7 @@ class BandGapNarrowing(HelperFunctions):
             Nd=np.copy(Nd),
             ne=ne,
             nh=nh,
-            temp=self.cal_dts['temp'],
+            temp=self._cal_dts['temp'],
             doping=doping)
 
     def check_models(self):

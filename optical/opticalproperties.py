@@ -5,13 +5,12 @@ import sys
 import scipy.constants as const
 from semiconductor.helper.helper import HelperFunctions
 
-# the idea is to have one class (opticalProperties)
-# which is connectd to many other smaller class that provide
-# n, absorption/k,
-
 
 class TabulatedOpticalProperties(HelperFunctions):
-    cal_dts = {
+    '''
+    A class to obtain n, k, and alpha
+    '''
+    _cal_dts = {
         'material': 'Si',
         'temp': 300.,
         'abs_author': None,
@@ -20,43 +19,44 @@ class TabulatedOpticalProperties(HelperFunctions):
     }
 
     def __init__(self, **kwargs):
-        self._update_dts(**kwargs)
+
+        self.caculationdetails = kwargs
         self._update_links()
         self.load()
 
     def _update_links(self):
         self.tac = TabulatedAbsorptionCoefficient(
-            material=self.cal_dts['material'],
-            author=self.cal_dts['abs_author'],
-            temp=self.cal_dts['temp'],
+            material=self._cal_dts['material'],
+            author=self._cal_dts['abs_author'],
+            temp=self._cal_dts['temp'],
         )
 
         try:
             self.tri = TabulatedRefractiveIndex(
-                material=self.cal_dts['material'],
-                author=self.cal_dts['ref_author'],
-                temp=self.cal_dts['temp'],
+                material=self._cal_dts['material'],
+                author=self._cal_dts['ref_author'],
+                temp=self._cal_dts['temp'],
             )
         except:
-            print('No reactive index data found')
-
+            print(sys.exc_info()[0])
+            sys.exit('No reactive index data found')
 
     def load(self, common_range=True, **kwargs):
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         if 'author' or 'material' in ''.join(kwargs.keys()):
             self._update_links()
 
         try:
-            self.tri.load(temp=self.cal_dts['temp'])
+            self.tri.load(temp=self._cal_dts['temp'])
             self.ref_ind = self.tri.ref_ind
         except:
             pass
 
-        self.tac.load(temp=self.cal_dts['temp'])
+        self.tac.load(temp=self._cal_dts['temp'])
         self.abs_cof_bb = self.tac.abs_cof_bb
 
-        if self.cal_dts['ext_cof']:
+        if self._cal_dts['ext_cof']:
             self.ext_cof_bb = self.tac.calculate_ext_coef()
 
         if common_range:
@@ -91,7 +91,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
     These are temperature dependence.
     """
 
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300.,
         'author': None,
@@ -103,19 +103,19 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['material'],
+            self._cal_dts['material'],
             self.author_file)
 
         # get the models ready
         self._int_model(author_file)
 
         # initiate the first model
-        self.change_model(self.cal_dts['author'])
+        self.change_model(self._cal_dts['author'])
 
     def load(self, **kwargs):
         """
@@ -123,15 +123,15 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
         from the provided or from self. the name
         """
         # check to see if its set here out outside of this function
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # if change the model, update it.
         if 'author' in kwargs.keys():
-            self.change_model(self.cal_dts['author'])
+            self.change_model(self._cal_dts['author'])
 
         # Getting the absorption coefficient from a file
         data = np.genfromtxt(os.path.join(os.path.dirname(__file__),
-                                          self.cal_dts['material'],
+                                          self._cal_dts['material'],
                                           self.model),
                              names=True, delimiter=',')
 
@@ -142,19 +142,19 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
         # if the temp is a float
         if type(self.vals['temp']) is float:
             self.abs_cof_bb = data['alpha']
-            if self.cal_dts['temp'] != self.vals['temp']:
+            if self._cal_dts['temp'] != self.vals['temp']:
                 try:
                     self.abs_cof_bb = _temp_power_law(self.abs_cof_bb,
                                                       data['C_ka'],
-                                                      self.cal_dts['temp'],
+                                                      self._cal_dts['temp'],
                                                       self.vals['temp'])
                 except:
                     print(
                         '''Warning:'''
                         '''\n\tNo tabulated data, or temp cofs for'''
-                        ''' {0:.0f} K'''.format(self.cal_dts['temp']) +
+                        ''' {0:.0f} K'''.format(self._cal_dts['temp']) +
                         '''\tfor the author {0}'''.format(
-                            self.cal_dts['author']) +
+                            self._cal_dts['author']) +
                         '\tusing data for temperature {0:.0f} K.'.format(
                             self.vals['temp'])
                     )
@@ -163,7 +163,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
 
             # this happens when there are several alpha values, so lets try a
             # specif temp
-            name = 'alpha_{0:.0f}K'.format(self.cal_dts['temp'])
+            name = 'alpha_{0:.0f}K'.format(self._cal_dts['temp'])
             if name in data.dtype.names:
                 self.abs_cof_bb = data[name]
             else:
@@ -171,9 +171,9 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
                 print(
                     'Warning:'
                     '\n\tTabulated data at {0} K does not exist.'.format(
-                        self.cal_dts['temp']) +
+                        self._cal_dts['temp']) +
                     '\n\tfor the author {0}'.format(
-                        self.cal_dts['author']) +
+                        self._cal_dts['author']) +
                     '\n\tThe value for', self.vals['default_temp'],
                     'K is used'
                 )
@@ -199,7 +199,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
 
 class TabulatedRefractiveIndex(HelperFunctions):
 
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300.,
         'author': None,
@@ -211,19 +211,19 @@ class TabulatedRefractiveIndex(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['material'],
+            self._cal_dts['material'],
             self.author_file)
 
         # get the models ready
         self._int_model(author_file)
 
         # initiate the first model
-        self.change_model(self.cal_dts['author'])
+        self.change_model(self._cal_dts['author'])
 
     def load(self, **kwargs):
         """
@@ -231,11 +231,11 @@ class TabulatedRefractiveIndex(HelperFunctions):
         from the provided or from self. the name
         """
 
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():
-            self.change_model(self.cal_dts['author'])
+            self.change_model(self._cal_dts['author'])
 
         # To do
         # need to make a check if there is a temp value
@@ -245,24 +245,24 @@ class TabulatedRefractiveIndex(HelperFunctions):
 
         # Get n
         data = np.genfromtxt(os.path.join(os.path.dirname(__file__),
-                                          self.cal_dts['material'],
+                                          self._cal_dts['material'],
                                           self.model),
                              names=True, delimiter=',')
 
         self.wavelength, self.ref_ind, self.energy = data[
             'wavelength'], data['n'], data['energy']
 
-        if self.cal_dts['temp'] != self.vals['temp']:
+        if self._cal_dts['temp'] != self.vals['temp']:
             try:
                 self.ref_ind = _temp_power_law(self.ref_ind, data['C_n'],
-                                               self.cal_dts['temp'],
+                                               self._cal_dts['temp'],
                                                self.vals['temp'])
             except:
                 print(
                     'Temp Warning:'
                     '\tNo tabulated data, or temp cofs for {0:.0f} K'.format(
-                        self.cal_dts['temp']) +
-                    '\tfor the author {0}'.format(self.cal_dts['author']) +
+                        self._cal_dts['temp']) +
+                    '\tfor the author {0}'.format(self._cal_dts['author']) +
                     '\tusing data for temperature {0:.0f} K.'.format(
                         self.vals['temp'])
                 )
@@ -298,7 +298,7 @@ class ModelledAbsorptionCoefficient(HelperFunctions):
     beta = 0
     gamma = 0
 
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300.,
         'author': None,
@@ -310,19 +310,19 @@ class ModelledAbsorptionCoefficient(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['material'],
+            self._cal_dts['material'],
             self.author_list)
 
         # get the models ready
         self._int_model(author_file)
 
         # initiate the first model
-        self.change_model(self.cal_dts['author'])
+        self.change_model(self._cal_dts['author'])
 
     def update_absorptioncoefficients(self, f=None, Input=None):
         '''

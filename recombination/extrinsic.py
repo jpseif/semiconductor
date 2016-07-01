@@ -22,7 +22,7 @@ class SRH(HelperFunctions):
     # then need to look this value up from the model.
     # currently just have this as an input.
 
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'defect': None,
         'temp': 300.,
@@ -43,34 +43,34 @@ class SRH(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['material'],
+            self._cal_dts['material'],
             self.author_list)
 
         # get the models ready
         self._int_model(author_file)
 
         # initiate the a defect
-        self._change_model(self.cal_dts['defect'])
+        self._change_model(self._cal_dts['defect'])
         self._update_links()
         self._cal_taun_taup()
 
     def _update_links(self):
 
-        self.ni = ni(material=self.cal_dts['material'],
-                     author=self.cal_dts['ni_author'],
-                     temp=self.cal_dts['temp'],
+        self.ni = ni(material=self._cal_dts['material'],
+                     author=self._cal_dts['ni_author'],
+                     temp=self._cal_dts['temp'],
                      )
         self.ni.update()
 
         self.vel_th_e, self.vel_th_h = Vel_th(
-            material=self.cal_dts['material'],
-            author=self.cal_dts['vth_author'],
-            temp=self.cal_dts['temp']).update()
+            material=self._cal_dts['material'],
+            author=self._cal_dts['vth_author'],
+            temp=self._cal_dts['temp']).update()
 
     def _cal_taun_taup(self):
         '''
@@ -78,9 +78,9 @@ class SRH(HelperFunctions):
         from the capture cross sections
         '''
 
-        self.vals['tau_e'] = 1. / self.cal_dts['Nt']\
+        self.vals['tau_e'] = 1. / self._cal_dts['Nt']\
             / self.vals['sigma_e'] / self.vel_th_e  # s
-        self.vals['tau_h'] = 1. / self.cal_dts['Nt']\
+        self.vals['tau_h'] = 1. / self._cal_dts['Nt']\
             / self.vals['sigma_h'] / self.vel_th_h  # s
 
     def _change_model(self, defect):
@@ -90,11 +90,11 @@ class SRH(HelperFunctions):
         '''
 
         # load the defect
-        self.change_model(self.cal_dts['defect'])
+        self.change_model(self._cal_dts['defect'])
         print(self.vals.keys(), 'insdie')
         # check is a model was provided
         if 'vth_author' in self.vals.keys():
-            self.cal_dts['vth_author'] = self.vals['vth_author']
+            self._cal_dts['vth_author'] = self.vals['vth_author']
 
         # get the values from the model
         self._update_links()
@@ -106,10 +106,10 @@ class SRH(HelperFunctions):
         '''
 
         if bool(kwargs):
-            self._update_dts(**kwargs)
+            self.caculationdetails = kwargs
 
         if 'defect' in kwargs:
-            self._change_model(self.cal_dts['defect'])
+            self._change_model(self._cal_dts['defect'])
             self._cal_taun_taup()
 
         # if change in a model update the values
@@ -117,7 +117,7 @@ class SRH(HelperFunctions):
             self._update_links()
             self._cal_taun_taup()
 
-        return self._tau(self.cal_dts['nxc'],
+        return self._tau(self._cal_dts['nxc'],
                          self.vals['tau_e'],
                          self.vals['tau_h'],
                          self.vals['et'])
@@ -134,16 +134,16 @@ class SRH(HelperFunctions):
 
         # the escape from defects
         nh1 = self.ni.ni * \
-            np.exp(-Et * const.e / (const.k * self.cal_dts['temp']))
+            np.exp(-Et * const.e / (const.k * self._cal_dts['temp']))
         ne1 = self.ni.ni *\
-            np.exp(Et * const.e / (const.k * self.cal_dts['temp']))
+            np.exp(Et * const.e / (const.k * self._cal_dts['temp']))
 
         # get the number of carriers
-        ne, nh = get_carriers(Na=self.cal_dts['Na'],
-                              Nd=self.cal_dts['Nd'],
-                              nxc=self.cal_dts['nxc'],
-                              temp=self.cal_dts['temp'],
-                              material=self.cal_dts['material'],
+        ne, nh = get_carriers(Na=self._cal_dts['Na'],
+                              Nd=self._cal_dts['Nd'],
+                              nxc=self._cal_dts['nxc'],
+                              temp=self._cal_dts['temp'],
+                              material=self._cal_dts['material'],
                               ni=self.ni.ni
                               )
 
@@ -151,7 +151,7 @@ class SRH(HelperFunctions):
         U = (ne * nh - self.ni.ni**2) / \
             (tau_h * (ne + ne1) + tau_e * (nh + nh1))
 
-        return self.cal_dts['nxc'] / U
+        return self._cal_dts['nxc'] / U
 
     def usr_vals(self, Et=None, sigma_e=None, sigma_h=None,
                  tau_e=None, tau_h=None, Nt=None):
@@ -181,7 +181,7 @@ class SRH(HelperFunctions):
         if 'vth_author' in self.vals:
             del self.vals['vth_author']
 
-        self.cal_dts['Nt'] = Nt or self.cal_dts['Nt']
+        self._cal_dts['Nt'] = Nt or self._cal_dts['Nt']
         # it tau_n or tau_p's values passed,
         # do dont' caculate them
         if tau_e is None and tau_h is None:

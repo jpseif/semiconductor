@@ -11,7 +11,7 @@ from semiconductor.helper.helper import HelperFunctions
 
 
 class Conductivity(HelperFunctions):
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300,
         'mob_author': None,
@@ -25,64 +25,64 @@ class Conductivity(HelperFunctions):
     }
 
     def __init__(self, **kwargs):
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
     def _update_links(self):
 
         # setting downstream values, this should change from initalisation
         # to just updating through the update function
-        self.Mob = Mob(material=self.cal_dts['material'],
-                       author=self.cal_dts['mob_author'],
-                       temp=self.cal_dts['temp'])
-        self.ni = ni(material=self.cal_dts['material'],
-                     author=self.cal_dts['nieff_author'],
-                     temp=self.cal_dts['temp'])
-        self.ion = Ion(material=self.cal_dts['material'],
-                       author=self.cal_dts['ionis_author'],
-                       ni_author=self.cal_dts['nieff_author'],
-                       temp=self.cal_dts['temp'])
+        self.Mob = Mob(material=self._cal_dts['material'],
+                       author=self._cal_dts['mob_author'],
+                       temp=self._cal_dts['temp'])
+        self.ni = ni(material=self._cal_dts['material'],
+                     author=self._cal_dts['nieff_author'],
+                     temp=self._cal_dts['temp'])
+        self.ion = Ion(material=self._cal_dts['material'],
+                       author=self._cal_dts['ionis_author'],
+                       ni_author=self._cal_dts['nieff_author'],
+                       temp=self._cal_dts['temp'])
 
     def query_used_authors(self):
         return self.Mob.model, self.ni.model, self.ion.model
 
     def _conductivity(self, **kwargs):
 
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
         self._update_links()
 
         Nid, Nia = get_carriers(nxc=0,
-                                Na=self.cal_dts['Na'],
-                                Nd=self.cal_dts['Nd'],
-                                temp=self.cal_dts['temp'],
-                                ni_author=self.cal_dts['nieff_author']
+                                Na=self._cal_dts['Na'],
+                                Nd=self._cal_dts['Nd'],
+                                temp=self._cal_dts['temp'],
+                                ni_author=self._cal_dts['nieff_author']
                                 )
 
         if np.all(Nid > Nia):
             Nid = self.ion.update_dopant_ionisation(
                 Nid,
-                self.cal_dts['nxc'],
-                impurity=self.cal_dts['dopant'])
+                self._cal_dts['nxc'],
+                impurity=self._cal_dts['dopant'])
         elif np.all(Nia > Nid):
             Nia = self.ion.update_dopant_ionisation(
                 Nia,
-                nxc=self.cal_dts['nxc'],
-                impurity=self.cal_dts['dopant'])
+                nxc=self._cal_dts['nxc'],
+                impurity=self._cal_dts['dopant'])
 
         ne, nh = get_carriers(
             Na=Nia,
             Nd=Nid,
-            nxc=self.cal_dts['nxc'],
-            temp=self.cal_dts['temp'],
-            ni_author=self.cal_dts['nieff_author']
+            nxc=self._cal_dts['nxc'],
+            temp=self._cal_dts['temp'],
+            ni_author=self._cal_dts['nieff_author']
         )
 
-        mob_e = self.Mob.electron_mobility(nxc=self.cal_dts['nxc'],
-                                           Na=self.cal_dts['Na'],
-                                           Nd=self.cal_dts['Nd']
+        mob_e = self.Mob.electron_mobility(nxc=self._cal_dts['nxc'],
+                                           Na=self._cal_dts['Na'],
+                                           Nd=self._cal_dts['Nd']
                                            )
-        mob_h = self.Mob.hole_mobility(nxc=self.cal_dts['nxc'],
-                                       Na=self.cal_dts['Na'],
-                                       Nd=self.cal_dts['Nd'])
+        mob_h = self.Mob.hole_mobility(nxc=self._cal_dts['nxc'],
+                                       Na=self._cal_dts['Na'],
+                                       Nd=self._cal_dts['Nd'])
 
         print(mob_e[-1], mob_h[-1])
 
@@ -93,9 +93,9 @@ class Conductivity(HelperFunctions):
         calculates the conductivity
         '''
 
-        self.cal_dts['conductivity'] = self._conductivity(**kwargs)
+        self._cal_dts['conductivity'] = self._conductivity(**kwargs)
 
-        return self.cal_dts['conductivity']
+        return self._cal_dts['conductivity']
 
 class Resistivity(Conductivity):
     '''
@@ -107,9 +107,9 @@ class Resistivity(Conductivity):
         calculates the resistivity
         '''
 
-        self.cal_dts['resistivity'] = 1. / self._conductivity(**kwargs)
+        self._cal_dts['resistivity'] = 1. / self._conductivity(**kwargs)
 
-        return self.cal_dts['resistivity']
+        return self._cal_dts['resistivity']
 
 class DarkConductivity(HelperFunctions):
     '''
@@ -118,7 +118,7 @@ class DarkConductivity(HelperFunctions):
     doping from conductance.
     '''
 
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300,
         'mob_author': None,
@@ -130,16 +130,16 @@ class DarkConductivity(HelperFunctions):
     }
 
     def __init__(self, **kwargs):
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
         self._update_links()
 
     def _update_links(self):
 
         # setting downstream values, this should change from initalisation
         # to just updating through the update function
-        self.Mob = Mob(material=self.cal_dts['material'],
-                       author=self.cal_dts['mob_author'],
-                       temp=self.cal_dts['temp'])
+        self.Mob = Mob(material=self._cal_dts['material'],
+                       author=self._cal_dts['mob_author'],
+                       temp=self._cal_dts['temp'])
 
     def query_used_authors(self):
         return self.Mob.model, self.ni.model, self.ion.model
@@ -169,18 +169,18 @@ class DarkConductivity(HelperFunctions):
         '''
 
         if bool(kwargs):
-            self._update_dts(**kwargs)
+            self.caculationdetails = kwargs
             self._update_links()
 
         mob_e = self.Mob.electron_mobility(nxc=1,
                                            Na=0,
                                            Nd=0,
-                                           temp=self.cal_dts['temp']
+                                           temp=self._cal_dts['temp']
                                            )
         # # get an inital guess
         Na = dark_conductivity/const.e / mob_e
 
-        cond = Conductivity(**self.cal_dts)
+        cond = Conductivity(**self._cal_dts)
 
         def cal_dop(N, dopant_type,dark_conductivity):
             if dopant_type =='p':
@@ -195,7 +195,7 @@ class DarkConductivity(HelperFunctions):
         dop= (opt.newton(cal_dop,
          x0 =Na,
           tol=0.001,
-           args=(self.cal_dts['dopant_type'],dark_conductivity),
+           args=(self._cal_dts['dopant_type'],dark_conductivity),
            ))
 
         return dop

@@ -24,32 +24,36 @@ class Mobility(HelperFunctions):
     '''
     author_list = 'mobility.models'
 
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300,
         'author': None,
-        'Na': 1e16,
-        'Nd': 0,
+        'Na': 1,
+        'Nd': 1e16,
         'nxc': 1e10,
     }
 
     def __init__(self, **kwargs):
 
-        # update any values in cal_dts
+        self.author = None
+        # update any values in _cal_dts
         # that are passed
-        self._update_dts(**kwargs)
+        # print(self._cal_dts)
+        # print('kwargs', kwargs)
+        self.caculationdetails = kwargs
+        # print(self._cal_dts)
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['material'],
+            self._cal_dts['material'],
             self.author_list)
 
         # get the models ready
         self._int_model(author_file)
 
         # initiate the first model
-        self.change_model(self.cal_dts['author'])
+        self.change_model(self._cal_dts['author'])
 
     def electron_mobility(self,  **kwargs):
         '''
@@ -57,17 +61,17 @@ class Mobility(HelperFunctions):
 
         inputs:
             kwargs: (optinal)
-                any value with cal_dts, for which the mobility depends on
+                any value with _cal_dts, for which the mobility depends on
 
         output:
             The electron mobility cm^2 V^-1 s^-1
         '''
         if bool(kwargs):
-            self._update_dts(**kwargs)
+            self.caculationdetails = kwargs
         return getattr(model, self.model)(
-            self.vals, Na=self.cal_dts['Na'], Nd=self.cal_dts['Nd'],
-            nxc=self.cal_dts['nxc'], carrier='electron',
-            temp=self.cal_dts['temp'])
+            self.vals, Na=self._cal_dts['Na'], Nd=self._cal_dts['Nd'],
+            nxc=self._cal_dts['nxc'], carrier='electron',
+            temp=self._cal_dts['temp'])
 
     def hole_mobility(self, **kwargs):
         '''
@@ -75,16 +79,17 @@ class Mobility(HelperFunctions):
 
         inputs:
             kwargs: (optinal)
-                any value with cal_dts, for which the mobility depends on
+                any value with _cal_dts, for which the mobility depends on
 
         output:
             The hole mobility cm^2 V^-1 s^-1
         '''
         if bool(kwargs):
-            self._update_dts(**kwargs)
+            self.caculationdetails = kwargs
         return getattr(model, self.model)(
-            self.vals, Na=self.cal_dts['Na'], Nd=self.cal_dts['Nd'],
-            nxc=self.cal_dts['nxc'], carrier='hole', temp=self.cal_dts['temp'])
+            self.vals, Na=self._cal_dts['Na'], Nd=self._cal_dts['Nd'],
+            nxc=self._cal_dts['nxc'], carrier='hole',
+            temp=self._cal_dts['temp'])
 
     def mobility_sum(self,  **kwargs):
         '''
@@ -92,13 +97,13 @@ class Mobility(HelperFunctions):
 
         inputs:
             kwargs: (optinal)
-                any value with cal_dts, for which the mobility depends on
+                any value with _cal_dts, for which the mobility depends on
 
         output:
             The sum of the electron and hole mobilities cm^2 V^-1 s^-1
         '''
         if bool(kwargs):
-            self._update_dts(**kwargs)
+            self.caculationdetails = kwargs
         return self.hole_mobility() +\
             self.electron_mobility()
 
@@ -110,28 +115,29 @@ class Mobility(HelperFunctions):
             ni_author: (optional, str)
                 an author for the intrinsic carrier density
             kwargs: (optinal)
-                any value with cal_dts, for which the mobility depends on
+                any value with _cal_dts, for which the mobility depends on
 
         output:
             ambipolar mobility in cm^2 V^-1 s^-1
         '''
 
         if bool(kwargs):
-            self._update_dts(**kwargs)
+            self.caculationdetails = kwargs
 
         # get the number of carriers
         ne, nh = get_carriers(
-            Na=self.cal_dts['Na'],
-            Nd=self.cal_dts['Nd'],
-            nxc=self.cal_dts['nxc'],
-            temp=self.cal_dts['temp'],
-            material=self.cal_dts['material'],
-            ni_author=ni_author)
+            Na=self._cal_dts['Na'],
+            Nd=self._cal_dts['Nd'],
+            nxc=self._cal_dts['nxc'],
+            temp=self._cal_dts['temp'],
+            material=self._cal_dts['material'],
+            ni_author=ni_author,
+            ni=9e9)
 
         mob_h = self.hole_mobility()
         mob_e = self.electron_mobility()
 
-        # caculate the ambipolar mobility according to 
+        # caculate the ambipolar mobility according to
         mob_ambi = (ne+nh)/(nh/mob_e + ne/mob_h)
 
         return mob_ambi
@@ -148,9 +154,11 @@ def check_klaassen():
     a = Mobility('Si')
     a.change_model('klaassen1992')
 
-    print('''The model disagrees at low tempeature owing to dopant ionisation'''
-           '''I am unsure if mobility should take ionisated dopants or non ionisaed'''
-           '''most likley it should take both, currently it only takes one''')
+    print('''The model disagrees at low tempeature owing to dopant\
+           ionisation\
+           I am unsure if mobility should take ionisated dopants or\
+            non ionisaed\
+           most likley it should take both, currently it only takes one''')
 
     dn = np.logspace(10, 20)
     # dn = np.array([1e14])
@@ -229,8 +237,3 @@ def check_dorkel():
         plt.semilogx()
         plt.xlabel(r'$\Delta$n (cm$^{-3}$)')
         plt.xlabel(r'Moblity  (cm$^2$V$^{-1}$s$^{-1}$)')
-
-if __name__ == "__main__":
-    check_klaassen()
-    check_dorkel()
-    plt.show()

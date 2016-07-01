@@ -18,7 +18,7 @@ class DOS(HelperFunctions):
     number of free states for electrons and holes in the conduction
     and valance band
     '''
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300.,
         'author': None,
@@ -37,21 +37,21 @@ class DOS(HelperFunctions):
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['material'],
+            self._cal_dts['material'],
             self.author_list)
 
         # get the models ready
         self._int_model(author_file)
 
         # initiate the first model
-        self.change_model(self.cal_dts['author'])
+        self.change_model(self._cal_dts['author'])
 
     def update(self, **kwargs):
         '''
         a function to update the density of states
 
         inputs:
-            dictionary with values found in self.cal_dts:
+            dictionary with values found in self._cal_dts:
                 temperature: (optional)
                              in kelvin
                 author:  (optional)
@@ -62,22 +62,22 @@ class DOS(HelperFunctions):
             the density of states of the valance band
             the density of states of the conduction band
         '''
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():
-            self.change_model(self.cal_dts['author'])
+            self.change_model(self._cal_dts['author'])
 
         if 'ieg_author' in self.vals.keys():
 
             Eg0 = Egi(
-                material=self.cal_dts['material'],
+                material=self._cal_dts['material'],
                 temp=0,
                 author=self.vals['ieg_author'],
             ).update()
             Egratio = Eg0 / Egi(
-                material=self.cal_dts['material'],
-                temp=self.cal_dts['temp'],
+                material=self._cal_dts['material'],
+                temp=self._cal_dts['temp'],
                 author=self.vals['ieg_author'],
             ).update()
 
@@ -88,7 +88,7 @@ class DOS(HelperFunctions):
             dos_models, self.model
         )(
             self.vals,
-            temp=self.cal_dts['temp'],
+            temp=self._cal_dts['temp'],
             Egratio=Egratio)
 
         return self.Nc, self.Nv

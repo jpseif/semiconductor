@@ -21,7 +21,7 @@ class IntrinsicCarrierDensity(HelperFunctions):
     of the intrinsic to account for band gap narrowing.
     '''
 
-    cal_dts = {
+    _cal_dts = {
         'material': 'Si',
         'temp': 300.,
         'author': None,
@@ -31,21 +31,21 @@ class IntrinsicCarrierDensity(HelperFunctions):
 
     def __init__(self, **kwargs):
 
-        # update any values in cal_dts
+        # update any values in _cal_dts
         # that are passed
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            self.cal_dts['material'],
+            self._cal_dts['material'],
             self.author_list)
 
         # get the models ready
         self._int_model(author_file)
 
         # initiate the first model
-        self.change_model(self.cal_dts['author'])
+        self.change_model(self._cal_dts['author'])
 
     def update(self, **kwargs):
         '''
@@ -62,26 +62,26 @@ class IntrinsicCarrierDensity(HelperFunctions):
             The intrinsic carrier concentration in cm^-3.
             Note this is not the effective intrinsic carrier concentration
         '''
-        self._update_dts(**kwargs)
+        self.caculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():
-            self.change_model(self.cal_dts['author'])
+            self.change_model(self._cal_dts['author'])
 
         # if the model required the energy gap, calculate it
         if self.model == 'ni_temp_eg':
             Eg = IntrinsicBandGap(
-                material=self.cal_dts['material'],
+                material=self._cal_dts['material'],
                 author=self.vals['eg_model']
             ).update(
-                temp=self.cal_dts['temp'],
+                temp=self._cal_dts['temp'],
                 multiplier=1
             )
         else:
             Eg = 0
 
         self.ni = getattr(ni_models, self.model)(
-            self.vals, temp=self.cal_dts['temp'], Eg=Eg)
+            self.vals, temp=self._cal_dts['temp'], Eg=Eg)
 
         return self.ni
 

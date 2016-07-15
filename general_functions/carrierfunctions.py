@@ -29,6 +29,8 @@ def get_carriers(Na, Nd, nxc,
         Na = np.asarray([Na])
     if not isinstance(Nd, np.ndarray):
         Nd = np.array([Nd])
+    if not isinstance(nxc, np.ndarray):
+        nxc = np.array([nxc])
 
     if ni is None:
         ni = NI(material=material).update(author=ni_author, temp=temp)
@@ -46,21 +48,41 @@ def get_carriers(Na, Nd, nxc,
     min_car_den = ni**2 / maj_car_den
 
     # assign the minority carriers
-    ne = min_car_den
-    nh = min_car_den
+    ne0 = min_car_den
+    nh0 = min_car_den
 
     # check the doping and assign
     index = Na < Nd
 
-    ne[~index] = maj_car_den[~index]
-    nh[index] = maj_car_den[index]
+    ne0[~index] = maj_car_den[~index]
+    nh0[index] = maj_car_den[index]
 
-    ne += nxc
-    nh += nxc
+    # add the number of excess carriers
+    assert ne0.shape == nh0.shape
+
+    # make the excess carrier the right shape to add
+    nxc_m = nxc * np.ones((nxc.shape[0], ne0.shape[0]))
+
+    # add them to the dark carriers
+    ne = ne0 + nxc_m
+    nh = nh0 + nxc_m
+
+    # To make sure an array the same shape as the input array is returned
+    # Note this function does not play well if  both an array of dopants
+    # and excess carrerier densities are passed
+
+    if ne0.shape[0] == 1:
+        ne = ne[0]
+        nh = nh[0]
+    else:
+        ne = ne.flatten()
+        nh = nh.flatten()
 
     return ne, nh
 
-def fermi2carrier_fermi(Ef, ni_author=None, eg_author=None, temp=300, material='Si', Ei=0):
+
+def fermi2carrier_fermi(Ef, ni_author=None, eg_author=None, temp=300,
+                        material='Si', Ei=0):
     '''
     This does not work.
 

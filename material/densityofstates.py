@@ -30,9 +30,7 @@ class DOS(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        temp = locals().copy()
-        del temp['self']
-        self._update_dts(**temp)
+        self.caculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(

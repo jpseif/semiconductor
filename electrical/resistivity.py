@@ -189,13 +189,13 @@ class DarkConductivity(HelperFunctions):
             elif dopant_type =='n':
                 Na = 0
                 Nd = N
-            cond =  (cond.calculate(Na=Na, Nd=Nd))
-            return  cond - dark_conductivity
+            condv =  (cond.calculate(Na=Na, Nd=Nd))
+            return  condv - dark_conductivity
 
-        dop= (opt.newton(cal_dop,
-         x0 =Na,
-          tol=0.001,
-           args=(self._cal_dts['dopant_type'],dark_conductivity),
-           ))
+        dop = (opt.newton(cal_dop,
+                          x0 = Na,
+                          tol= 0.001,
+                          args=(self._cal_dts['dopant_type'],dark_conductivity)
+                          ,))
 
         return dop

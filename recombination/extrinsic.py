@@ -135,8 +135,10 @@ class SRH(HelperFunctions):
         # the escape from defects
         nh1 = self.ni.ni * \
             np.exp(-Et * const.e / (const.k * self._cal_dts['temp']))
-        ne1 = self.ni.ni *\
+
+        ne1 = self.ni.ni * \
             np.exp(Et * const.e / (const.k * self._cal_dts['temp']))
+
 
         # get the number of carriers
         ne, nh = get_carriers(Na=self._cal_dts['Na'],
@@ -165,7 +167,6 @@ class SRH(HelperFunctions):
             sigma_h: (optional float)
                 The capture cross section for holes in seconds
         '''
-
         temp = self.vals
         # assign the new values
         self.vals = {
@@ -178,11 +179,16 @@ class SRH(HelperFunctions):
             'tau_h': np.array([tau_h]) or temp['tau_h'],
             }
 
+        # the or above doens't work for zeros
+        if Et == 0:
+            self.vals['et']  = 0
+
         if 'vth_author' in self.vals:
             del self.vals['vth_author']
 
         self._cal_dts['Nt'] = Nt or self._cal_dts['Nt']
-        # it tau_n or tau_p's values passed,
+
+        # if tau_n or tau_p's values passed,
         # do dont' caculate them
         if tau_e is None and tau_h is None:
             self._cal_taun_taup()

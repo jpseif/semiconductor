@@ -25,6 +25,7 @@ def get_carriers(Na, Nd, nxc,
 
     '''
 
+    # check types
     if not isinstance(Na, np.ndarray):
         Na = np.asarray([Na])
     if not isinstance(Nd, np.ndarray):
@@ -32,6 +33,7 @@ def get_carriers(Na, Nd, nxc,
     if not isinstance(nxc, np.ndarray):
         nxc = np.array([nxc])
 
+    # if ni not provided obtain
     if ni is None:
         ni = NI(material=material).update(author=ni_author, temp=temp)
 
@@ -47,15 +49,16 @@ def get_carriers(Na, Nd, nxc,
                           np.sqrt((Nd - Na)**2 + 4 * ni**2)))
     min_car_den = ni**2 / maj_car_den
 
-    # assign the minority carriers
-    ne0 = min_car_den
-    nh0 = min_car_den
+    # assign the dark minority carriers
+    ne0 = np.copy(min_car_den)
+    nh0 = np.copy(min_car_den)
 
     # check the doping and assign
+    # if the number of donars are larger
     index = Na < Nd
 
-    ne0[~index] = maj_car_den[~index]
-    nh0[index] = maj_car_den[index]
+    nh0[~index] = maj_car_den[~index]
+    ne0[index] = maj_car_den[index]
 
     # add the number of excess carriers
     assert ne0.shape == nh0.shape

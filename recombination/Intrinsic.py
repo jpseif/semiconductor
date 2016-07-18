@@ -18,6 +18,8 @@ class Intrinsic(HelperFunctions):
         'ni_author': None,
         'rad_author': None,
         'aug_author': None,
+        'Na': 1,
+        'Nd': 1e16,
     }
 
     def __init__(self, **kwargs):
@@ -34,23 +36,27 @@ class Intrinsic(HelperFunctions):
             material=self._cal_dts['material'],
             author=self._cal_dts['rad_author'],
             temp=self._cal_dts['temp'],
-            ni_author=self._cal_dts['ni_author']
+            ni_author=self._cal_dts['ni_author'],
+            Na=self._cal_dts['Na'],
+            Nd=self._cal_dts['Nd'],
         )
 
         self.Auger = Auger(
             material=self._cal_dts['material'],
             author=self._cal_dts['aug_author'],
             temp=self._cal_dts['temp'],
-            ni_author=self._cal_dts['ni_author']
+            ni_author=self._cal_dts['ni_author'],
+            Na=self._cal_dts['Na'],
+            Nd=self._cal_dts['Nd'],
         )
 
-    def tau(self, nxc, Na, Nd, **kwargs):
+    def tau(self, nxc, **kwargs):
         '''
         Returns the intrinsic carrier lifetime
         '''
-        return 1. / self.itau(nxc, Na, Nd, **kwargs)
+        return 1. / self.itau(nxc, **kwargs)
 
-    def itau(self, nxc, Na, Nd, **kwargs):
+    def itau(self, nxc, **kwargs):
         '''
         Returns the inverse of the intrinsic carrier lifetime
         '''
@@ -58,8 +64,8 @@ class Intrinsic(HelperFunctions):
         if 'author' in ''.join(kwargs.keys()):
             self._update_links()
 
-        itau = self.Radiative.itau(nxc, Na, Nd, **kwargs) +\
-            self.Auger.itau(nxc, Na, Nd, **kwargs)
+        itau = self.Radiative.itau(nxc, **kwargs) +\
+            self.Auger.itau(nxc, **kwargs)
 
         return itau
 
@@ -72,7 +78,9 @@ class Radiative(HelperFunctions):
         'material': 'Si',
         'temp': 300.,
         'author': None,
-        'ni_author': None
+        'ni_author': None,
+        'Na': 1,
+        'Nd': 1e16,
     }
 
     def __init__(self, **kwargs):
@@ -93,13 +101,13 @@ class Radiative(HelperFunctions):
         # initiate the first model
         self.change_model(self._cal_dts['author'])
 
-    def tau(self, nxc, Na, Nd, **kwargs):
+    def tau(self, nxc, **kwargs):
         self.caculationdetails = kwargs
         self.change_model(self._cal_dts['author'])
 
         ne0, nh0 = get_carriers(
-            Na,
-            Nd,
+            Na=self._cal_dts['Na'],
+            Nd=self._cal_dts['Nd'],
             nxc=0,
             ni_author=self._cal_dts['ni_author'],
             temp=self._cal_dts['temp']
@@ -111,8 +119,8 @@ class Radiative(HelperFunctions):
             self.vals, nxc, nh0, ne0, B, temp=self._cal_dts['temp']
         )
 
-    def itau(self, nxc, Na, Nd, **kwargs):
-        return 1. / self.tau(nxc, Na, Nd, **kwargs)
+    def itau(self, nxc, **kwargs):
+        return 1. / self.tau(nxc, **kwargs)
 
     def _get_B(self):
 
@@ -137,7 +145,9 @@ class Auger(HelperFunctions):
         'material': 'Si',
         'temp': 300.,
         'author': None,
-        'ni_author': None
+        'ni_author': None,
+        'Na': 1,
+        'Nd': 1e16,
     }
 
     def __init__(self, **kwargs):
@@ -158,15 +168,15 @@ class Auger(HelperFunctions):
         # initiate the first model
         self.change_model(self._cal_dts['author'])
 
-    def tau(self, nxc, Na, Nd, **kwargs):
+    def tau(self, nxc, **kwargs):
         self.caculationdetails = kwargs
 
         if 'author' in kwargs.keys():
             self.change_model(self._cal_dts['author'])
 
         ne0, nh0 = get_carriers(
-            Na,
-            Nd,
+            Na=self._cal_dts['Na'],
+            Nd=self._cal_dts['Nd'],
             nxc=0,
             ni_author=self._cal_dts['ni_author'],
             temp=self._cal_dts['temp']
@@ -175,8 +185,8 @@ class Auger(HelperFunctions):
         return getattr(augmdls, self.model)(
             self.vals, nxc, ne0, nh0, temp=self._cal_dts['temp'])
 
-    def itau(self, nxc, Na, Nd, **kwargs):
-        return 1. / self.tau(nxc, Na, Nd, **kwargs)
+    def itau(self, nxc, **kwargs):
+        return 1. / self.tau(nxc, **kwargs)
 
     def check(self, author, fig=None, ax=None):
         if ax is None:

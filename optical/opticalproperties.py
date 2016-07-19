@@ -20,7 +20,7 @@ class TabulatedOpticalProperties(HelperFunctions):
 
     def __init__(self, **kwargs):
 
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
         self._update_links()
         self.load()
 
@@ -42,7 +42,7 @@ class TabulatedOpticalProperties(HelperFunctions):
             sys.exit('No reactive index data found')
 
     def load(self, common_range=True, **kwargs):
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         if 'author' or 'material' in ''.join(kwargs.keys()):
             self._update_links()
@@ -103,7 +103,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
@@ -123,7 +123,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
         from the provided or from self. the name
         """
         # check to see if its set here out outside of this function
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # if change the model, update it.
         if 'author' in kwargs.keys():
@@ -211,7 +211,7 @@ class TabulatedRefractiveIndex(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
@@ -231,7 +231,7 @@ class TabulatedRefractiveIndex(HelperFunctions):
         from the provided or from self. the name
         """
 
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():
@@ -310,7 +310,7 @@ class ModelledAbsorptionCoefficient(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(

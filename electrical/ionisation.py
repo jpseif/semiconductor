@@ -31,7 +31,7 @@ class Ionisation(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
         self._init_links()
 
         # get the address of the authors list
@@ -74,7 +74,7 @@ class Ionisation(HelperFunctions):
         output:
             the number of ionised impurities
         '''
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():
@@ -125,7 +125,7 @@ class Ionisation(HelperFunctions):
                 The number of ionised dopants
         '''
 
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():

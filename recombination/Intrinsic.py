@@ -25,7 +25,7 @@ class Intrinsic(HelperFunctions):
     def __init__(self, **kwargs):
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # pass values to models
         self._update_links()
@@ -60,7 +60,7 @@ class Intrinsic(HelperFunctions):
         '''
         Returns the inverse of the intrinsic carrier lifetime
         '''
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
         if 'author' in ''.join(kwargs.keys()):
             self._update_links()
 
@@ -87,7 +87,7 @@ class Radiative(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
@@ -102,7 +102,7 @@ class Radiative(HelperFunctions):
         self.change_model(self._cal_dts['author'])
 
     def tau(self, nxc, **kwargs):
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
         self.change_model(self._cal_dts['author'])
 
         ne0, nh0 = get_carriers(
@@ -154,7 +154,7 @@ class Auger(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
@@ -169,7 +169,7 @@ class Auger(HelperFunctions):
         self.change_model(self._cal_dts['author'])
 
     def tau(self, nxc, **kwargs):
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         if 'author' in kwargs.keys():
             self.change_model(self._cal_dts['author'])

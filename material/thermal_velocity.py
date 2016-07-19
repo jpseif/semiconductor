@@ -31,7 +31,7 @@ class ThermalVelocity(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
@@ -59,7 +59,7 @@ class ThermalVelocity(HelperFunctions):
         output:
             the thermal velocity in cm/s
         '''
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():

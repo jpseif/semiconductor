@@ -27,7 +27,7 @@ class EscapeProbability(HelperFunctions):
     def __init__(self,
                  x=None, **kwargs):
 
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         if x is None:
             self.x = np.linspace(0, 0.018, 100)
@@ -59,7 +59,7 @@ class EscapeProbability(HelperFunctions):
         There is no input for surface reflections
         """
         if kwargs:
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
             self._update_links()
 
         self.width_from_xlegnth()
@@ -111,7 +111,7 @@ class EscapeProbability(HelperFunctions):
         """
 
         if kwargs:
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
             self._update_links()
 
         self.width_from_xlegnth()

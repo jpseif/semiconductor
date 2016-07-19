@@ -33,7 +33,7 @@ class IntrinsicCarrierDensity(HelperFunctions):
 
         # update any values in _cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
@@ -62,7 +62,7 @@ class IntrinsicCarrierDensity(HelperFunctions):
             The intrinsic carrier concentration in cm^-3.
             Note this is not the effective intrinsic carrier concentration
         '''
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():

@@ -29,6 +29,8 @@ class BandGapNarrowing(HelperFunctions):
         'temp': 300.,
         'author': None,
         'nxc': 1e10,
+        'Na': 0,
+        'Nd': 1e16,
     }
 
     author_list = 'bandgap_narrowing.models'
@@ -37,7 +39,7 @@ class BandGapNarrowing(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
@@ -51,7 +53,7 @@ class BandGapNarrowing(HelperFunctions):
         # initiate the first model
         self.change_model(self._cal_dts['author'])
 
-    def update(self, Na, Nd, **kwargs):
+    def update(self, **kwargs):
         '''
         Calculates the band gap narrowing
 
@@ -62,24 +64,24 @@ class BandGapNarrowing(HelperFunctions):
             band gap narrowing in eV
         '''
 
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():
             self.change_model(self._cal_dts['author'])
 
         # this should be change an outside function alter
-        ne, nh = GF.get_carriers(Na=Na,
-                                 Nd=Nd,
+        ne, nh = GF.get_carriers(Na=self._cal_dts['Na'],
+                                 Nd=self._cal_dts['Nd'],
                                  nxc=self._cal_dts['nxc'],
                                  temp=self._cal_dts['temp'])
 
-        doping = np.array(np.abs(Na - Nd))
+        doping = np.array(np.abs(self._cal_dts['Na'] - self._cal_dts['Nd']))
 
         return getattr(Bgn, self.model)(
             self.vals,
-            Na=np.copy(Na),
-            Nd=np.copy(Nd),
+            Na=np.copy(self._cal_dts['Na']),
+            Nd=np.copy(self._cal_dts['Nd']),
             ne=ne,
             nh=nh,
             temp=self._cal_dts['temp'],

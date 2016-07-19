@@ -40,7 +40,7 @@ class Mobility(HelperFunctions):
         # that are passed
         # print(self._cal_dts)
         # print('kwargs', kwargs)
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
         # print(self._cal_dts)
 
         # get the address of the authors list
@@ -67,7 +67,7 @@ class Mobility(HelperFunctions):
             The electron mobility cm^2 V^-1 s^-1
         '''
         if bool(kwargs):
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
         return getattr(model, self.model)(
             self.vals, Na=self._cal_dts['Na'], Nd=self._cal_dts['Nd'],
             nxc=self._cal_dts['nxc'], carrier='electron',
@@ -85,7 +85,7 @@ class Mobility(HelperFunctions):
             The hole mobility cm^2 V^-1 s^-1
         '''
         if bool(kwargs):
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
         return getattr(model, self.model)(
             self.vals, Na=self._cal_dts['Na'], Nd=self._cal_dts['Nd'],
             nxc=self._cal_dts['nxc'], carrier='hole',
@@ -103,7 +103,7 @@ class Mobility(HelperFunctions):
             The sum of the electron and hole mobilities cm^2 V^-1 s^-1
         '''
         if bool(kwargs):
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
         return self.hole_mobility() +\
             self.electron_mobility()
 
@@ -122,7 +122,7 @@ class Mobility(HelperFunctions):
         '''
 
         if bool(kwargs):
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
 
         # get the number of carriers
         ne, nh = get_carriers(

@@ -40,7 +40,7 @@ class SpontaneousRadiativeEmission(HelperFunctions):
             These will then be used
         """
 
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
         self._update_links()
 
     def _update_links(self):
@@ -100,7 +100,7 @@ class SpontaneousRadiativeEmission(HelperFunctions):
                 The black body emission spectrum
         """
         if bool(kwargs):
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
             self._update_links()
 
         # black body here is per solid angle
@@ -126,7 +126,7 @@ class SpontaneousRadiativeEmission(HelperFunctions):
         """
 
         if bool(kwargs):
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
             self._update_links()
 
         QF_split *= const.e
@@ -157,7 +157,7 @@ class SpontaneousRadiativeEmission(HelperFunctions):
         """
 
         if bool(kwargs):
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
             self._update_links()
 
         # we just need to multip the per energy by the derivative below
@@ -198,7 +198,7 @@ class luminescence_emission(HelperFunctions):
 
     def __init__(self, **kwargs):
 
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         self._index = None
 
@@ -292,7 +292,7 @@ class luminescence_emission(HelperFunctions):
         """
         # ensure inputs are good
         if bool(kwargs):
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
             self._update_x_dist()
             self._update_links()
 

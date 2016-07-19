@@ -25,7 +25,7 @@ class IntrinsicBandGap(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
@@ -55,7 +55,7 @@ class IntrinsicBandGap(HelperFunctions):
             the intrinsic bandgap in eV
         '''
 
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         if 'author' in kwargs.keys():
             self.change_model(self._cal_dts['author'])

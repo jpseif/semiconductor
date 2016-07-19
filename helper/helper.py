@@ -46,12 +46,12 @@ class HelperFunctions():
         pass
 
     @property
-    def caculationdetails(self):
+    def calculationdetails(self):
         print('kwargs being viewed')
         return self._cal_dts
 
-    @caculationdetails.setter
-    def caculationdetails(self, kwargs):
+    @calculationdetails.setter
+    def calculationdetails(self, kwargs):
         '''
         assignes the inputted values that are requrired,
         befor calling a function to pass it to the downstream

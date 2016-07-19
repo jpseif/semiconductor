@@ -30,7 +30,7 @@ class DOS(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
@@ -60,7 +60,7 @@ class DOS(HelperFunctions):
             the density of states of the valance band
             the density of states of the conduction band
         '''
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # a check to make sure the model hasn't changed
         if 'author' in kwargs.keys():

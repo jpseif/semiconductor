@@ -43,7 +43,7 @@ class SRH(HelperFunctions):
 
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # get the address of the authors list
         author_file = os.path.join(
@@ -106,7 +106,7 @@ class SRH(HelperFunctions):
         '''
 
         if bool(kwargs):
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
 
         if 'defect' in kwargs:
             self._change_model(self._cal_dts['defect'])

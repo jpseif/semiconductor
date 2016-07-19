@@ -35,8 +35,12 @@ def Passler(vals, temp):
     returns Eg in eV
     """
 
-    gamma = (1. - 3. * vals['delta']**2) / \
-        (np.exp(vals['theta'] / temp) - 1)
+    if temp == 0:
+        gamma = 0
+    else:
+        gamma = (1. - 3. * vals['delta']**2) / \
+            (np.exp(vals['theta'] / temp) - 1)
+
     xi = 2. * temp / vals['theta']
 
     # Values for each sum component
@@ -56,7 +60,11 @@ def Varshni(vals, temp):
     Passler's paper suggests that this model is for very
     high dispersion relations  Delta  = 5/4
     '''
-    return vals['e0'] - vals['alpha'] * temp**2 / (temp + vals['beta'])
+    if temp == 0:
+        Eg = vals['e0']
+    else:
+        Eg = vals['e0'] - vals['alpha'] * temp**2 / (temp + vals['beta'])
+    return Eg
 
 
 def Cubic_partial(vals, temp):
@@ -88,10 +96,13 @@ def Cubic_partial(vals, temp):
         Eg[index] = vals['a' + str(i)] + \
             vals['b' + str(i)] * temp[index] + \
             vals['c' + str(i)] * temp[index]**2.
+
     if np.any(temp > vals['t2']):
-        print ('\nWarning:\n\tIntrinsic bandgap does not cover this temperature range\n')
+        print ('\nWarning:'
+               '\n\tIntrinsic bandgap does not cover this temperature range\n')
         index = temp > vals['t2']
         Eg[index] = vals['a2'] + \
             vals['b2'] * temp[index] + \
             vals['c2'] * temp[index]**2.
+
     return Eg

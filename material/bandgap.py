@@ -29,7 +29,7 @@ class BandGap(HelperFunctions):
     def __init__(self, **kwargs):
         # update any values in cal_dts
         # that are passed
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # pass values to models
         self._update_links()
@@ -55,7 +55,7 @@ class BandGap(HelperFunctions):
         '''
         Calculates the band gap
         '''
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
         # just prints a warning if the model is for the incorrect
         # dopants
@@ -82,6 +82,8 @@ class BandGap(HelperFunctions):
                             author=self._cal_dts['BGN_author'],
                             temp=self._cal_dts['temp'],
                             nxc=self._cal_dts['nxc'],
+                            Na=self._cal_dts['Na'],
+                            Nd=self._cal_dts['Nd'],
                             )
         return Eg
 

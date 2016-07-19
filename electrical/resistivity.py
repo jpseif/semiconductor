@@ -25,7 +25,7 @@ class Conductivity(HelperFunctions):
     }
 
     def __init__(self, **kwargs):
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
 
     def _update_links(self):
 
@@ -47,7 +47,7 @@ class Conductivity(HelperFunctions):
 
     def _conductivity(self, **kwargs):
 
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
         self._update_links()
 
         Nid, Nia = get_carriers(nxc=0,
@@ -130,7 +130,7 @@ class DarkConductivity(HelperFunctions):
     }
 
     def __init__(self, **kwargs):
-        self.caculationdetails = kwargs
+        self.calculationdetails = kwargs
         self._update_links()
 
     def _update_links(self):
@@ -169,7 +169,7 @@ class DarkConductivity(HelperFunctions):
         '''
 
         if bool(kwargs):
-            self.caculationdetails = kwargs
+            self.calculationdetails = kwargs
             self._update_links()
 
         mob_e = self.Mob.electron_mobility(nxc=1,

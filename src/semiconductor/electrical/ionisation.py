@@ -6,7 +6,7 @@ import matplotlib.pylab as plt
 import os
 
 from semiconductor.helper.helper import HelperFunctions
-import semiconductor.electrical.impurity_ionisation_models as IIm
+from . import impurity_ionisation_models as IIm
 from semiconductor.material.densityofstates import DOS
 import semiconductor.general_functions.carrierfunctions as CF
 

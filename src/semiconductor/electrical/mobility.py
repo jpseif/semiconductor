@@ -11,7 +11,7 @@ try:
 except:
     import configparser
 
-import semiconductor.electrical.mobilitymodels as model
+from . import mobilitymodels as model
 from semiconductor.general_functions.carrierfunctions import get_carriers
 
 from semiconductor.helper.helper import HelperFunctions

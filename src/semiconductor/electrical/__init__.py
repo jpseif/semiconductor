@@ -1,4 +1,4 @@
 
-from semiconductor.electrical import mobility
-from semiconductor.electrical import ionisation
-from semiconductor.electrical import resistivity
+from .mobility import Mobility
+from .ionisation import Ionisation
+from .resistivity import *

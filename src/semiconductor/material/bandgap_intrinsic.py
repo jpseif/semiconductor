@@ -2,7 +2,7 @@
 import matplotlib.pylab as plt
 import os
 import numpy as np
-import semiconductor.material.bandgap_intrinsic_models as iBg
+from semiconductor.material import bandgap_intrinsic_models as iBg
 from semiconductor.helper.helper import HelperFunctions
 
 
@@ -17,7 +17,7 @@ class IntrinsicBandGap(HelperFunctions):
         'material': 'Si',
         'temp': 300.,
         'author': None,
-        'multiplier' : 1.,
+        'multiplier': 1.,
     }
     author_list = 'bandgap.models'
 

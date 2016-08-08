@@ -4,7 +4,7 @@ import sys
 import os
 import scipy.constants as const
 
-import semiconductor.material.ni as ni
+import semiconductor.material.intrinsic_carrier_density as ni
 import semiconductor.optical.opticalproperties as opticalproperties
 import semiconductor.optical.absorptance as absorptance
 from semiconductor.helper.helper import HelperFunctions

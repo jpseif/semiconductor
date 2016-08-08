@@ -7,7 +7,7 @@ import sys
 import os
 
 from semiconductor.helper.helper import HelperFunctions
-import semiconductor.material.densityofstates_models as dos_models
+from semiconductor.material import densityofstates_models as dos_models
 from semiconductor.material.bandgap_intrinsic import IntrinsicBandGap as Egi
 
 

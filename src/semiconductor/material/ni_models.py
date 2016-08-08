@@ -10,7 +10,10 @@ def ni_temp(vals, temp, **kargs):
      given by
     """
 
-    if temp == 0:
+    if not isinstance(temp, np.ndarray):
+        temp = np.asarray([temp])
+
+    if np.all(temp == 0):
         ni = 0
     else:
         ni = vals['a'] * (temp)**vals['power'] * \
@@ -25,7 +28,10 @@ def ni_temp_eg(vals, temp,  Eg, *args):
      Heinke3 and Macfarlane et a1.31 as cited by Green,3
     """
 
-    if temp == 0:
+    if not isinstance(temp, np.ndarray):
+        temp = np.asarray([temp])
+
+    if np.all(temp == 0):
         ni = 0
     else:
         ni = vals['a'] * temp**vals['power'] * \

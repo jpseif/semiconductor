@@ -40,7 +40,7 @@ class HelperFunctions():
     _cal_dts = {
         'material': 'Si',
         'temp': 300,
-        }
+    }
 
     def __init__(self):
         pass
@@ -136,7 +136,6 @@ class HelperFunctions():
         returns:
             list of authors
         '''
-
         author_list = self.Models.sections()
         author_list.remove('default')
 

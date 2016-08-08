@@ -8,7 +8,8 @@ import os
 from semiconductor.helper.helper import HelperFunctions
 from . import impurity_ionisation_models as IIm
 from semiconductor.material.densityofstates import DOS
-import semiconductor.general_functions.carrierfunctions as CF
+from semiconductor.general_functions import carrierfunctions
+from semiconductor.general_functions import carrierfunctions as CF
 
 
 class Ionisation(HelperFunctions):
@@ -17,6 +18,16 @@ class Ionisation(HelperFunctions):
     Depending on a dopant level from a band, and the thermal
     energy available, a dopant is electrical active (donating or
     accepting an electron to the band)  or inactive.
+    It can take the inputs:
+
+    material: (string)
+        The elemental symbol for the material e.g 'Si'.
+    temp: (float)
+        The temperature of the sample in kelvin. This can not be an array.
+    author: (string)
+        The author of the ionisation model being used
+    ni_author: (string)
+        The author of the intrinsic carrier concentraion being used.
     '''
     _cal_dts = {
         'material': 'Si',
@@ -131,21 +142,23 @@ class Ionisation(HelperFunctions):
         if 'author' in kwargs.keys():
             self.change_model(self._cal_dts['author'])
 
-        N_idop = N_dop
+        if not isinstance(N_dop, np.ndarray):
+            N_dop = np.asarray([N_dop])
+
+        N_idop = np.copy(N_dop)
 
         if impurity in self.vals.keys():
             # TO DO, change this from just running 10 times to a proper check
             for i in range(10):
                 if self.vals['tpe_' + self.vals[impurity]] == 'donor':
-                    Nd = np.array(N_idop)
+                    Nd = np.copy(N_idop)
                     Na = np.zeros(Nd.shape)
                 elif self.vals['tpe_' + self.vals[impurity]] == 'acceptor':
-                    Na = np.array(N_idop)
+                    Na = np.copy(N_idop)
                     Nd = np.zeros(Na.shape)
                 else:
                     print('something went wrong in ionisation model')
 
-                # print('here:', Na, Nd, nxc)
                 ne, nh = CF.get_carriers(
                     Na,
                     Nd,
@@ -156,6 +169,7 @@ class Ionisation(HelperFunctions):
 
                 N_idop = self.update(
                     N_dop, ne, nh, impurity)
+
         else:
             print(r'Not a valid impurity, returning 100% ionisation')
 
@@ -182,7 +196,7 @@ class Ionisation(HelperFunctions):
 
             if not np.all(iN_imp == 0):
                 plt.plot(
-                 N_imp, iN_imp / N_imp * 100, label='Altermatt: ' + impurity)
+                    N_imp, iN_imp / N_imp * 100, label='Altermatt: ' + impurity)
 
         test_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),

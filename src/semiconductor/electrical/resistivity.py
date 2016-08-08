@@ -4,7 +4,7 @@ import scipy.constants as const
 import scipy.optimize as opt
 
 from semiconductor.general_functions.carrierfunctions import get_carriers
-from semiconductor.material.ni import IntrinsicCarrierDensity as ni
+from semiconductor.material.intrinsic_carrier_density import IntrinsicCarrierDensity as ni
 from semiconductor.electrical.mobility import Mobility as Mob
 from semiconductor.electrical.ionisation import Ionisation as Ion
 from semiconductor.helper.helper import HelperFunctions
@@ -59,12 +59,12 @@ class Conductivity(HelperFunctions):
 
         if np.all(Nid > Nia):
             Nid = self.ion.update_dopant_ionisation(
-                Nid,
-                self._cal_dts['nxc'],
+                N_dop=Nid,
+                nxc=self._cal_dts['nxc'],
                 impurity=self._cal_dts['dopant'])
         elif np.all(Nia > Nid):
             Nia = self.ion.update_dopant_ionisation(
-                Nia,
+                N_dop=Nia,
                 nxc=self._cal_dts['nxc'],
                 impurity=self._cal_dts['dopant'])
 
@@ -84,8 +84,6 @@ class Conductivity(HelperFunctions):
                                        Na=self._cal_dts['Na'],
                                        Nd=self._cal_dts['Nd'])
 
-        print(mob_e[-1], mob_h[-1])
-
         return const.e * (mob_e * ne + mob_h * nh)
 
     def calculate(self, **kwargs):
@@ -96,6 +94,7 @@ class Conductivity(HelperFunctions):
         self._cal_dts['conductivity'] = self._conductivity(**kwargs)
 
         return self._cal_dts['conductivity']
+
 
 class Resistivity(Conductivity):
     '''
@@ -110,6 +109,7 @@ class Resistivity(Conductivity):
         self._cal_dts['resistivity'] = 1. / self._conductivity(**kwargs)
 
         return self._cal_dts['resistivity']
+
 
 class DarkConductivity(HelperFunctions):
     '''
@@ -150,7 +150,7 @@ class DarkConductivity(HelperFunctions):
         given the resistivity of the sample in the dark
         '''
 
-        return self.dark_conductivity2doping(1./dark_resistivity, **kwargs)
+        return self.dark_conductivity2doping(1. / dark_resistivity, **kwargs)
 
     def dark_conductivity2doping(self, dark_conductivity, **kwargs):
         '''
@@ -178,24 +178,23 @@ class DarkConductivity(HelperFunctions):
                                            temp=self._cal_dts['temp']
                                            )
         # # get an inital guess
-        Na = dark_conductivity/const.e / mob_e
+        Na = dark_conductivity / const.e / mob_e
 
         cond = Conductivity(**self._cal_dts)
 
-        def cal_dop(N, dopant_type,dark_conductivity):
-            if dopant_type =='p':
+        def cal_dop(N, dopant_type, dark_conductivity):
+            if dopant_type == 'p':
                 Na = N
                 Nd = 0
-            elif dopant_type =='n':
+            elif dopant_type == 'n':
                 Na = 0
                 Nd = N
-            condv =  (cond.calculate(Na=Na, Nd=Nd))
-            return  condv - dark_conductivity
+            condv = (cond.calculate(Na=Na, Nd=Nd))
+            return condv - dark_conductivity
 
         dop = (opt.newton(cal_dop,
-                          x0 = Na,
-                          tol= 0.001,
-                          args=(self._cal_dts['dopant_type'],dark_conductivity)
-                          ,))
+                          x0=Na,
+                          tol=0.001,
+                          args=(self._cal_dts['dopant_type'], dark_conductivity),))
 
         return dop

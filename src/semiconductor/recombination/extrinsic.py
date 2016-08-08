@@ -7,7 +7,7 @@ import matplotlib.pylab as plt
 
 from semiconductor.helper.helper import HelperFunctions
 from semiconductor.general_functions.carrierfunctions import get_carriers
-from semiconductor.material.ni import IntrinsicCarrierDensity as ni
+from semiconductor.material.intrinsic_carrier_density import IntrinsicCarrierDensity as ni
 from semiconductor.material.thermal_velocity import ThermalVelocity as Vel_th
 
 sys.path.append(

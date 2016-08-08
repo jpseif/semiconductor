@@ -7,8 +7,8 @@ import os
 import configparser
 
 from semiconductor.helper.helper import HelperFunctions
-import semiconductor.material.bandgap_narrowing_models as Bgn
-import semiconductor.general_functions.carrierfunctions as GF
+from semiconductor.material import bandgap_narrowing_models as Bgn
+from semiconductor.general_functions import carrierfunctions as GF
 
 
 class BandGapNarrowing(HelperFunctions):

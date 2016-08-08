@@ -1,8 +1,8 @@
 
 [default]
-model: Couderc2014
+model: Couderc_2014
 
-[Couderc2014]
+[Couderc_2014]
 model: Couderc
 Av:  2.525e-9
 Bv:  -4.689e-6
@@ -12,11 +12,11 @@ Ac: -4.609e-10
 Bc: 6.7523e-7
 Cc: -1.312e-5
 Dc: 1.094
-doi: 10.1063/1.4867776 
-notes: This parameterisation is obtained from a fit of ni to Eg where Nv and Nc are fitted. 
-	The fit is performed by varying the effective mass in the conductance and valance band changes with  temperature, a cubic relation is assumed.  
+doi: 10.1063/1.4867776
+notes: This parameterisation is obtained from a fit of ni to Eg where Nv and Nc are fitted.
+	The fit is performed by varying the effective mass in the conductance and valance band changes with  temperature, a cubic relation is assumed.
 
-[Green1990_full]
+[Green_1990_full]
 model:Green_full
 ; times rest electron mass
 mt: 0.1905
@@ -38,7 +38,7 @@ notes: measurements taken at low temp from cyclon resonance. Then using a fit to
 	the energy band-gap with temp to determine the change in the masses with temp
 	to provide the finial change in the DOS. Valid up to 400 K.
 
-[Green1990_param]
+[Green_1990_param]
 model:Green_param
 doi:10.1063/1.345414
-notes: a simple parameterisation from 200-500K quoted as with 2% accuracy
+notes: a simple parameterisation from 200-500K quoted as with 2 percent accuracy

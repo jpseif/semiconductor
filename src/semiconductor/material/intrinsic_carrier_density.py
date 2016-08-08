@@ -85,7 +85,7 @@ class IntrinsicCarrierDensity(HelperFunctions):
 
         return self.ni
 
-    def check_models(self):
+    def check_models(self, Plot=True):
         '''
         Displays a plot of all the models against experimental data
         '''
@@ -99,11 +99,14 @@ class IntrinsicCarrierDensity(HelperFunctions):
         Eg = 1.17
 
         for author in self.available_models():
+
             ni = self.update(temp=temp, author=author)
-            ax.plot(np.log(temp),
-                    np.log(ni * np.exp(Eg / 2. * Const.e / Const.k / temp)),
-                    label=author)
-            print (author, '\t {0:.2e}'.format(self.update(temp=300, author=author)))
+            if Plot:
+                ax.plot(np.log(temp),
+                        np.log(ni * np.exp(Eg / 2. * Const.e / Const.k / temp)),
+                        label=author)
+            a = self.update(temp=300, author=author)
+            print('{1} \t {0:.2e}'.format(a[0], author))
 
         test_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
@@ -112,16 +115,17 @@ class IntrinsicCarrierDensity(HelperFunctions):
         data = np.genfromtxt(
             test_file,
             delimiter=',', names=True, skip_header=1, filling_values=np.inf)
-        for name in data.dtype.names[1:]:
-            ax.plot(np.log(data['Temp']),
-                    np.log(data[name] *
-                           np.exp(Eg / 2. * Const.e / Const.k / data['Temp'])),
-                    'o', label='experimental values\'s: ' + name)
+        if Plot:
+            for name in data.dtype.names[1:]:
+                ax.plot(np.log(data['Temp']),
+                        np.log(data[name] *
+                               np.exp(Eg / 2. * Const.e / Const.k / data['Temp'])),
+                        'o', label='experimental values\'s: ' + name)
 
-        ax.set_xlabel('log(Temperature (K))')
-        ax.set_ylabel(r'$log(n_i \times e^{Eg_0(0)/kT}  )$')
+            ax.set_xlabel('log(Temperature (K))')
+            ax.set_ylabel(r'$log(n_i \times e^{Eg_0(0)/kT}  )$')
 
-        ax.legend(loc=0)
-        ax.set_xlim(4, 6)
-        ax.set_ylim(42, 47)
-        plt.show()
+            ax.legend(loc=0)
+            ax.set_xlim(4, 6)
+            ax.set_ylim(42, 47)
+            plt.show()

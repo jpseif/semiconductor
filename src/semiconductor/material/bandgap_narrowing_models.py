@@ -68,10 +68,10 @@ def Schenk(vals, Nd, Na, ne, nh, temp, **args):
     '''
 
     # makes the values unitless
-    ne *= vals['aex']**3.
-    nh *= vals['aex']**3.
-    Na *= vals['aex']**3.
-    Nd *= vals['aex']**3.
+    ne = (vals['aex']**3.) * ne
+    nh = (vals['aex']**3.) * nh
+    Na = (vals['aex']**3.) * Na
+    Nd = (vals['aex']**3.) * Nd
 
     n_sum = ne + nh
     n_ionic = Na + Nd
@@ -100,7 +100,8 @@ def ridged_shift(vals, n_sum, n_p, num_carrier, carrier):
         (4. * Const.pi)**3. * n_sum**2. *
         (
             (48. * num_carrier / Const.pi / vals['g' + carrier])**(1. / 3.)
-            + vals['c' + carrier] * np.log(1. + vals['d' + carrier] * n_p**vals['p' + carrier]))
+            + vals['c' + carrier] * np.log(1. + vals['d' + carrier] *
+                                           n_p**vals['p' + carrier]))
         + (8. * Const.pi * vals['alpha' + carrier] / vals['g' + carrier])
         * num_carrier * vals['t']**2.
         + np.sqrt(8. * Const.pi * n_sum) * vals['t']**(5. / 2.)

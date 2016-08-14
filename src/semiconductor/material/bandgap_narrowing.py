@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pylab as plt
 import os
 import configparser
+import scipy.constants as C
 
 from semiconductor.helper.helper import HelperFunctions
 from semiconductor.material import bandgap_narrowing_models as Bgn
@@ -86,6 +87,17 @@ class BandGapNarrowing(HelperFunctions):
             nh=nh,
             temp=self._cal_dts['temp'],
             doping=doping)
+
+    def ni_multiplier(self, **kwargs):
+        '''
+        returns a multiplification factor that when applied to the intrinsic
+        carrier concentration provides the effective intrinsic carrier
+        concentraion.
+        '''
+
+        BGN = self.update(**kwargs)
+        vt = C.k * self._cal_dts['temp'] / C.e
+        return np.exp(BGN / vt / 2.)
 
     def check_models(self):
         plt.figure('Bandgap narrowing')

@@ -6,8 +6,8 @@ import configparser
 
 from semiconductor.helper.helper import HelperFunctions, change_model
 from semiconductor.general_functions.carrierfunctions import get_carriers
-import semiconductor.recombination.radiative_models as radmdls
-import semiconductor.recombination.auger_models as augmdls
+from semiconductor.recombination import radiative_models as radmdls
+from semiconductor.recombination import auger_models as augmdls
 
 
 class Intrinsic(HelperFunctions):

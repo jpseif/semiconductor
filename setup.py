@@ -20,7 +20,8 @@ CLASSIFIERS = [
     "Programming Language :: Python :: 3.5",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-INSTALL_REQUIRES = []
+INSTALL_REQUIRES = ['numpy',  'scipy',
+                    'matplotlib']
 
 ###################################################################
 

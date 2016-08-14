@@ -2,7 +2,7 @@
 # UTF-8
 
 import numpy as np
-import semiconductor.general_functions.carrierfunctions as GF
+from semiconductor.general_functions import carrierfunctions as GF
 
 
 def add_mobilities(self, mobility_list):

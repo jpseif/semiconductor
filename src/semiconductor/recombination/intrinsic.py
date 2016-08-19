@@ -113,7 +113,7 @@ class Radiative(HelperFunctions):
             temp=self._cal_dts['temp']
         )
 
-        B = self._get_B()
+        B = self._get_Blow()
 
         return getattr(radmdls, self.model)(
             self.vals, nxc, nh0, ne0, B, temp=self._cal_dts['temp']
@@ -122,7 +122,7 @@ class Radiative(HelperFunctions):
     def itau(self, nxc, **kwargs):
         return 1. / self.tau(nxc, **kwargs)
 
-    def _get_B(self):
+    def _get_Blow(self):
 
         # if there is a model for blow, apply it
         if 'blow_model' in self.vals.keys():

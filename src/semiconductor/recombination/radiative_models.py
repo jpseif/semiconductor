@@ -24,7 +24,7 @@ def Roosbroeck_with_screening_B(vals, nxc, doping, temp, Blow):
     """
     This is the roosbroeck model that accounts for many things,
     such as band gap narrowing.
-    It needs temperature, nxc, doping and blow to be defined
+    It needs temperature, nxc, doping and Blow to be defined
     """
 
     bmin = vals['rmax'] + (vals['rmin'] - vals['rmax']) / (

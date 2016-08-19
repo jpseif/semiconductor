@@ -343,7 +343,7 @@ def uDCS_compensated(carrier, vals, nh, ne, Na, Nd, temp):
         mob = cal_min()
     else:
         mob = cal_maj()
-    print(mob)
+
     return mob
 
 
@@ -397,10 +397,13 @@ def Z(carrier, vals, Na, Nd):
     """
     accounts for high doping effects - clustering
     """
-
-    return 1. + 1. / (vals['c_' + carrier] +
-                      (vals['nref2_' + carrier] / return_dopant(carrier, Na,
-                                                                Nd))**2.)
+    if return_dopant(carrier, Na, Nd) == 0 :
+        z = 1.
+    else:
+        z = 1. + 1. / (vals['c_' + carrier] +
+                          (vals['nref2_' + carrier] / return_dopant(carrier, Na,
+                                                                    Nd))**2.)
+    return z
 
 
 def G(carrier, vals, nh, ne, Na, Nd, temp):

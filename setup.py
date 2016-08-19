@@ -22,7 +22,7 @@ CLASSIFIERS = [
 ]
 INSTALL_REQUIRES = ['numpy',  'scipy',
                     'matplotlib']
-
+# INSTALL_REQUIRES = []
 ###################################################################
 
 HERE = os.path.abspath(os.path.dirname(__file__))

@@ -36,6 +36,7 @@ def get_carriers(Na, Nd, nxc,
     if not isinstance(nxc, np.ndarray):
         nxc = np.array([nxc])
 
+
     # if ni not provided obtain
     if ni is None:
         ni = NI(material=material).update(author=ni_author, temp=temp)

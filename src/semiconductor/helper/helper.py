@@ -32,7 +32,7 @@ def change_model(Models, author=None):
             except:
                 pass
 
-    return vals, model
+    return vals, model, author
 
 
 class HelperFunctions():
@@ -73,7 +73,8 @@ class HelperFunctions():
 
         Models = Models or self.Models
 
-        self.vals, self.model = change_model(Models, author)
+        self.vals, self.model, self._cal_dts['author'] = change_model(
+                                                        Models, author)
 
     def plot_all_models(self, update_function, xvalues=None, **kwargs):
         '''

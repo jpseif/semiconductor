@@ -4,6 +4,13 @@ import os
 from semiconductor.helper.helper import Webplotdig_JSONreader
 
 
+def none(vals, nxc, *args, **kwargs):
+    '''
+    Returns an infinite lifetime
+    '''
+    return np.ones(nxc.shape[0]) * np.inf
+
+
 def auger_dopants(vals, nxc, ne0, nh0, **args):
     '''
     This is the classic auger model that only depends on doping
@@ -213,7 +220,7 @@ def Altermatt1997_check(vals, func, fig, ax):
     This is incomplete
     """
 
-    print ('Have not placed in check data for Altermatt\'s model yet')
+    print('Have not placed in check data for Altermatt\'s model yet')
     nxc = np.logspace(13, 20)
     for Nd in [1e15, 1e18, 1e20]:
 

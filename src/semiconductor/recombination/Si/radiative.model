@@ -3,6 +3,10 @@
 [default]
 model = Altermatt2005
 
+[None]
+model = none
+b = none
+
 [Altermatt2005]
 model = Roosbroeck_with_screening
 blow_model = cubic_loglog_parm

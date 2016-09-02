@@ -3,6 +3,9 @@
 [default]
 model = Richter2012
 
+[None]
+model = none
+
 [Richter2012]
 model= coulomb_enhanced_auger_Richter
 K_n= 2.5e-31

@@ -5,6 +5,13 @@ import numpy as np
 import scipy.constants as Const
 
 
+def none(*arkgs, **kwargs):
+    '''
+    returns the band gap narrowing in eV
+    '''
+    return 0
+
+
 def apparent_BGN(vals, doping, **kargs):
     '''
     It returns the 'apparent BGN'. This estimates the real band gap
@@ -14,6 +21,8 @@ def apparent_BGN(vals, doping, **kargs):
     which is why it determines an 'apparent BGN' and not an actual BGN.
     The apparent occurs as Boltzmann statistics are used rather than
     Fermi-Dirac statistic.
+
+    returns the band gap narrowing in eV
     '''
 
     if type(doping).__module__ != np.__name__:
@@ -44,6 +53,8 @@ def BGN(vals, doping, **kargs):
     This estimates the real band gap narrowing,
     but uses Boltzmann stats
     where N is the net dopant concentration.
+
+    returns the band gap narrowing in eV
     '''
     # BGN = np.zeros(doping.shape)
 
@@ -65,6 +76,8 @@ def Schenk(vals, Nd, Na, ne, nh, temp, **args):
     valence band edges, which depend from the free-carrier concentrations
     2. the ionic quasi-particle shifts of the conduction and
     valence band edges resulting from ionised dopants concentrations
+
+    returns the band gap narrowing in eV
     '''
 
     # makes the values unitless

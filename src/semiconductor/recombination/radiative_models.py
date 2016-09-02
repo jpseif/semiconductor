@@ -2,6 +2,13 @@
 import numpy as np
 
 
+def none(vals, nxc, **kwargs):
+    '''
+    Returns an infinite lifetime
+    '''
+    return np.ones(nxc.shape[0]) * np.inf
+
+
 def Roosbroeck(vals, nxc, nh0, ne0, B, **kwargs):
     '''
     The classic roosbroeck function

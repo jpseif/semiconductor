@@ -113,10 +113,11 @@ class Radiative(HelperFunctions):
             temp=self._cal_dts['temp']
         )
 
-        B = self._get_Blow()
+        Blow = self._get_Blow()
 
         return getattr(radmdls, self.model)(
-            self.vals, nxc, nh0, ne0, B, temp=self._cal_dts['temp']
+            vals=self.vals, nxc=nxc, nh0=nh0, ne0=ne0, Blow=Blow, temp=self._cal_dts[
+                'temp']
         )
 
     def itau(self, nxc, **kwargs):
@@ -125,7 +126,8 @@ class Radiative(HelperFunctions):
     def get_B(self, nxc):
 
         if 'b_model' in self.vals.keys():
-            vals, model = change_model(self.Models, self.vals['blow_vals'])
+            vals, model, author = change_model(
+                self.Models, self.vals['blow_vals'])
 
             doping = abs(self._cal_dts['Na'] - self._cal_dts['Nd'])
 
@@ -144,7 +146,8 @@ class Radiative(HelperFunctions):
 
         # if there is a model for blow, apply it
         if 'blow_model' in self.vals.keys():
-            vals, model = change_model(self.Models, self.vals['blow_vals'])
+            vals, model, author = change_model(
+                self.Models, self.vals['blow_vals'])
 
             B = getattr(radmdls, self.vals['blow_model'])(
                 vals, self._cal_dts['temp']

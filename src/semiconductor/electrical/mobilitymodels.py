@@ -14,6 +14,22 @@ def add_mobilities(self, mobility_list):
     return 1. / imobility
 
 
+def dannhauser(vals, Na, Nd, nxc, **kwargs):
+    '''
+    return the sum of the carrier mobility
+    This was taken from a Sinton Instruments excel work sheet from 2010
+    '''
+    doping = np.amax(Na, Nd)
+    sum_mu = vals['mob_sum'] * (
+        1 + 10**(vals['power'] * np.log10((nxc + doping) / vals['ni']**2)
+                 )) / (
+        1 + vals['coef'] * 10**(
+            vals['power'] * np.log10((nxc + doping) / vals['ni']**2)
+        ))
+
+    return sum_mu
+
+
 def CaugheyThomas(vals, Na, Nd, nxc, **kwargs):
     '''
     emperical form for one temperature taken from:
@@ -255,9 +271,9 @@ def unified_mobility_compensated(vals, Na, Nd, nxc, temp, carrier, **kwargs):
                              nxc=nxc,
                              temp=temp)
 
-    return 1./(
-        1./uDCS(carrier, vals, nh, ne, Na, Nd, temp) +
-        1./uLS(carrier, vals, temp))
+    return 1. / (
+        1. / uDCS(carrier, vals, nh, ne, Na, Nd, temp) +
+        1. / uLS(carrier, vals, temp))
 
 
 def uLS(carrier, vals, temp):
@@ -267,11 +283,11 @@ def uLS(carrier, vals, temp):
 
 def uLS_compensated(carrier, vals, temp):
     return vals['umax_' + carrier] * (300. / temp)**vals['theta_' + carrier] +\
-        vals['u_cor'] * np.exp((-temp/vals['t_cor'])**vals['theta_h_cor'])
+        vals['u_cor'] * np.exp((-temp / vals['t_cor'])**vals['theta_h_cor'])
 
 
 def uDCS(carrier, vals, nh, ne, Na, Nd, temp):
-    carrier_sum = nh+ne
+    carrier_sum = nh + ne
 
     return un(carrier, vals, temp) * Nsc(carrier, vals, nh, ne, Na, Nd) / \
         Nsceff(carrier, vals, nh, ne, Na, Nd, temp) * (
@@ -286,14 +302,14 @@ def uDCS_compensated(carrier, vals, nh, ne, Na, Nd, temp):
     A modifcation by Schindler that provides the mobility for compensated
     doped material.
     '''
-    carrier_sum = nh+ne
+    carrier_sum = nh + ne
 
     ne0, nh0 = GF.get_carriers(Na=Na,
                                Nd=Nd,
                                nxc=0,
                                temp=300.)
 
-    C_l = (Na+Nd) / (nh0+ne0)
+    C_l = (Na + Nd) / (nh0 + ne0)
 
     if C_l < 1:
         C_l = 1
@@ -306,30 +322,30 @@ def uDCS_compensated(carrier, vals, nh, ne, Na, Nd, temp):
 
         def beta2():
             tref = 37.9 * np.log(
-                vals['cl_ref']**2 * (Na+Nd)/1e19 + 3.6
-                )
-            return 1 + 60./np.sqrt(vals['cl_ref']) * \
-                np.exp(-(temp/tref + 1.18)**2)
+                vals['cl_ref']**2 * (Na + Nd) / 1e19 + 3.6
+            )
+            return 1 + 60. / np.sqrt(vals['cl_ref']) * \
+                np.exp(-(temp / tref + 1.18)**2)
 
         return un(carrier, vals, 300) * nsc / nsceff * (
-            (nsc/vals['nref_' + carrier])**(vals['alpha_' + carrier]) /
-            (temp/vals['temp_refc'])**(3*vals['alpha_' + carrier] - 1.5) +
+            (nsc / vals['nref_' + carrier])**(vals['alpha_' + carrier]) /
+            (temp / vals['temp_refc'])**(3 * vals['alpha_' + carrier] - 1.5) +
             (
-                (C_l**beta2() - 1.)/vals['cl_ref'])**vals['beta1']
-             )**(-1.) + \
-                (uc(carrier, vals, 300) * carrier_sum / nsceff) *\
-                (vals['temp_refc']/temp)**(0.5)
+                (C_l**beta2() - 1.) / vals['cl_ref'])**vals['beta1']
+        )**(-1.) + \
+            (uc(carrier, vals, 300) * carrier_sum / nsceff) *\
+            (vals['temp_refc'] / temp)**(0.5)
 
     def cal_min():
         return un(carrier, vals, 300) * nsc / nsceff * (
-            (nsc/vals['nref_' + carrier])**(vals['alpha_' + carrier]) /
-            (temp/vals['temp_refc'])**(3.*vals['alpha_' + carrier] - 1.5) +
+            (nsc / vals['nref_' + carrier])**(vals['alpha_' + carrier]) /
+            (temp / vals['temp_refc'])**(3. * vals['alpha_' + carrier] - 1.5) +
             (
                 ((Na + Nd) / vals['n_ref3']) *
                 (C_l - 1.) / vals['cl_ref'])**vals['beta1']
-            )**(-1.) + \
+        )**(-1.) + \
             (uc(carrier, vals, 300) * carrier_sum / nsceff) * \
-            (vals['temp_refc']/temp)**(0.5)
+            (vals['temp_refc'] / temp)**(0.5)
 
     mob = 1
 
@@ -397,12 +413,12 @@ def Z(carrier, vals, Na, Nd):
     """
     accounts for high doping effects - clustering
     """
-    if return_dopant(carrier, Na, Nd) == 0 :
+    if return_dopant(carrier, Na, Nd) == 0:
         z = 1.
     else:
         z = 1. + 1. / (vals['c_' + carrier] +
-                          (vals['nref2_' + carrier] / return_dopant(carrier, Na,
-                                                                    Nd))**2.)
+                       (vals['nref2_' + carrier] / return_dopant(carrier, Na,
+                                                                 Nd))**2.)
     return z
 
 
@@ -432,7 +448,7 @@ def PCW(carrier, vals, nh, ne, Na, Nd, temp):
     # Done
     return 3.97e13 * (
         1. / (Nsc(carrier, vals, nh, ne, Na, Nd)) * ((temp / 300.)**(3.))
-        )**(2. / 3.)
+    )**(2. / 3.)
 
 
 def PBH(carrier, vals, temp, carrier_sum):

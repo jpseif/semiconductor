@@ -66,8 +66,10 @@ class Mobility(HelperFunctions):
         output:
             The electron mobility cm^2 V^-1 s^-1
         '''
+
         if bool(kwargs):
             self.calculationdetails = kwargs
+
         return getattr(model, self.model)(
             self.vals, Na=self._cal_dts['Na'], Nd=self._cal_dts['Nd'],
             nxc=self._cal_dts['nxc'], carrier='electron',
@@ -84,8 +86,10 @@ class Mobility(HelperFunctions):
         output:
             The hole mobility cm^2 V^-1 s^-1
         '''
+
         if bool(kwargs):
             self.calculationdetails = kwargs
+
         return getattr(model, self.model)(
             self.vals, Na=self._cal_dts['Na'], Nd=self._cal_dts['Nd'],
             nxc=self._cal_dts['nxc'], carrier='hole',
@@ -104,8 +108,19 @@ class Mobility(HelperFunctions):
         '''
         if bool(kwargs):
             self.calculationdetails = kwargs
-        return self.hole_mobility() +\
-            self.electron_mobility()
+
+        # check if the model is for both carriers, or just their sum
+        if 'mobility_sum_only' in self.vals.keys():
+            mob_sum = getattr(model, self.model)(
+                self.vals, Na=self._cal_dts['Na'],
+                Nd=self._cal_dts['Nd'],
+                nxc=self._cal_dts['nxc'],
+                temp=self._cal_dts['temp'])
+        else:
+            mob_sum = self.hole_mobility() +\
+                self.electron_mobility()
+
+        return mob_sum
 
     def ambipolar(self, ni_author=None, **kwargs):
         '''
@@ -138,7 +153,7 @@ class Mobility(HelperFunctions):
         mob_e = self.electron_mobility()
 
         # caculate the ambipolar mobility according to
-        mob_ambi = (ne+nh)/(nh/mob_e + ne/mob_h)
+        mob_ambi = (ne + nh) / (nh / mob_e + ne / mob_h)
 
         return mob_ambi
 
@@ -149,7 +164,6 @@ class Mobility(HelperFunctions):
 
 # these checks should not be here, but rather be in the models class
 def check_klaassen():
-
     '''compares to values taken from www.PVlighthouse.com.au'''
     a = Mobility('Si')
     a.change_model('klaassen1992')
@@ -169,7 +183,7 @@ def check_klaassen():
         os.path.dirname(__file__), 'Si', 'test_mobility_files')
     fnames = [r'Klassen_1e14_dopants.dat',
               r'Klassen_1e14_temp-450.dat']
-    print(os.path.isdir(folder))
+    # print(os.path.isdir(folder))
 
     for temp, f_name in zip([300, 450], fnames):
 
@@ -182,7 +196,7 @@ def check_klaassen():
                  'b-',
                  label='electron-here')
 
-        print(f_name)
+        # print(f_name)
         data = np.genfromtxt(os.path.join(folder, f_name), names=True)
 
         plt.plot(data['deltan'], data['uh'], 'b--',

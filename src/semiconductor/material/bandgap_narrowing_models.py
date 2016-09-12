@@ -5,7 +5,7 @@ import numpy as np
 import scipy.constants as Const
 
 
-def none(*arkgs, **kwargs):
+def none(*args, **kwargs):
     '''
     returns the band gap narrowing in eV
     '''

@@ -88,6 +88,22 @@ class BandGapNarrowing(HelperFunctions):
             temp=self._cal_dts['temp'],
             doping=doping)
 
+    def ni_eff(self, ni, **kwargs):
+        '''
+        returns the effective intrinsic carrier densitiy
+        '''
+        if not isinstance(ni, np.ndarray):
+            ni = np.asarray([ni])
+
+        mult = self.ni_multiplier(**kwargs)
+
+        if not isinstance(mult, np.ndarray):
+            mult = np.asarray([mult])
+
+        assert ni.shape == mult.shape or ni.shape[0] == 1
+
+        return ni * mult
+
     def ni_multiplier(self, **kwargs):
         '''
         returns a multiplification factor that when applied to the intrinsic

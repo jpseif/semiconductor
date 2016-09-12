@@ -19,7 +19,7 @@ def dannhauser(vals, Na, Nd, nxc, **kwargs):
     return the sum of the carrier mobility
     This was taken from a Sinton Instruments excel work sheet from 2010
     '''
-    doping = np.amax(Na, Nd)
+    doping = np.amax([Na, Nd])
     sum_mu = vals['mob_sum'] * (
         1 + 10**(vals['power'] * np.log10((nxc + doping) / vals['ni']**2)
                  )) / (

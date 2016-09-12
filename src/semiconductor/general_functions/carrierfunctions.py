@@ -36,14 +36,12 @@ def get_carriers(Na, Nd, nxc,
     if not isinstance(nxc, np.ndarray):
         nxc = np.array([nxc])
 
-
     # if ni not provided obtain
     if ni is None:
         ni = NI(material=material).update(author=ni_author, temp=temp)
 
     # Calculated on the assumption that at thermal equilibrium in the
     # dark n0p0 = ni**2, and that charge neutrality holds. Usually
-
     # simplified to saying the majority carrier density ~ the doping and min
     # carrier denisty is the number of excess carriers. The below version
     # more accurately incorporates ni though, which is particularly important

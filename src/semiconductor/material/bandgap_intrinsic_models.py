@@ -4,7 +4,7 @@ import numpy as np
 
 def Passler(vals, temp):
     """
-    taken from the Couderc2014 paper
+    taken from the Couderc_2014 paper
     depent on temperature
 
     This model different from proceeding ones by( taken

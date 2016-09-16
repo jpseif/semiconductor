@@ -116,8 +116,8 @@ class Radiative(HelperFunctions):
         Blow = self._get_Blow()
 
         return getattr(radmdls, self.model)(
-            vals=self.vals, nxc=nxc, nh0=nh0, ne0=ne0, Blow=Blow, temp=self._cal_dts[
-                'temp']
+            vals=self.vals, nxc=nxc, nh0=nh0, ne0=ne0,
+            Blow=Blow, temp=self._cal_dts['temp']
         )
 
     def itau(self, nxc, **kwargs):
@@ -155,7 +155,7 @@ class Radiative(HelperFunctions):
 
         # else use the constant value
         else:
-            B = self.vals['b']
+            B = self.vals['blow']
         return B
 
 

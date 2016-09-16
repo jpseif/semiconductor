@@ -50,7 +50,8 @@ def wl2nrg(data):
         datanew[name] = data[name]
 
      # cacls and appends the wavelength values
-    datanew['energy'] = (const.c * const.h) / data['wavelength'] * 1e9 / const.e
+    datanew['energy'] = (const.c * const.h) / \
+        data['wavelength'] * 1e9 / const.e
 
     # returns the new array
     return datanew
@@ -78,8 +79,8 @@ def add_wavelength_oren_ergy_to_file(fname):
     np.savetxt(fname, data, delimiter=',', header=','.join(
         data.dtype.names), comments='', fmt=('%0.4e'), )
 
-# fnames = ['Si_Schinke2014','Si_Green2008','Si_Green1995','Si_Daub1995']
-fname = 'Silicon_Nguyen2014test'
+# fnames = ['Si_Schinke_2014','Si_Green_2008','Si_Green_1995','Si_Daub_1995']
+fname = 'Silicon_Nguyen_2014test'
 add_wavelength_oren_ergy_to_file(fname)
 
 plt.semilogy()

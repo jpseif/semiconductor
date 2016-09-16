@@ -21,10 +21,10 @@ def dannhauser(vals, Na, Nd, nxc, **kwargs):
     '''
     doping = np.amax([Na, Nd])
     sum_mu = vals['mob_sum'] * (
-        1 + 10**(vals['power'] * np.log10((nxc + doping) / vals['ni']**2)
-                 )) / (
-        1 + vals['coef'] * 10**(
-            vals['power'] * np.log10((nxc + doping) / vals['ni']**2)
+        1. + 10**(vals['power'] * np.log10((nxc + doping) / vals['ni2'])
+                  )) / (
+        1. + vals['coef'] * 10**(
+            vals['power'] * np.log10((nxc + doping) / vals['ni2'])
         ))
 
     return sum_mu

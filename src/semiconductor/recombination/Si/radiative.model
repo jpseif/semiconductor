@@ -1,13 +1,13 @@
 
 
 [default]
-model = Altermatt2005
+model = Altermatt_2005
 
 [None]
 model = none
-b = none
+blow = none
 
-[Altermatt2005]
+[Altermatt_2005]
 model = Roosbroeck_with_screening
 blow_model = cubic_loglog_parm
 blow_vals = Trupke2003
@@ -30,12 +30,12 @@ s2 =  3.
 w2 = 3.54
 notes: An extension of Trupke2003 model, to account for injection dependent effects.
 	This can be though of as conceptually similar how the effective intrinsic carrier density
-	compares to the carrier density. There was a misprint in the paper corrected in Altermatt2011.
+	compares to the carrier density. There was a misprint in the paper corrected in Altermatt_2011.
 	Here Blow is the radiative recombination constant for the low injection case.
 
 [PC1D]
 model = Roosbroeck
-B = 9.5e-15
+blow = 9.5e-15
 
 [Trupke2003]
 blow_model = cubic_loglog_parm

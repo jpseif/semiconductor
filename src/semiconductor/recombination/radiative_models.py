@@ -9,7 +9,7 @@ def none(vals, nxc, **kwargs):
     return np.ones(nxc.shape[0]) * np.inf
 
 
-def Roosbroeck(vals, nxc, nh0, ne0, B, **kwargs):
+def Roosbroeck(vals, nxc, nh0, ne0, Blow, **kwargs):
     '''
     The classic roosbroeck function
         It simply states that the radiaative recombiation rate is
@@ -22,7 +22,7 @@ def Roosbroeck(vals, nxc, nh0, ne0, B, **kwargs):
     nh = nh0 + nxc
     ne = ne0 + nxc
 
-    R = B * (ne * nh - ne0 * nh0)
+    R = Blow * (ne * nh - ne0 * nh0)
     # print R
     return nxc / R
 
@@ -58,7 +58,7 @@ def Roosbroeck_with_screening(vals, nxc, nh0, ne0, Blow, temp):
     It needs temperature, nxc, doping and blow to be defined
     """
     B = Roosbroeck_with_screening_B(vals, nxc, np.amax([nh0, ne0]), temp, Blow)
-    tau = Roosbroeck(vals, nxc, nh0, ne0, B=B)
+    tau = Roosbroeck(vals, nxc, nh0, ne0, Blow=B)
     return tau
 
 

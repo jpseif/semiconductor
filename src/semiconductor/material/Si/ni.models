@@ -37,7 +37,7 @@ notes: temp range 78-340K
 
 [Sproul_1993]
 ;ni from spectral response from 77 - 300
-;taken from Couderc2014 paper to include BGN
+;taken from Couderc_2014 paper to include BGN
 model: ni_temp_eg
 A: 1.64e15
 power: 1.706
@@ -46,7 +46,7 @@ notes: temp range 77-300K, also this used a different model for the energy gap.
 
 [Misiakos_1993_with-Couderc-BGN]
 ;ni from spectral response from 87 - 340
-;taken from Couderc2014 paper to include BGN
+;taken from Couderc_2014 paper to include BGN
 model: ni_temp_eg
 A: 1.821e15
 power: 1.699

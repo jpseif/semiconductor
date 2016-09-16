@@ -33,7 +33,11 @@ class Ionisation(HelperFunctions):
         'material': 'Si',
         'temp': 300,
         'author': None,
-        'ni_author': None
+        'ni_author': None,
+        'N_imp': np.array([1e16]),
+        'ne': 1e16,
+        'nh': 0,
+        'impurity': 'boron',
     }
 
     author_list = 'ionisation.models'
@@ -64,7 +68,7 @@ class Ionisation(HelperFunctions):
                        author=None
                        )
 
-    def update(self, N_imp, ne, nh, impurity, **kwargs):
+    def update(self, **kwargs):
         '''
         Calculates the number of ionisied impurities
 
@@ -100,19 +104,21 @@ class Ionisation(HelperFunctions):
         else:
             Nc, Nv = 0, 0
 
-        if impurity in self.vals.keys():
+        if self._cal_dts['impurity'] in self.vals.keys():
             # get the ionisation fraction
             iN_imp = getattr(IIm, self.model)(
-                self.vals, N_imp, ne, nh,
+                self.vals, self._cal_dts['N_imp'], self._cal_dts[
+                    'ne'], self._cal_dts['nh'],
                 self._cal_dts['temp'], Nc, Nv,
-                self.vals[impurity])
+                self.vals[self._cal_dts['impurity']])
             # multiply it by the number of dopants
-            iN_imp *= N_imp
+            iN_imp *= self._cal_dts['N_imp']
         else:
             print('''\nWarning:\n\t'''
                   '''No such impurity, please check your model'''
                   '''and spelling.\n\tReturning zero array\n''')
-            iN_imp = np.zeros(np.asarray(N_imp).flatten().shape[0])
+            iN_imp = np.zeros(np.asarray(
+                self._cal_dts['N_imp']).flatten().shape[0])
 
         return iN_imp
 

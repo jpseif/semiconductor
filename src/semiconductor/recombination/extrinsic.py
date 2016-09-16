@@ -91,7 +91,7 @@ class SRH(HelperFunctions):
 
         # load the defect
         self.change_model(self._cal_dts['defect'])
-        print(self.vals.keys(), 'insdie')
+        # print(self.vals.keys(), 'insdie')
         # check is a model was provided
         if 'vth_author' in self.vals.keys():
             self._cal_dts['vth_author'] = self.vals['vth_author']
@@ -139,7 +139,6 @@ class SRH(HelperFunctions):
         ne1 = self.ni.ni * \
             np.exp(Et * const.e / (const.k * self._cal_dts['temp']))
 
-
         # get the number of carriers
         ne, nh = get_carriers(Na=self._cal_dts['Na'],
                               Nd=self._cal_dts['Nd'],
@@ -177,11 +176,11 @@ class SRH(HelperFunctions):
             'notes': 'User defined value',
             'tau_e': np.array([tau_e]) or temp['tau_e'],
             'tau_h': np.array([tau_h]) or temp['tau_h'],
-            }
+        }
 
         # the or above doens't work for zeros
         if Et == 0:
-            self.vals['et']  = 0
+            self.vals['et'] = 0
 
         if 'vth_author' in self.vals:
             del self.vals['vth_author']

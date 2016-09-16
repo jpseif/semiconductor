@@ -1,5 +1,6 @@
 
 
+from .bandgap_intrinsic import IntrinsicBandGap
 from .bandgap import BandGap
 from .bandgap_narrowing import BandGapNarrowing
 from .densityofstates import DOS

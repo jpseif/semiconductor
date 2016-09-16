@@ -33,7 +33,10 @@ model = Klaassen_1992
 [Dannhauser-Krausse_1972]
 model = dannhauser
 mobility_sum_only = True
-ni = 4242640687
+# the following value is taken from a Sinton Instruments sheet.
+# It does not reflect any "real" value, but how the origianl
+# conductance to nxc were done.
+ni2 = 1.2e18
 mob_sum = 1800
 power = 0.8431
 coef = 8.36

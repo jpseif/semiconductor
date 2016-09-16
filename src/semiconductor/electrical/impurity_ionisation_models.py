@@ -20,6 +20,7 @@ from glob import glob
 def complete(values, N_imp, *args):
     return np.ones(N_imp.shape[0])
 
+
 def E_dop(values, Ni, dopant):
     '''retuns the Dopant energy level in eV'''
     return values['e_dop0_' + dopant] / (
@@ -36,7 +37,7 @@ def b(values, Ni, dopant):
     return 1. / (1. + (Ni / values['n_b_' + dopant])**values['d_' + dopant])
 
 
-def altermatt2006(values, N_impurity, ne, nh, T, Nc, Nv, dopant):
+def altermatt_2006(values, N_impurity, ne, nh, T, Nc, Nv, dopant):
     '''
     This function returns the fraction of ionisated dopants.
     Dopant ionisation of single doped material
@@ -57,4 +58,3 @@ def altermatt2006(values, N_impurity, ne, nh, T, Nc, Nv, dopant):
             (nh + values['g_' + dopant] * nh1)
 
     return ratio
-

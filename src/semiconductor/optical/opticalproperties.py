@@ -97,7 +97,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
         'author': None,
     }
 
-    author_file = r'tabulated_absorption_coefficient.const'
+    author_file = 'tabulated_absorption_coefficient.const'
 
     def __init__(self, **kwargs):
 
@@ -286,7 +286,7 @@ def _temp_power_law(ref_vairable, coef, temp, ref_temp):
     '''
     The coefficient is assumed to be times by 1e-4
     '''
-    return ref_vairable * np.power(temp / ref_temp, coef*1e-4*ref_temp)
+    return ref_vairable * np.power(temp / ref_temp, coef * 1e-4 * ref_temp)
 
 
 class ModelledAbsorptionCoefficient(HelperFunctions):

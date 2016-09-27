@@ -1,3 +1,4 @@
+
 [default]
 model: Schinke_2015
 
@@ -23,6 +24,15 @@ notes: determined the absorptance from spectral luminescence at a range of diffe
     However this measurement was done at a the high injection level of 1e17, meaning band gap naorrowing is
     ofccuring.
 
+[Wang_2013]
+model: Si_Wang_2013
+temp: 300
+doi: 10.1007/s10765-013-1414-2
+notes: Review of Si models and tabulated data, and measures their own values
+  of different thickness using T data, with calculated reflectance.
+  They find Greens tabulated data and Geist model agree within
+  3-7 percent, even through they come from different data sources.
+
 [Green_2008]
 model: Si_Green_2008
 temp: 300
@@ -45,9 +55,28 @@ doi: 10.1002/pip.4670030303
 notes: determined from the combination of published ellipometry
     and spectral response measurements.
 
+[Vuye_1993]
+model: Si_Vuye_1993
+temp: 300 to 750 K
+doi: 10.1016/0040-6090(93)90082-Z
+notes: Determined from ellipsometry measurements, so several samples types
+
+[Jellison_1992]
+model: Si_Jellison_1992
+temp: 300
+doi: 10.1016/0925-3467(92)90022-F
+notes: Determined from ellipsometry measurements, so several samples types
+
 [Daub_1995]
 model: Si_Daub_1995
 temp: 295
 doi: http://dx.doi.org/10.1103/PhysRevLett.74.10_20, 10.1109/JPHOTOV._2013.2263985
 notes: a relative measured determined from spectral luminesecnece measurements. Data taken from
     Fig 4. The tabulated data was obtained by Schinke and made publically avilable
+
+
+[Aspnes_1983]
+model: Si_Aspnes_1983
+temp: 300
+doi: 10.1103/PhysRevB.27.985
+notes: Determined R&T measurements

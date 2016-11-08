@@ -1,6 +1,0 @@
-
-include mind_map.png README.md *.model
-recursive-include * *.model
-recursive-include * *.models
-recursive-inclide optical Si*
-prune docs/_build

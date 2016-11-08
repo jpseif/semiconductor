@@ -174,7 +174,7 @@ class Ionisation(HelperFunctions):
                     ni=self._cal_dts['ni_author'])
 
                 N_idop = self.update(
-                    N_dop, ne, nh, impurity)
+                    N_imp=N_dop, ne=ne, nh=nh, impurity=impurity)
 
         else:
             print(r'Not a valid impurity, returning 100% ionisation')

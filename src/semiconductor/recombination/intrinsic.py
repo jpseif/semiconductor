@@ -123,7 +123,8 @@ class Radiative(HelperFunctions):
     def itau(self, nxc, **kwargs):
         return 1. / self.tau(nxc, **kwargs)
 
-    def get_B(self, nxc):
+    def get_B(self, nxc, **kwargs):
+        self.calculationdetails = kwargs
 
         if 'b_model' in self.vals.keys():
             vals, model, author = change_model(

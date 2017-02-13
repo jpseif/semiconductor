@@ -288,7 +288,6 @@ def uLS_compensated(carrier, vals, temp):
 
 def uDCS(carrier, vals, nh, ne, Na, Nd, temp):
     carrier_sum = nh + ne
-
     return un(carrier, vals, temp) * Nsc(carrier, vals, nh, ne, Na, Nd) / \
         Nsceff(carrier, vals, nh, ne, Na, Nd, temp) * (
         vals['nref_' + carrier] / Nsc(carrier, vals, nh, ne, Na,
@@ -413,12 +412,12 @@ def Z(carrier, vals, Na, Nd):
     """
     accounts for high doping effects - clustering
     """
-    if return_dopant(carrier, Na, Nd) == 0:
-        z = 1.
-    else:
-        z = 1. + 1. / (vals['c_' + carrier] +
-                       (vals['nref2_' + carrier] / return_dopant(carrier, Na,
-                                                                 Nd))**2.)
+    index = return_dopant(carrier, Na, Nd) == 0
+
+    z = 1. + 1. / (vals['c_' + carrier] +
+                   (vals['nref2_' + carrier] / return_dopant(carrier, Na,
+                                                             Nd))**2.)
+    z[index] = 1
     return z
 
 

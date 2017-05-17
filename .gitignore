@@ -1,2 +1,10 @@
 
-.pyc
+*.pyc
+*.xl*
+*.txt
+*.graphml
+*.zip
+*.DS_Store
+*.p y
+*.png
+*.csv

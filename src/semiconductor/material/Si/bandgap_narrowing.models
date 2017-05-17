@@ -1,6 +1,6 @@
 
 [default]
-model: Yan_2014-fer
+model: Yan_2014fer
 
 [None]
 model = none
@@ -12,6 +12,8 @@ N_onset = 7e17
 dopant = phosphorous
 ; The assumed assumed_ni
 assumed_ni = 1.5e10
+notes = PV lighthouse data has been noted to be inconsistance with the original publication
+doi: 10.1109/IEDM.1985.190954
 
 
 [Cuevas_1996]
@@ -24,7 +26,7 @@ dopant = phosphorous
 assumed_ni = 1e10
 
 
-[Yan_2013-bz]
+[Yan_2013bz]
 ; Updated values of alamo
 model = apparent_BGN
 de_slope = 0.01296
@@ -34,7 +36,7 @@ assumed_ni = 9.65e9
 dopant = phosphorous
 notes: For phorphous, apparent BGN for use with BZ carrier  stats
 
-[Yan_2014-bz]
+[Yan_2014bz]
 ; Updated values of alamo
 model = apparent_BGN
 de_slope = 0.01543
@@ -44,7 +46,7 @@ dopant = boron
 assumed_ni = 9.65e9
 notes: For Boron, apparent BGN for use with BZ carrier stats
 
-[Schenk_1988-fer]
+[Schenk_1988fer]
 model = Schenk
 ge = 12
 gh = 4
@@ -79,7 +81,7 @@ qh = 0.25
 dopant = phosphorous
 notes: To be used with Fermi direct statics, and only for phosphorous
 
-[Schenk_1988-reparamitisation-Yan_2013]
+[Schenk_1988_reparamitisation_Yan_2013]
 model = BGN
 de_slope = 3.5e-5
 N_onset = 1e14
@@ -90,7 +92,7 @@ dopant = phosphorous
 assumed_ni = 9.65e9
 notes: For phosphorous, apparent BGN for use with Fermi carrier stats. Has up to 10%% deviation from complex Schenk
 
-[Yan_2013-fer]
+[Yan_2013fer]
 ; Updated values of alamo
 ; Uses FD states, and Klassen mobility model
 model = BGN
@@ -103,7 +105,7 @@ dopant = phosphorous
 assumed_ni = 9.65e9
 notes: For phorphous, apparent BGN for use with Femi carrier stats
 
-[Yan_2014-fer]
+[Yan_2014fer]
 ; Updated values of alamo
 ; Done for boron
 ; Uses FD states, and Klassen mobility model

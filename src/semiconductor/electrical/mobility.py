@@ -14,13 +14,26 @@ except:
 from . import mobilitymodels as model
 from semiconductor.general_functions.carrierfunctions import get_carriers
 
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 
 
-class Mobility(HelperFunctions):
+class Mobility(BaseModelClass):
     '''
-    A class to provide the mobility in a semiconductor
-    carriers
+    A class to provide the mobility of th excess carriers in a semiconductor
+
+    inputs:
+        1. material: (str)
+            The elemental name for the material. Defualt (Si)
+        2. temp: (float)
+            The temperature of the material in Kelvin (300)
+        3. author: (str)
+            The author of the model to be used
+        4. nxc: (array like cm^-3)
+            The number of excess carriers
+        5. Na: (array like cm^-3)
+            The number of acceptor dopants
+        6. Nd: (array like cm^-3)
+            The number of donar dopants        
     '''
     author_list = 'mobility.models'
 

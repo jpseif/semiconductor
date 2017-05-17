@@ -7,12 +7,12 @@ import scipy.constants as const
 import semiconductor.material.intrinsic_carrier_density as ni
 import semiconductor.optical.opticalproperties as opticalproperties
 import semiconductor.optical.absorptance as absorptance
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 
 import inspect
 
 
-class SpontaneousRadiativeEmission(HelperFunctions):
+class SpontaneousRadiativeEmission(BaseModelClass):
 
     """
     This class calculates the spectral spontaneous radiative emisison from
@@ -167,7 +167,7 @@ class SpontaneousRadiativeEmission(HelperFunctions):
         return self.genralised_planks_PerEnergy(**kwargs) * dEdwl
 
 
-class luminescence_emission(HelperFunctions):
+class luminescence_emission(BaseModelClass):
 
     """
     A class that simualted the PL emitted by a device

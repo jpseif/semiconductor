@@ -2,20 +2,23 @@
 import os
 import numpy as np
 import scipy.constants as Const
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 from semiconductor.material import vel_th_models
 from semiconductor.material.bandgap_intrinsic import IntrinsicBandGap as Egi
 
 
-class ThermalVelocity(HelperFunctions):
+class ThermalVelocity(BaseModelClass):
 
     '''
-    The intrinsic carrier density is the number of carriers
-    that exist the a material at thermal equilibrium.
-    It is impacted by the band gap
+    This calculates the thermal velocity.
 
-    The effective intrinsic carrier density refers to a modification
-    of the intrinsic to account for band gap narrowing.
+    inputs:
+        1. material: (str)
+            The elemental name for the material. Defualt (Si)
+        2. temp: (float)
+            The temperature of the material in Kelvin (300)
+        3. author: (str)
+            The author of the model to be used
     '''
 
     _cal_dts = {

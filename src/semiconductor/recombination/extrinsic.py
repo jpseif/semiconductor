@@ -5,17 +5,45 @@ import os
 import scipy.constants as const
 import matplotlib.pylab as plt
 
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass, class_or_value
 from semiconductor.general_functions.carrierfunctions import get_carriers
 from semiconductor.material.intrinsic_carrier_density import IntrinsicCarrierDensity as ni
 from semiconductor.material.thermal_velocity import ThermalVelocity as Vel_th
+from semiconductor.material import BandGapNarrowing
 
 sys.path.append(
     os.path.abspath(os.path.join(os.getcwd(), os.pardir, os.pardir)))
 
 
-class SRH(HelperFunctions):
+class SRH(BaseModelClass):
 
+    '''
+    This calculates the steady state shockley read hall recombiation that
+    occurs for given defects.
+
+    inputs:
+        1. material: (str, Si)
+            The elemental name for the material
+        2. temp: (float Kelvin, 300)
+            The temperature of the material in
+        3. defect: (str)
+            The author of the model to be used
+        4. Nt: (float cm^-3)
+            The number of defects
+        5. nxc: (array like cm^-3)
+            The number of excess carriers
+        6. Na: (array like cm^-3)
+            The number of acceptor dopants
+        7. Nd: (array like cm^-3)
+            The number of donar dopants
+        8. vth_author: (str)
+            Author for the thermal velocity model to be used
+        9. ni_author: (str)
+            Author for the intrinsic carrier density
+        10. BGN_author: (str)
+            Author for the band gap narrowing model
+
+    '''
     # ToDo:
     # need to assign which thermal velocity values
     # were used for each value of capture cross section
@@ -31,7 +59,8 @@ class SRH(HelperFunctions):
         'Nd': 0,
         'Na': 1e16,
         'nxc': 1e10,
-        'ni_author': None
+        'ni_author': None,
+        'BGN_author': None
     }
 
     vel_th_e = None
@@ -40,7 +69,6 @@ class SRH(HelperFunctions):
     author_list = 'SRH.defects'
 
     def __init__(self, **kwargs):
-
         # update any values in cal_dts
         # that are passed
         self.calculationdetails = kwargs
@@ -53,7 +81,6 @@ class SRH(HelperFunctions):
 
         # get the models ready
         self._int_model(author_file)
-
         # initiate the a defect
         self._change_model(self._cal_dts['defect'])
         self._update_links()
@@ -61,16 +88,35 @@ class SRH(HelperFunctions):
 
     def _update_links(self):
 
-        self.ni = ni(material=self._cal_dts['material'],
-                     author=self._cal_dts['ni_author'],
-                     temp=self._cal_dts['temp'],
-                     )
-        self.ni.update()
-
-        self.vel_th_e, self.vel_th_h = Vel_th(
+        # update the links if provided. Else continue with the
+        # provided or calculated number
+        self.ni, self._cal_dts['ni_author'] = class_or_value(
+            self._cal_dts['ni_author'],
+            ni,
+            'update',
             material=self._cal_dts['material'],
-            author=self._cal_dts['vth_author'],
-            temp=self._cal_dts['temp']).update()
+            temp=self._cal_dts['temp'])
+
+        vels, self._cal_dts['vth_author'] = class_or_value(
+            self._cal_dts['vth_author'],
+            Vel_th,
+            'update',
+            material=self._cal_dts['material'],
+            temp=self._cal_dts['temp'])
+
+        self.vel_th_e, self.vel_th_h = vels
+
+        nieff_mult, self._cal_dts['BGN_author'] = class_or_value(
+            self._cal_dts['BGN_author'],
+            BandGapNarrowing,
+            'ni_multiplier',
+            material=self._cal_dts['material'],
+            temp=self._cal_dts['temp'],
+            nxc=[0],
+            Na=self._cal_dts['Na'],
+            Nd=self._cal_dts['Nd'],)
+
+        self.nieff = self.ni * nieff_mult
 
     def _cal_taun_taup(self):
         '''
@@ -117,6 +163,10 @@ class SRH(HelperFunctions):
             self._update_links()
             self._cal_taun_taup()
 
+        if 'Na' in ''.join(kwargs.keys()) or 'Nd'in ''.join(kwargs.keys()):
+            self._update_links()
+            self._cal_taun_taup()
+
         return self._tau(self._cal_dts['nxc'],
                          self.vals['tau_e'],
                          self.vals['tau_h'],
@@ -131,12 +181,11 @@ class SRH(HelperFunctions):
         in the band gap. This is calculated from the kinetics
         of repairing.
         """
-
         # the escape from defects
-        nh1 = self.ni.ni * \
+        nh1 = self.nieff * \
             np.exp(-Et * const.e / (const.k * self._cal_dts['temp']))
 
-        ne1 = self.ni.ni * \
+        ne1 = self.nieff * \
             np.exp(Et * const.e / (const.k * self._cal_dts['temp']))
 
         # get the number of carriers
@@ -145,11 +194,11 @@ class SRH(HelperFunctions):
                               nxc=self._cal_dts['nxc'],
                               temp=self._cal_dts['temp'],
                               material=self._cal_dts['material'],
-                              ni=self.ni.ni
+                              ni=self.nieff
                               )
 
         # calculate the recombination rate
-        U = (ne * nh - self.ni.ni**2) / \
+        U = (ne * nh - self.nieff**2 ) / \
             (tau_h * (ne + ne1) + tau_e * (nh + nh1))
 
         return self._cal_dts['nxc'] / U

@@ -3,10 +3,10 @@ import configparser
 import os
 import sys
 import scipy.constants as const
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 
 
-class TabulatedOpticalProperties(HelperFunctions):
+class TabulatedOpticalProperties(BaseModelClass):
     '''
     A class to obtain n, k, and alpha
     '''
@@ -84,7 +84,7 @@ class TabulatedOpticalProperties(HelperFunctions):
         pass
 
 
-class TabulatedAbsorptionCoefficient(HelperFunctions):
+class TabulatedAbsorptionCoefficient(BaseModelClass):
 
     """
     A class containg the optical constants of silicon
@@ -197,7 +197,7 @@ class TabulatedAbsorptionCoefficient(HelperFunctions):
         return self.ext_cof_bb
 
 
-class TabulatedRefractiveIndex(HelperFunctions):
+class TabulatedRefractiveIndex(BaseModelClass):
 
     _cal_dts = {
         'material': 'Si',
@@ -289,7 +289,7 @@ def _temp_power_law(ref_vairable, coef, temp, ref_temp):
     return ref_vairable * np.power(temp / ref_temp, coef * 1e-4 * ref_temp)
 
 
-class ModelledAbsorptionCoefficient(HelperFunctions):
+class ModelledAbsorptionCoefficient(BaseModelClass):
 
     ''' This purpose of this it to provide access if the absorption
         coefficient have a model.

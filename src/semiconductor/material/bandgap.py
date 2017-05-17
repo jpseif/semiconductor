@@ -5,14 +5,33 @@ import sys
 
 from semiconductor.material.bandgap_intrinsic import IntrinsicBandGap
 from semiconductor.material.bandgap_narrowing import BandGapNarrowing
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 
 
-class BandGap(HelperFunctions):
+class BandGap(BaseModelClass):
 
     '''
-    A simple class to combine the intrinsic band gap and
+    A simple class that combines the intrinsic band gap and
     band gap narrowing classes for easy access
+
+    Inputs to this class are:
+
+        1. material: (str)
+            The elemental name for the material. Defualt (Si)
+        2. temp: (float)
+            The temperature of the material in Kelvin (300)
+        3. iEg_author: (str)
+            The author of the intrinsic band gap model to be used
+        4. multiplier: (float)
+            A multipler. This is a hack that people use to adjust the bandgap to achieve other desired values.
+        5. BGN_author: (str)
+            The author of the band gap narrowing.
+        4. nxc: (array like cm^-3)
+            The number of excess carriers
+        5. Na: (array like cm^-3)
+            The number of acceptor dopants
+        6. Nd: (array like cm^-3)
+            The number of donar dopants
     '''
     _cal_dts = {
         'material': 'Si',

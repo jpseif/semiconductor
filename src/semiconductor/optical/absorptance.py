@@ -4,10 +4,10 @@ import sys
 import os
 import scipy.constants as Const
 import semiconductor.optical.opticalproperties as opticalproperties
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 
 
-class EscapeProbability(HelperFunctions):
+class EscapeProbability(BaseModelClass):
     '''
     A class that contains models for the escape probabilities
     '''

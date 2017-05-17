@@ -3,15 +3,27 @@ import matplotlib.pylab as plt
 import os
 import numpy as np
 from semiconductor.material import bandgap_intrinsic_models as iBg
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 
 
-class IntrinsicBandGap(HelperFunctions):
+class IntrinsicBandGap(BaseModelClass):
 
     '''
-    The intrinsic band-gap as a function of temperature
+    A class that calculates the intrinsic band-gap of a material from a provided model
+
+    The intrinsic bandgap is the band gap for an intrinsic material as a function of temperature
         it changes as a result of:
              different effective carrier mass (band strucutre)
+
+    inputs:
+        1. material: (str)
+            The elemental name for the material. Defualt (Si)
+        2. temp: (float)
+            The temperature of the material in Kelvin (300)
+        3. author: (str)
+            The author of the model to be used
+        4. multiplier: (float)
+            A multipler. This is a hack that people use to adjust the bandgap to achieve other desired values.
     '''
     _cal_dts = {
         'material': 'Si',

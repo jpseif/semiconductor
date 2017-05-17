@@ -7,10 +7,34 @@ from semiconductor.general_functions.carrierfunctions import get_carriers
 from semiconductor.material.intrinsic_carrier_density import IntrinsicCarrierDensity as ni
 from semiconductor.electrical.mobility import Mobility as Mob
 from semiconductor.electrical.ionisation import Ionisation as Ion
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 
 
-class Conductivity(HelperFunctions):
+class Conductivity(BaseModelClass):
+    '''
+    Calculates the conductivity of a semiconductor given the inputs
+
+    inputs
+        1. material: (str)
+            The elemental name for the material. Defualt (Si)
+        2. temp: (float)
+            The temperature of the material in Kelvin (300)
+        3. mob_author: (str)
+            The mobility author  to be used
+        4. nieff_author (str)
+            The intrinsic carrier density to be used
+        5. ionis_author (str)
+            The author of a model to be used for dopant ionisation
+        6. dopant (str)
+            The elemental name for the dopants
+        7. nxc: (array like cm^-3)
+            The number of excess carriers
+        8. Na: (array like cm^-3)
+            The number of acceptor dopants
+        9. Nd: (array like cm^-3)
+            The number of donar dopants
+    '''
+
     _cal_dts = {
         'material': 'Si',
         'temp': 300,
@@ -98,7 +122,27 @@ class Conductivity(HelperFunctions):
 
 class Resistivity(Conductivity):
     '''
-    A class to caculate the resistivity
+    Calculates the resistivity of a semiconductor given the inputs
+
+    inputs
+        1. material: (str)
+            The elemental name for the material. Defualt (Si)
+        2. temp: (float)
+            The temperature of the material in Kelvin (300)
+        3. mob_author: (str)
+            The mobility author  to be used
+        4. nieff_author (str)
+            The intrinsic carrier density to be used
+        5. ionis_author (str)
+            The author of a model to be used for dopant ionisation
+        6. dopant (str)
+            The elemental name for the dopants
+        7. nxc: (array like cm^-3)
+            The number of excess carriers
+        8. Na: (array like cm^-3)
+            The number of acceptor dopants
+        9. Nd: (array like cm^-3)
+            The number of donar dopants
     '''
 
     def calculate(self, **kwargs):
@@ -111,11 +155,27 @@ class Resistivity(Conductivity):
         return self._cal_dts['resistivity']
 
 
-class DarkConductivity(HelperFunctions):
+class DarkConductivity(BaseModelClass):
     '''
     A class for the special case for a sample where the number of excess
-    carriers is zero. It allows caculation of conudtance of doping, and
+    carriers is zero. It allows calculation of conductance from doping, and
     doping from conductance.
+
+    Calculates the conductivity of a semiconductor given the inputs
+
+    inputs
+        1. material: (str)
+            The elemental name for the material. Defualt (Si)
+        2. temp: (float)
+            The temperature of the material in Kelvin (300)
+        3. mob_author: (str)
+            The mobility author  to be used
+        4. nieff_author (str)
+            The intrinsic carrier density to be used
+        5. ionis_author (str)
+            The author of a model to be used for dopant ionisation
+        6. dopant_type (str)
+            The type of typnt n or p  
     '''
 
     _cal_dts = {

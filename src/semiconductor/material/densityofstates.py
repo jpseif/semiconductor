@@ -6,17 +6,30 @@ import matplotlib.pylab as plt
 import sys
 import os
 
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 from semiconductor.material import densityofstates_models as dos_models
 from semiconductor.material.bandgap_intrinsic import IntrinsicBandGap as Egi
 
 
-class DOS(HelperFunctions):
+class DOS(BaseModelClass):
 
     '''
     The density of states is a value that determines the
     number of free states for electrons and holes in the conduction
-    and valance band
+    and/or valance band
+
+    the inputs for these models include
+
+    Inputs to this class are:
+
+        1. material: (str)
+            The elemental name for the material. Defualt (Si)
+        2. temp: (float)
+            The temperature of the material in Kelvin (300)
+        3. iEg_author: (str)
+            The author of the intrinsic band gap model to be used
+        4. author: (str)
+            The author of the model to be used to calculate the density of states
     '''
     _cal_dts = {
         'material': 'Si',

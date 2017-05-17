@@ -7,23 +7,37 @@ import os
 import configparser
 import scipy.constants as C
 
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 from semiconductor.material import bandgap_narrowing_models as Bgn
 from semiconductor.general_functions import carrierfunctions as GF
 
 
-class BandGapNarrowing(HelperFunctions):
+class BandGapNarrowing(BaseModelClass):
 
     '''
-    Bang gap narrowing accounts for a reduction in bandgap that
-    occurs as a result from no thermal effects. These include:
+    Band gap narrowing accounts for a reduction in bandgap which
+    occurs as a result of no thermal effects. These include:
         doping
         excess carrier density (non thermal distribution)
 
-    As it depends ont eh excess carriers, it also depends on the
-    intrinsic carrier density.
-    Note: I currently believed that the impact of dopants
-        is much larger than the impact of the carrier distribution
+    This class allows calculation of an effective intrinsic carrier
+    density. However, it only uses boltzman stastics. 
+
+    Inputs to this class are:
+
+        1. material: (str)
+            The elemental name for the material. Defualt (Si)
+        2. temp: (float)
+            The temperature of the material in Kelvin (300)
+        3. author: (str)
+            The author of the model to be used
+        4. nxc: (array like cm^-3)
+            The number of excess carriers
+        5. Na: (array like cm^-3)
+            The number of acceptor dopants
+        6. Nd: (array like cm^-3)
+            The number of donar dopants
+
     '''
     _cal_dts = {
         'material': 'Si',
@@ -117,18 +131,9 @@ class BandGapNarrowing(HelperFunctions):
 
     def check_models(self):
         plt.figure('Bandgap narrowing')
-        Na = np.logspace(12, 20)
         Nd = 0.
         dn = 1e14
         temp = 300.
-
-        for author in self.available_models():
-            BGN = self.update(Na=Na, Nd=Nd, nxc=dn,
-                              author=author,
-                              temp=temp)
-
-            if not np.all(BGN == 0):
-                plt.plot(Na, BGN, label=author)
 
         test_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
@@ -136,10 +141,27 @@ class BandGapNarrowing(HelperFunctions):
 
         data = np.genfromtxt(test_file, delimiter=',', names=True)
 
-        for name in data.dtype.names[1:]:
-            plt.plot(
-                data['N'], data[name], 'r--',
-                label='PV-lighthouse\'s: ' + name)
+        for author in data.dtype.names[1:]:
+
+            if author in self.available_models():
+                Na=data['N']
+                BGN = self.update(Na=Na, Nd=Nd, nxc=dn,
+                                  author=author,
+                                  temp=temp)
+
+                plt.plot(
+                    data['N'], data[author], '.',
+                    label='PV-lighthouse\'s: ' + author)
+                if not np.all(BGN == 0):
+                    plt.plot(Na, BGN, label=author)
+
+
+                if np.average(np.abs(data[author] - BGN)/(BGN+0.1)) > 0.003:
+                    print('{0} failed to match test data'.format(author),np.average(np.abs(data[author] - BGN)/(BGN+0.1)) )
+
+            else:
+                print('{0} not an available model'.format(author))
+                print('models availables are', self.available_models())
 
         plt.semilogx()
         plt.xlabel('Doping (cm$^{-3}$)')
@@ -180,3 +202,9 @@ def check_Schenk(fig, ax):
     ax.set_ylabel('Bang gap narrowing (eV)')
     ax.set_xlabel('Ionised Doping (cm$^{-3}$)')
     ax.semilogx()
+
+if __name__ =='__main__':
+
+    bgn = BandGapNarrowing()
+    bgn.check_models()
+    plt.show()

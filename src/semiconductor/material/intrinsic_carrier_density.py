@@ -6,11 +6,11 @@ from pylab import *
 import os
 import scipy.constants as Const
 from semiconductor.material.bandgap_intrinsic import IntrinsicBandGap
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 from semiconductor.material import ni_models
 
 
-class IntrinsicCarrierDensity(HelperFunctions):
+class IntrinsicCarrierDensity(BaseModelClass):
 
     '''
     The intrinsic carrier density is the number of carriers
@@ -18,7 +18,17 @@ class IntrinsicCarrierDensity(HelperFunctions):
     It is impacted by the band gap
 
     The effective intrinsic carrier density refers to a modification
-    of the intrinsic to account for band gap narrowing.
+    of the intrinsic to account for band gap narrowing. This does not calculate
+    those changes.
+
+    inputs:
+        1. material: (str)
+            The elemental name for the material. Defualt (Si)
+        2. temp: (float)
+            The temperature of the material in Kelvin (300)
+        3. author: (str)
+            The author of the model to be used
+
     '''
 
     _cal_dts = {

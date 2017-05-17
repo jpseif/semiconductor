@@ -5,6 +5,7 @@ import matplotlib.pylab as plt
 import numpy as np
 import json
 import inspect
+import numbers
 try:
     import ConfigParser as configparser
 except:
@@ -35,7 +36,26 @@ def change_model(Models, author=None):
     return vals, model, author
 
 
-class HelperFunctions():
+def class_or_value(value, clas, value_updater, **kwargs):
+    if isinstance(value, str) or value is None:
+        c = clas(**kwargs)
+        if value in c.available_models() or value is None:
+            ret = getattr(c, value_updater)(author=value)
+            value = c.calculationdetails['author']
+        else:
+            print('value', value, c.available_models())
+            raise
+    elif isinstance(value, numbers.Number):
+        ret = value
+
+    else:
+        ret = 0
+        print(value)
+
+    return ret, value
+
+
+class BaseModelClass():
 
     _cal_dts = {
         'material': 'Si',
@@ -47,7 +67,6 @@ class HelperFunctions():
 
     @property
     def calculationdetails(self):
-        print('kwargs being viewed')
         return self._cal_dts
 
     @calculationdetails.setter
@@ -74,7 +93,7 @@ class HelperFunctions():
         Models = Models or self.Models
 
         self.vals, self.model, self._cal_dts['author'] = change_model(
-                                                        Models, author)
+            Models, author)
 
     def plot_all_models(self, update_function, xvalues=None, **kwargs):
         '''

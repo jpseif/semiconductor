@@ -4,13 +4,34 @@ import matplotlib.pylab as plt
 import os
 import configparser
 
-from semiconductor.helper.helper import HelperFunctions, change_model
+from semiconductor.helper.helper import BaseModelClass, change_model
 from semiconductor.general_functions.carrierfunctions import get_carriers
 from semiconductor.recombination import radiative_models as radmdls
 from semiconductor.recombination import auger_models as augmdls
 
 
-class Intrinsic(HelperFunctions):
+class Intrinsic(BaseModelClass):
+    '''
+    Calculates the intrinsic recombiation
+
+    inputs
+        1. material: (str, Si)
+            The elemental name for the material
+        2. temp: (float Kelvin, 300)
+            The temperature of the material in
+        3. Na: (array like cm^-3)
+            The number of acceptor dopants
+        4. Nd: (array like cm^-3)
+            The number of donar dopants
+        5. ni_author: (str)
+            Author for the intrinsic carrier density
+        6. rad_author: (str)
+            Author to use for the radiative recombiation model
+        7. aug_author: (str)
+            Author to use for the radiative recombiation model
+
+
+    '''
 
     _cal_dts = {
         'material': 'Si',
@@ -26,7 +47,6 @@ class Intrinsic(HelperFunctions):
         # update any values in cal_dts
         # that are passed
         self.calculationdetails = kwargs
-
         # pass values to models
         self._update_links()
 
@@ -70,7 +90,7 @@ class Intrinsic(HelperFunctions):
         return itau
 
 
-class Radiative(HelperFunctions):
+class Radiative(BaseModelClass):
 
     author_list = 'radiative.model'
 
@@ -160,7 +180,7 @@ class Radiative(HelperFunctions):
         return B
 
 
-class Auger(HelperFunctions):
+class Auger(BaseModelClass):
     author_list = 'auger.model'
 
     _cal_dts = {

@@ -5,14 +5,14 @@ import numpy as np
 import matplotlib.pylab as plt
 import os
 
-from semiconductor.helper.helper import HelperFunctions
+from semiconductor.helper.helper import BaseModelClass
 from . import impurity_ionisation_models as IIm
 from semiconductor.material.densityofstates import DOS
 from semiconductor.general_functions import carrierfunctions
 from semiconductor.general_functions import carrierfunctions as CF
 
 
-class Ionisation(HelperFunctions):
+class Ionisation(BaseModelClass):
 
     '''
     Depending on a dopant level from a band, and the thermal
@@ -20,14 +20,15 @@ class Ionisation(HelperFunctions):
     accepting an electron to the band)  or inactive.
     It can take the inputs:
 
-    material: (string)
-        The elemental symbol for the material e.g 'Si'.
-    temp: (float)
-        The temperature of the sample in kelvin. This can not be an array.
-    author: (string)
-        The author of the ionisation model being used
-    ni_author: (string)
-        The author of the intrinsic carrier concentraion being used.
+    input
+        material: (string)
+            The elemental symbol for the material e.g 'Si'.
+        temp: (float)
+            The temperature of the sample in kelvin. This can not be an array.
+        author: (string)
+            The author of the ionisation model being used
+        ni_author: (string)
+            The author of the intrinsic carrier concentraion being used.
     '''
     _cal_dts = {
         'material': 'Si',

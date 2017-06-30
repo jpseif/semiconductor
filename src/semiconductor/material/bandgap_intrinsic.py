@@ -31,7 +31,7 @@ class IntrinsicBandGap(BaseModelClass):
         'author': None,
         'multiplier': 1.,
     }
-    author_list = 'bandgap.models'
+    author_list = 'bandgap.yaml'
 
     def __init__(self, **kwargs):
 

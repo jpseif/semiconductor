@@ -1,0 +1,103 @@
+---
+default:
+    model: Klaassen_1992
+---
+Dannhauser-Krausse_1972:
+    coef: 8.36
+    mob_sum: 1800
+    mobility_sum_only: 'True'
+    model: dannhauser
+    ni2: 1.2e18 # This ni was taken from a Sinton Instruments sheet, the original ni^2 is unknown
+    notes: sum of the mobility model used by Sinton Consulting.
+    power: 0.8431
+---
+Dorkel_1981:
+    Ae: 4.61e17
+    Ah: 1e17
+    alphae: 2.2
+    alphah: 2.2
+    Be: 1.52e15
+    Bh: 6.25e14
+    doi: 10.1016/0038-1101(81)90097-6
+    model: dorkel
+    mul0e: 1430
+    mul0h: 495
+    notes: mobility accounting for each component. Depends on dopents, carrier type and concentration. Claims that the calculated mobility deviates by an average of 5% from experimental values. Note At the time of Dorkel and Leturcq's work, most experimental work had been done at 300 K.
+    temp0: 300
+---
+Klaassen_1992:
+    alpha_e: .711
+    alpha_h: .719
+    c_e: 0.21
+    c_h: 0.5
+    fbh: 3.828
+    fcw: 2.459
+    model: unified_mobility
+    mr_e: 1.
+    mr_h: 1.258
+    notes: 'A very good model. This include the changes made by sentarous. Nref for arsnic is 9.68e16 and 2.23e17 (sentarous). Other values of mr that has been used is 1./1.258 and 1.258, in QSSModel52.xls used at Australian National University.'
+    nref2_e: 4e20
+    nref2_h: 7.2e20
+    nref_e: 9.2e16
+    nref_h: 2.23e17
+    r1: .7643
+    r2: 2.2999
+    r3: 6.5502
+    r4: 2.367
+    r5: -0.8552
+    r6: .6478
+    s1: .89233
+    s2: .41372
+    s3: .19778
+    s4: .28227
+    s5: .005978
+    s6: 1.80618
+    s7: 0.72169
+    theta_e: 2.285
+    theta_h: 2.247
+    umax_e: 1414
+    umax_h: 470.5
+    umin_e: 68.5
+    umin_h: 44.9
+---
+Schindler_2014:
+    alpha_e: .711
+    alpha_h: .719
+    beta1: 1.092
+    c_e: 0.21
+    c_h: 0.5
+    cl_ref: 24.82
+    fbh: 3.828
+    fcw: 2.459
+    model: unified_mobility_compensated
+    mr_e: 1.
+    mr_h: 1.258
+    n_ref3: 1.276e17
+    nref2_e: 4e20
+    nref2_h: 7.2e20
+    nref_e: 9.2e16
+    nref_h: 2.23e17
+    r1: .7643
+    r2: 2.2999
+    r3: 6.5502
+    r4: 2.367
+    r5: -0.8552
+    r6: .6478
+    s1: .89233
+    s2: .41372
+    s3: .19778
+    s4: .28227
+    s5: .005978
+    s6: 1.80618
+    s7: 0.72169
+    t_cor: 120
+    temp_refc: 300
+    theta_e: 2.285
+    theta_h: 2.247
+    theta_h_cor: 1.9
+    u_cor: 4800
+    umax_e: 1414
+    umax_h: 470.5
+    umin_e: 68.5
+    umin_h: 44.9
+    notes: Modification of klassens model to work for compensatedly doped material. 

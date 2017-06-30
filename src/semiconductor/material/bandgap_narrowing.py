@@ -21,7 +21,7 @@ class BandGapNarrowing(BaseModelClass):
         excess carrier density (non thermal distribution)
 
     This class allows calculation of an effective intrinsic carrier
-    density. However, it only uses boltzman stastics. 
+    density. However, it only uses boltzman stastics.
 
     Inputs to this class are:
 
@@ -48,7 +48,7 @@ class BandGapNarrowing(BaseModelClass):
         'Nd': 1e16,
     }
 
-    author_list = 'bandgap_narrowing.models'
+    author_list = 'bandgap_narrowing.yaml'
 
     def __init__(self, **kwargs):
 
@@ -144,7 +144,7 @@ class BandGapNarrowing(BaseModelClass):
         for author in data.dtype.names[1:]:
 
             if author in self.available_models():
-                Na=data['N']
+                Na = data['N']
                 BGN = self.update(Na=Na, Nd=Nd, nxc=dn,
                                   author=author,
                                   temp=temp)
@@ -155,9 +155,9 @@ class BandGapNarrowing(BaseModelClass):
                 if not np.all(BGN == 0):
                     plt.plot(Na, BGN, label=author)
 
-
-                if np.average(np.abs(data[author] - BGN)/(BGN+0.1)) > 0.003:
-                    print('{0} failed to match test data'.format(author),np.average(np.abs(data[author] - BGN)/(BGN+0.1)) )
+                if np.average(np.abs(data[author] - BGN) / (BGN + 0.1)) > 0.003:
+                    print('{0} failed to match test data'.format(author),
+                          np.average(np.abs(data[author] - BGN) / (BGN + 0.1)))
 
             else:
                 print('{0} not an available model'.format(author))
@@ -203,7 +203,7 @@ def check_Schenk(fig, ax):
     ax.set_xlabel('Ionised Doping (cm$^{-3}$)')
     ax.semilogx()
 
-if __name__ =='__main__':
+if __name__ == '__main__':
 
     bgn = BandGapNarrowing()
     bgn.check_models()

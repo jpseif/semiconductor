@@ -37,7 +37,7 @@ class DOS(BaseModelClass):
         'author': None,
         'iEg_author': None
     }
-    author_list = 'DOS.models'
+    author_list = 'DOS.yaml'
 
     def __init__(self, **kwargs):
 
@@ -79,17 +79,17 @@ class DOS(BaseModelClass):
         if 'author' in kwargs.keys():
             self.change_model(self._cal_dts['author'])
 
-        if 'ieg_author' in self.vals.keys():
+        if 'iEg_author' in self.vals.keys():
 
             Eg0 = Egi(
                 material=self._cal_dts['material'],
                 temp=0,
-                author=self.vals['ieg_author'],
+                author=self.vals['iEg_author'],
             ).update()
             Egratio = Eg0 / Egi(
                 material=self._cal_dts['material'],
                 temp=self._cal_dts['temp'],
-                author=self.vals['ieg_author'],
+                author=self.vals['iEg_author'],
             ).update()
 
         else:

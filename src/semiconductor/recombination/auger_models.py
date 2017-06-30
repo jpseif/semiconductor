@@ -21,8 +21,8 @@ def auger_dopants(vals, nxc, ne0, nh0, **args):
     It requires the  the dark carrier concentrations of the
     sample to be known
     '''
-    Ce = vals['cn']
-    Ch = vals['cp']
+    Ce = vals['Cn']
+    Ch = vals['Cp']
 
     nh = nh0 + nxc
     ne = ne0 + nxc
@@ -47,10 +47,10 @@ def auger(vals, nxc, ne0, nh0, **args):
     nh = nh0 + nxc
     ne = ne0 + nxc
 
-    Ce = vals['ced'] * ne0 / \
-        (ne0 + nh) + vals['ccc'] / 2 * nh / (nh + ne0)
-    Ch = vals['chd'] * nh0 / \
-        (nh0 + ne) + vals['ccc'] / 2 * ne / (ne + nh0)
+    Ce = vals['Ced'] * ne0 / \
+        (ne0 + nh) + vals['Ccc'] / 2 * nh / (nh + ne0)
+    Ch = vals['Chd'] * nh0 / \
+        (nh0 + ne) + vals['Ccc'] / 2 * ne / (ne + nh0)
 
     R = (Ce * ne + Ch * nh) * (ne * nh - nh0 * ne0)
 
@@ -69,21 +69,21 @@ def coulomb_enhanced_auger_Altermatt(vals, nxc, ne0, nh0, temp):
     nh = nh0 + nxc
     ne = ne0 + nxc
 
-    gmaxn = vals['k_gmaxn'] * temp**vals['p_gmaxn']
-    gmaxh = vals['k_gmaxh'] * temp**vals['p_gmaxh']
+    gmaxn = vals['K_gmaxn'] * temp**vals['p_gmaxn']
+    gmaxh = vals['K_gmaxh'] * temp**vals['p_gmaxh']
 
     # enhancement factors
     g_eeh = 1. + (gmaxn - 1) * (1. - np.tanh((
-        (ne / vals['k_eeh'])**vals['n_eeh'])))
+        (ne / vals['K_eeh'])**vals['n_eeh'])))
     g_ehh = 1. + (gmaxh - 1) * (1. - np.tanh(
-        ((nh / vals['k_ehh'])**vals['p_ehh'])))
+        ((nh / vals['K_ehh'])**vals['p_ehh'])))
 
     # Cn can be considered temp independent for 70 - 400K
-    Cn = vals['k_n']
+    Cn = vals['K_n']
     Cn *= g_eeh
 
     # Ch can not
-    Ch = vals['k_h0'] + vals['k_h1'] * temp + vals['k_h2'] * temp**2
+    Ch = vals['K_h0'] + vals['K_h1'] * temp + vals['K_h2'] * temp**2
     Ch *= g_ehh
 
     # the auger recombination rate is given by
@@ -107,20 +107,20 @@ def coulomb_enhanced_auger_Glunz(vals, nxc, ne0, nh0, **args):
     nh = nh0 + nxc
     ne = ne0 + nxc
 
-    gmaxn = vals['k_gmaxn'] * 300.**vals['p_gmaxn']
-    gmaxh = vals['k_gmaxh'] * 300.**vals['p_gmaxh']
+    gmaxn = vals['K_gmaxn'] * 300.**vals['p_gmaxn']
+    gmaxh = vals['K_gmaxh'] * 300.**vals['p_gmaxh']
 
     # enhancement factors
     g_eeh = 1. + (gmaxn - 1) * (1. - np.tanh((
-        (ne / vals['k_eeh'])**vals['n_eeh'])))
+        (ne / vals['K_eeh'])**vals['n_eeh'])))
     g_ehh = 1. + (gmaxh - 1) * (1. - np.tanh(
-        ((nh / vals['k_ehh'])**vals['p_ehh'])))
+        ((nh / vals['K_ehh'])**vals['p_ehh'])))
 
-    Cn = g_eeh * vals['k_n'] * ne0 / (ne0 + nxc) + \
-        vals['k_a'] / 2 * nxc / (ne0 + nxc)
+    Cn = g_eeh * vals['K_n'] * ne0 / (ne0 + nxc) + \
+        vals['K_a'] / 2 * nxc / (ne0 + nxc)
 
-    Ch = g_ehh * vals['k_h'] * nh0 / (nh0 + nxc) + \
-        vals['k_a'] / 2 * nxc / (nh0 + nxc)
+    Ch = g_ehh * vals['K_h'] * nh0 / (nh0 + nxc) + \
+        vals['K_a'] / 2 * nxc / (nh0 + nxc)
 
     # the auger recombination rate is given by
     R = Cn * (ne**2 * nh - ne0**2 * nh0) + \
@@ -142,9 +142,9 @@ def coulomb_enhanced_auger_Kerrsimple(vals, nxc, ne0, nh0, **args):
     ne = ne0 + nxc
 
     R = (ne * nh - ne0 * nh0) *\
-        (vals['k_n'] * ne0**vals['p_n'] +
-         vals['k_h'] * nh0**vals['p_h'] +
-         vals['k_nxc'] * nxc**vals['p_nxc']
+        (vals['K_n'] * ne0**vals['p_n'] +
+         vals['K_h'] * nh0**vals['p_h'] +
+         vals['K_nxc'] * nxc**vals['p_nxc']
          )
 
     # Then the lifetime is provided by this
@@ -163,16 +163,16 @@ def coulomb_enhanced_auger_Kerr(vals, nxc, ne0, nh0, **args):
     nh = nh0 + nxc
     ne = ne0 + nxc
 
-    g_eeh = 1. + vals['l_eeh'] * (1. - np.tanh(
-        (ne0 / vals['k_eeh'])**vals['n_eeh']))
-    g_ehh = 1. + vals['l_ehh'] * (1. - np.tanh(
-        (nh0 / vals['k_ehh'])**vals['p_ehh']))
+    g_eeh = 1. + vals['L_eeh'] * (1. - np.tanh(
+        (ne0 / vals['K_eeh'])**vals['n_eeh']))
+    g_ehh = 1. + vals['L_ehh'] * (1. - np.tanh(
+        (nh0 / vals['K_ehh'])**vals['p_ehh']))
 
     # the auger recombination rate is given by
     R = (ne * nh - ne0 * nh0) *\
-        (vals['k_n'] * g_eeh * ne0 +
-         vals['k_h'] * g_ehh * nh0 +
-         vals['k_nxc'] *
+        (vals['K_n'] * g_eeh * ne0 +
+         vals['K_h'] * g_ehh * nh0 +
+         vals['K_nxc'] *
          nxc * (nxc + vals['n_nxc']) / (nxc + vals['d_nxc'])
          )
 
@@ -189,17 +189,17 @@ def coulomb_enhanced_auger_Richter(vals, nxc, ne0, nh0, **args):
     nh = nh0 + nxc
     ne = ne0 + nxc
 
-    g_eeh = 1. + vals['l_eeh'] * (1. - np.tanh(
-        (ne0 / vals['k_eeh'])**vals['n_eeh']))
-    g_ehh = 1. + vals['l_ehh'] * (1. - np.tanh(
-        (nh0 / vals['k_ehh'])**vals['p_ehh']))
+    g_eeh = 1. + vals['L_eeh'] * (1. - np.tanh(
+        (ne0 / vals['K_eeh'])**vals['n_eeh']))
+    g_ehh = 1. + vals['L_ehh'] * (1. - np.tanh(
+        (nh0 / vals['K_ehh'])**vals['p_ehh']))
 
     # the auger recombination rate is given by
     R = (ne * nh - ne0 * nh0) *\
-        (vals['k_n'] * g_eeh * ne0 +
-         vals['k_p'] * g_ehh *
+        (vals['K_n'] * g_eeh * ne0 +
+         vals['K_p'] * g_ehh *
          nh0 +
-         vals['k_delta'] *
+         vals['K_delta'] *
          nxc**vals['delta']
          )
 

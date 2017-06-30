@@ -37,7 +37,7 @@ class IntrinsicCarrierDensity(BaseModelClass):
         'author': None,
     }
 
-    author_list = 'ni.models'
+    author_list = 'ni.yaml'
 
     def __init__(self, **kwargs):
 

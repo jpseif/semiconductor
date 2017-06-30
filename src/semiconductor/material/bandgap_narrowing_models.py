@@ -59,7 +59,7 @@ def BGN(vals, doping, **kargs):
     # BGN = np.zeros(doping.shape)
 
     bgn = vals['de_slope']\
-        * np.power(np.log(doping / vals['n_onset']), vals['b'])\
+        * np.power(np.log(doping / vals['N_onset']), vals['b'])\
         + vals['de_offset']
 
     # ensures no negitive values

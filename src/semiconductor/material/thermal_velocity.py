@@ -27,8 +27,8 @@ class ThermalVelocity(BaseModelClass):
         'author': None,
     }
 
-    author_list = 'vel_th.models'
-    vel_th= None
+    author_list = 'vel_th.yaml'
+    vel_th = None
 
     def __init__(self, **kwargs):
 
@@ -68,24 +68,24 @@ class ThermalVelocity(BaseModelClass):
         if 'author' in kwargs.keys():
             self.change_model(self._cal_dts['author'])
 
-        if 'ieg_author' in self.vals.keys():
+        if 'iEg_author' in self.vals.keys():
 
             Eg0 = Egi(
                 material=self._cal_dts['material'],
                 temp=0,
-                author=self.vals['ieg_author'],
+                author=self.vals['iEg_author'],
             ).update()
             Egratio = Eg0 / Egi(
                 material=self._cal_dts['material'],
                 temp=self._cal_dts['temp'],
-                author=self.vals['ieg_author'],
+                author=self.vals['iEg_author'],
             ).update()
 
         else:
             Egratio = None
 
         # if the model required the energy gap, calculate it
-        self.vel_th_e, self.vel_th_h  = getattr(vel_th_models, self.model)(
-            self.vals, temp=self._cal_dts['temp'],Egratio=Egratio)
+        self.vel_th_e, self.vel_th_h = getattr(vel_th_models, self.model)(
+            self.vals, temp=self._cal_dts['temp'], Egratio=Egratio)
 
         return self.vel_th_e, self.vel_th_h

@@ -6,32 +6,25 @@ import numpy as np
 import json
 import inspect
 import numbers
-try:
-    import ConfigParser as configparser
-except:
-    import configparser
+# try:
+#     import ConfigParser as configparser
+# except:
+#     import configparser
+import ruamel.yaml as yaml
 
 
 def change_model(Models, author=None):
+    '''
+    Extracts the data from the dictionary
+    '''
 
-    author = author or Models.get('default', 'model')
+    author = author or Models['default']['model']
 
-    model = Models.get(author, 'model')
+    model = Models[author]['model']
 
-    vals = dict(Models.items(author))
+    vals = Models[author].copy()
 
     del vals['model']
-
-    for k, v in vals.items():
-
-        # checks if float or list
-        try:
-            vals[k] = float(v)
-        except:
-            try:
-                vals[k] = [float(i) for i in v.split(';')]
-            except:
-                pass
 
     return vals, model, author
 
@@ -50,7 +43,6 @@ def class_or_value(value, clas, value_updater, **kwargs):
 
     else:
         ret = 0
-        print(value)
 
     return ret, value
 
@@ -80,13 +72,13 @@ class BaseModelClass():
             items = [i for i in kwargs.keys() if i in self._cal_dts.keys()]
             for item in items:
                 self._cal_dts[item] = kwargs[item]
-    #         self._update_links()
-    # def _update_links(self):
-    #     pass
 
     def _int_model(self, fname):
-        self.Models = configparser.ConfigParser()
-        self.Models.read(fname)
+        self.Models = {}
+
+        with open(fname, 'r') as f:
+            for i in yaml.safe_load_all(f):
+                self.Models.update(i)
 
     def change_model(self, author, Models=None):
 
@@ -156,19 +148,21 @@ class BaseModelClass():
         returns:
             list of authors
         '''
-        author_list = self.Models.sections()
-        author_list.remove('default')
+        author_list = list(self.Models.keys())
+
+        if 'default' in author_list:
+            author_list.remove('default')
 
         # remove modles that are not implimented
         for author in list(author_list):
 
-            if 'not_implimented' in dict(self.Models.items(author))['model']:
+            if 'not_implimented' in self.Models[author]['model']:
                 author_list.remove(author)
 
         # does the filtering
         if Filter is not None:
             for c, author in enumerate(author_list):
-                if self.Models.get(author, Filter) not in Filter_value:
+                if self.Models[author][Filter] not in Filter_value:
                     author_list.remove(author)
 
         # prints no models available
@@ -194,8 +188,7 @@ class BaseModelClass():
         for mdl in models:
             print('{0}:\t'.format(mdl),)
             try:
-                # print
-                print(dict(self.Models.items(mdl))['notes'])
+                print(self.Models[models]['notes'])
             except:
                 print('No notes')
 

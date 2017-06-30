@@ -73,7 +73,7 @@ def get_carriers(Na, Nd, nxc,
 
     else:
         print("I can't work with these dimensions")
-        print("nxc: {0} \n nh0: {1} \n ne0: {2}".format(
+        print("nxc: {0} \n nh0: {1} \n nE0: {2}".format(
             nxc.shape, nh0.shape, ne0.shape))
         raise ValueError
 

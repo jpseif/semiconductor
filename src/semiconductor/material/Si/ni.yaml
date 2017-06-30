@@ -1,0 +1,51 @@
+---
+default:
+    model: Couderc_2014
+---
+Couderc_2014:
+    A: 1.541e15
+    doi: 10.1063/1.4867776
+    eg_model: Passler2002
+    model: ni_temp_eg
+    notes: temperature range 77-375K revaluation of sproul with sheckns band gap narrowing by couderc.
+    power: 1.712
+---
+Sproul_1991:
+    A: 1.016666667e15
+    doi: 10.1063/1.349645
+    eg: 6880
+    model: ni_temp
+    notes: temperature range 275-375K. This version is equilivant to sprouls paper, but uses the more general form of the equation used in this paper.
+    power: 2
+---
+Sproul_1991_2:
+    A: 7.91124E+13
+    doi: 10.1063/1.349645
+    eg: 6733
+    model: ni_temp
+    notes: temperature range 275-375K. An alternative form presented by sproul with a larger  uncertainty, as the power was not fitted.
+    power: 2.365
+---
+Misiakos_1993:
+    A: 2.70127E+13
+    doi: 10.1063/1.354551
+    eg: 6726
+    model: ni_temp
+    notes: temperature range 78-340K
+    power: 2.54
+---
+Sproul_1993:
+    A: 1.64e15
+    doi: 10.1063/1.353288
+    eg_model: Passler2002
+    model: ni_temp_eg
+    notes: temperature range 77-300K, also this used a different model for the energy gap.
+    power: 1.706
+---
+Misiakos_1993_with-Couderc-BGN:
+    A: 1.821e15
+    doi: 10.1063/1.4867776
+    eg_model: Passler2002
+    model: ni_temp_eg
+    notes: revaluation of sproul with sheckns band gap narrowing by couderc. After BGN correction, sprouls data provided more accurate values, so this wasn't used
+    power: 1.699

@@ -22,6 +22,8 @@ def Roosbroeck(vals, nxc, nh0, ne0, Blow, **kwargs):
     nh = nh0 + nxc
     ne = ne0 + nxc
 
+    print(Blow, ne, nh, ne0, nh0)
+
     R = Blow * (ne * nh - ne0 * nh0)
     # print R
     return nxc / R

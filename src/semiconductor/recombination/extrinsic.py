@@ -66,7 +66,7 @@ class SRH(BaseModelClass):
     vel_th_e = None
     vel_th_h = None
 
-    author_list = 'SRH.defects'
+    author_list = 'SRH.yaml'
 
     def __init__(self, **kwargs):
         # update any values in cal_dts

@@ -1,0 +1,135 @@
+---
+default:
+    model: Richter2012
+---
+None:
+    model: none
+---
+Richter2012:
+    delta: 0.92
+    doi: 10.1103/PhysRevB.86.165202
+    K_delta: 3.0e-29
+    K_eeh: 3.3e17
+    K_ehh: 7e17
+    K_n: 2.5e-31
+    K_p: 8.5e-32
+    L_eeh: 13
+    L_ehh: 7.5
+    model: coulomb_enhanced_auger_Richter
+    n_eeh: .66
+    notes: Based on lifetime measurements (photoluminescence and photoconductance). Values taken from Table II. Only valid for 300K. Check values are taken from Fig 9. The names of the vairables are renamed to match the existing model.
+    p_ehh: 0.63
+---
+Kerr2002_simple:
+    doi: 10.1063/1.1432476
+    K_h: 6e-25
+    K_n: 1.8e-24
+    K_nxc: 3.e-27
+    model: coulomb_enhanced_auger_Kerrsimple
+    notes: Reinterpretation of data, introduced new parameterisation. for the 300 K
+    p_h: 0.65
+    p_n: .65
+    p_nxc: 0.8
+---
+Kerr2002_complex:
+    doi: 10.1063/1.1432476
+    d_nxc: 6e16
+    K_eeh: 2e16
+    K_ehh: 2e16
+    K_h: 9.9e-32
+    K_n: 2.8e-31
+    K_nxc: 3.79e-31
+    L_eeh: 44
+    L_ehh: 44
+    model: coulomb_enhanced_auger_Kerr
+    n_eeh: .29
+    n_nxc: 3.8e17
+    notes: Reinterpretation of data, introduced new parameterisation. for the 300 K
+    p_ehh: .29
+---
+Glunz1999:
+    doi: 10.1063/1.370784
+    d_nxc: 6e16
+    K_a: 1.66e-30
+    K_eeh: 5e16
+    K_ehh: 5e16
+    K_gmaxh: 564812
+    K_gmaxn: 235548
+    K_h: 9.9e-32
+    K_n: 2.8e-31
+    K_nxc: 3.79e-31
+    model: coulomb_enhanced_auger_Glunz
+    n_eeh: .34
+    n_nxc: 3.8e17
+    notes: Reinterpretation of data, introduced new parameterisation. This is for
+        the 300 K
+    p_ehh: .29
+    p_gmaxh: -1.6545
+    p_gmaxn: -1.5013
+---
+Altermatt1997:
+    doi: 10.1063/1.366360
+    K_eeh: 5e16
+    K_ehh: 5e16
+    K_gmaxh: 564812
+    K_gmaxn: 235548
+    K_h: 9.9e-32
+    K_h0: 7.91e-32
+    K_h1: -4.13e-35
+    K_h2: 3.59e-37
+    K_n: 2.8e-31
+    model: coulomb_enhanced_auger_Altermatt
+    n_eeh: .34
+    notes: 'This is for the temperature range 70-400 K. Limited to low injection only'
+    p_ehh: .29
+    p_gmaxh: -1.6545
+    p_gmaxn: -1.5013
+---
+SchroderTextbook:
+    Ccc: 1.8e-30 # carrier-carrier constant
+    Ced: 3e-33 # hole dopant constant
+    Chd: 6e-31 # electron dopant constant
+    model: auger
+---
+PC1D:
+    Ccc: 1.66e-30 # carrier-carrier constant
+    Ced: 9.9e-32 # hole dopant constant
+    Chd: 2.2e-31 # electron dopant constant
+    model: auger
+    notes: This is a model used by a popular computer program in photovoltaics. The computer program can be found at 10.1109/PVSC.1997.654065
+---
+Dziewior1977:
+    doi: 10.1063/1.89694
+    Cn: 2.8e-31
+    Cp: .99e-31
+    model: auger_dopants
+    notes: Based on photoluminescence measurements at 300 K, Doping in the range 6e18-1e20 for n-type and for doping 5e18 - 1e20 for p-type.
+---
+Beck1973:
+    doi: 10.1016/0038-1098(73)90075-6
+    Cn: 1.7e-31
+    Cp: 1.2e-31
+    model: auger_dopants
+    notes: Based on photoluminescence measurements. Doping in the range 2e18-2e19 for n-type and for doping 2e18-3e19 for p-type.
+---
+DelAlamo1984:
+    doi: 10.1109/T-ED.1984.21805
+    Cn: 1.8e-31
+    model: not_implimented
+    notes: Not implemented, for doping 6e18-6e19
+---
+Wang1984:
+    Cn: 2.22e-31 ;for doping 2.5e19-8e19
+    model: not_implimented
+    notes: Not implemented, Based on transient photoconductance, for doping 2.5e19-8e19 measurements
+---
+Wieder1980:
+    doi: 10.1109/T-ED.1980.20048
+    Cn: 1.6e-31 ;for doping 5e18-2e120
+    model: not_implimented
+    notes: Not implemented, Based on measurements of diffusions in lateral transistors, for doping 5e18-2e120
+---
+Wang2012:
+    doi: 10.1063/1.4768900
+    model: not_implimented
+    notes: The first temperature dependent model of auger for silicon. The model describes the temperature change in the Auger coefficient for holes. It was performed only at one injection level (5e16 cm^-3). There are many paramters still unknown for a full temperature dependent auger model.

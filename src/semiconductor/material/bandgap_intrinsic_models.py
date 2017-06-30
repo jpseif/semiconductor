@@ -52,7 +52,7 @@ def Passler(vals, temp):
     No4 = 8. / 3. * xi**4.
     No5 = xi**6.
 
-    E = vals['e0'] - vals['alpha'] * vals['theta'] * \
+    E = vals['E0'] - vals['alpha'] * vals['theta'] * \
         (gamma + 3. * vals['delta']**2 / 2 *
          ((1. + No2 + No3 + No4 + No5)**(1. / 6.) - 1))
     return E
@@ -67,9 +67,9 @@ def Varshni(vals, temp):
         temp = np.asarray([temp])
 
     if np.all(temp == 0):
-        Eg = vals['e0']
+        Eg = vals['E0']
     else:
-        Eg = vals['e0'] - vals['alpha'] * temp**2 / (temp + vals['beta'])
+        Eg = vals['E0'] - vals['alpha'] * temp**2 / (temp + vals['beta'])
     return Eg
 
 
@@ -97,18 +97,18 @@ def Cubic_partial(vals, temp):
 
     for i in [2, 1, 0]:
 
-        index = temp < float(vals['t' + str(i)])
+        index = temp < float(vals['T' + str(i)])
 
-        Eg[index] = vals['a' + str(i)] + \
-            vals['b' + str(i)] * temp[index] + \
-            vals['c' + str(i)] * temp[index]**2.
+        Eg[index] = vals['A' + str(i)] + \
+            vals['B' + str(i)] * temp[index] + \
+            vals['C' + str(i)] * temp[index]**2.
 
-    if np.any(temp > vals['t2']):
+    if np.any(temp > vals['T2']):
         print('\nWarning:'
               '\n\tIntrinsic bandgap does not cover this temperature range\n')
-        index = temp > vals['t2']
-        Eg[index] = vals['a2'] + \
-            vals['b2'] * temp[index] + \
-            vals['c2'] * temp[index]**2.
+        index = temp > vals['T2']
+        Eg[index] = vals['A2'] + \
+            vals['B2'] * temp[index] + \
+            vals['C2'] * temp[index]**2.
 
     return Eg

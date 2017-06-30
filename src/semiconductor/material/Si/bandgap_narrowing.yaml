@@ -1,0 +1,98 @@
+---
+default:
+    model: Yan_2014fer
+---
+None:
+    model: none
+---
+DelAlamo_1985:
+    assumed_ni: 1.5e10
+    de_slope: 0.0187
+    doi: 10.1109/IEDM.1985.190954
+    dopant: phosphorous
+    model: apparent_BGN
+    N_onset: 7e17
+    notes: PV lighthouse data has been noted to be inconsistance with the original publication
+---
+Cuevas_1996:
+    assumed_ni: 1e10
+    de_slope: 0.014
+    dopant: phosphorous
+    model: apparent_BGN
+    N_onset: 1.4e17
+    notes: Updated values of alamo
+---
+Yan_2013bz:
+    assumed_ni: 9.65e9
+    de_slope: 0.01296
+    dopant: phosphorous
+    model: apparent_BGN
+    N_onset: 1e17
+    notes: For phorphous, apparent BGN for use with BZ carrier  stats
+---
+Yan_2014bz:
+    assumed_ni: 9.65e9
+    de_slope: 0.01543
+    dopant: boron
+    model: apparent_BGN
+    N_onset: 1e17
+    notes: For Boron, apparent BGN for use with BZ carrier stats
+---
+Schenk_1988fer:
+    aex: 37.19e-8 # cm
+    alphae: 0.5187
+    alphah: 0.4813
+    be: 8
+    bh: 1
+    ce: 1.3346
+    ch: 1.2365
+    de: 0.893
+    dh: 1.153
+    es: 11.7
+    ge: 12
+    gh: 4
+    he: 3.91
+    hh: 4.2
+    je: 2.8585
+    jh: 2.9307
+    ke: 0.012
+    kh: 0.19
+    model: Schenk
+    pe: 0.233333333 # 7/30
+    ph: 0.233333333 # 7/30
+    qe: 0.75
+    qh: 0.25
+    Ryex: 0.01655 # eV
+    udm: 0.1665
+    dopant: phosphorous
+    notes: To be used with Fermi direct statics, and only for phosphorous
+---
+Schenk_1988_reparamitisation_Yan_2013:
+    model: BGN
+    N_onset: 1e14
+    assumed_ni: 9.65e9
+    b: 3
+    de_offset: 8.7e-4
+    de_slope: 3.5e-5
+    dopant: phosphorous
+    notes: For phosphorous, apparent BGN for use with Fermi carrier stats. Has up to 10% deviation from complex Schenk
+---
+Yan_2013fer:
+    assumed_ni: 9.65e9
+    b: 3
+    de_offset: 0
+    de_slope: 4.2e-5
+    dopant: phosphorous
+    model: BGN
+    N_onset: 1e14
+    notes: For phorphous, apparent BGN for use with Femi carrier stats and Klassen's mobility model
+---
+Yan_2014fer:
+    assumed_ni: 9.65e9
+    b: 3
+    de_offset: 0
+    de_slope: 4.72e-5
+    dopant: boron
+    model: BGN
+    N_onset: 1e14
+    notes: For boron, apparent BGN for use with Fermi carrier stats and Klassen's mobility model

@@ -33,9 +33,9 @@ class Mobility(BaseModelClass):
         5. Na: (array like cm^-3)
             The number of acceptor dopants
         6. Nd: (array like cm^-3)
-            The number of donar dopants        
+            The number of donar dopants
     '''
-    author_list = 'mobility.models'
+    author_list = 'mobility.yaml'
 
     _cal_dts = {
         'material': 'Si',

@@ -41,7 +41,7 @@ class Ionisation(BaseModelClass):
         'impurity': 'boron',
     }
 
-    author_list = 'ionisation.models'
+    author_list = 'ionisation.yaml'
 
     def __init__(self, **kwargs):
 

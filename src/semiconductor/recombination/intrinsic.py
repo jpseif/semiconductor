@@ -92,7 +92,7 @@ class Intrinsic(BaseModelClass):
 
 class Radiative(BaseModelClass):
 
-    author_list = 'radiative.model'
+    author_list = 'radiative.yaml'
 
     _cal_dts = {
         'material': 'Si',
@@ -181,7 +181,7 @@ class Radiative(BaseModelClass):
 
 
 class Auger(BaseModelClass):
-    author_list = 'auger.model'
+    author_list = 'auger.yaml'
 
     _cal_dts = {
         'material': 'Si',

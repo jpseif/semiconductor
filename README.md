@@ -1,4 +1,5 @@
-#Semiconductor
+
+# Semiconductor
 
 This is a place I used to get together a bunch of different analytical models and
 tabulated data sets for semiconductor properties. Its main focus is Silicon, as
@@ -78,7 +79,7 @@ the  initalisation of the class, or through the "update" function. Lets
 choose Schenk's from 1988 and set it through the "update" function. All classes
 have a similar update function. If we look at the models inputs, we see it also needs
 an input for temperature. This is just passed to the update function, which passes
-it to the appropriate places.  
+it to the appropriate places.
 ```python
     temp = 300
     bgn_sch = BGN_class.update(Na=Na, Nd=Nd, nxc=nxc, temp=300, author='Schenk1988fer')
@@ -87,7 +88,7 @@ it to the appropriate places.
 Finally we can plot, and compare the differences in the models.
 
 ``` python
-    import matplotlib.pylab as plt  
+    import matplotlib.pylab as plt
 
     plt.plot(Nd, bgn_yan, label = 'Yan')
     plt.plot(Nd, bgn_sch, label = 'Schenk')

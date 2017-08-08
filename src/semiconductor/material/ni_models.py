@@ -34,8 +34,8 @@ def ni_temp_eg(vals, temp,  Eg, *args):
     if np.all(temp == 0):
         ni = 0
     else:
-        print('\n\n', type(vals['A']), vals['A'])
-        print(type(vals['power']), vals['power'])
+        # print('\n\n', type(vals['A']), vals['A'])
+        # print(type(vals['power']), vals['power'])
         ni = vals['A'] * temp**vals['power'] * \
             np.exp(- Eg * Const.e / 2. / Const.k / temp)
 

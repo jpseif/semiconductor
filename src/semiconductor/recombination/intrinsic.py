@@ -12,7 +12,8 @@ from semiconductor.recombination import auger_models as augmdls
 
 class Intrinsic(BaseModelClass):
     '''
-    Calculates the intrinsic recombiation
+    Calculates the intrinsic recombiation which includes both radiative and
+    Auger recombiation
 
     inputs
         1. material: (str, Si)
@@ -72,13 +73,13 @@ class Intrinsic(BaseModelClass):
 
     def tau(self, nxc, **kwargs):
         '''
-        Returns the intrinsic carrier lifetime
+        Returns the intrinsic carrier lifetime in seconds
         '''
         return 1. / self.itau(nxc, **kwargs)
 
     def itau(self, nxc, **kwargs):
         '''
-        Returns the inverse of the intrinsic carrier lifetime
+        Returns the inverse of the intrinsic carrier lifetime in s^-1^
         '''
         self.calculationdetails = kwargs
         if 'author' in ''.join(kwargs.keys()):
@@ -91,6 +92,9 @@ class Intrinsic(BaseModelClass):
 
 
 class Radiative(BaseModelClass):
+    '''
+    A class to allows the calculation of different radiative models
+    '''
 
     author_list = 'radiative.yaml'
 
@@ -122,6 +126,9 @@ class Radiative(BaseModelClass):
         self.change_model(self._cal_dts['author'])
 
     def tau(self, nxc, **kwargs):
+        '''
+        Returns the intrinsic carrier lifetime in seconds
+        '''
         self.calculationdetails = kwargs
         self.change_model(self._cal_dts['author'])
 
@@ -141,6 +148,9 @@ class Radiative(BaseModelClass):
         )
 
     def itau(self, nxc, **kwargs):
+        '''
+        Returns the inverse of the intrinsic carrier lifetime in s^-1^
+        '''
         return 1. / self.tau(nxc, **kwargs)
 
     def get_B(self, nxc, **kwargs):
@@ -181,6 +191,10 @@ class Radiative(BaseModelClass):
 
 
 class Auger(BaseModelClass):
+    '''
+    A class to allows the calculation of different Auger recombiation models
+    '''
+
     author_list = 'auger.yaml'
 
     _cal_dts = {
@@ -211,6 +225,9 @@ class Auger(BaseModelClass):
         self.change_model(self._cal_dts['author'])
 
     def tau(self, nxc, **kwargs):
+        '''
+        Returns the intrinsic carrier lifetime in seconds
+        '''
         self.calculationdetails = kwargs
 
         if 'author' in kwargs.keys():
@@ -228,6 +245,9 @@ class Auger(BaseModelClass):
             self.vals, nxc, ne0, nh0, temp=self._cal_dts['temp'])
 
     def itau(self, nxc, **kwargs):
+        '''
+        Returns the inverse of the intrinsic carrier lifetime in s^-1^
+        '''
         return 1. / self.tau(nxc, **kwargs)
 
     def check(self, author, fig=None, ax=None):

@@ -116,7 +116,7 @@ class IntrinsicCarrierDensity(BaseModelClass):
                         np.log(ni * np.exp(Eg / 2. * Const.e / Const.k / temp)),
                         label=author)
             a = self.update(temp=300, author=author)
-            print('{1} \t {0:.2e}'.format(a[0], author))
+            # print('{1} \t {0:.2e}'.format(a[0], author))
 
         test_file = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),

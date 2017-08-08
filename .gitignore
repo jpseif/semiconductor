@@ -8,3 +8,6 @@
 *.p y
 *.png
 *.csv
+build
+optical
+*test.py

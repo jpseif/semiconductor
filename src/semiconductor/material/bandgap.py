@@ -11,8 +11,7 @@ from semiconductor.helper.helper import BaseModelClass
 class BandGap(BaseModelClass):
 
     '''
-    A simple class that combines the intrinsic band gap and
-    band gap narrowing classes for easy access
+    A simple class that combines the intrinsic band gap (band gap variation with temperature) and band gap narrowing (band gap changes from everything else) for easy use.
 
     Inputs to this class are:
 
@@ -32,6 +31,7 @@ class BandGap(BaseModelClass):
             The number of acceptor dopants
         6. Nd: (array like cm^-3)
             The number of donar dopants
+
     '''
     _cal_dts = {
         'material': 'Si',
@@ -72,7 +72,7 @@ class BandGap(BaseModelClass):
 
     def update(self, **kwargs):
         '''
-        Calculates the band gap
+        Calculates the band gap for the given models
         '''
         self.calculationdetails = kwargs
 

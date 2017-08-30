@@ -1,0 +1,198 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Semiconductor &#8212; semiconductor 0.2 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Material properties" href="material/material.html" />
+    <link rel="prev" title="Welcome to semiconductor’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="semiconductor">
+<span id="semiconductor"></span><h1>Semiconductor<a class="headerlink" href="#semiconductor" title="Permalink to this headline">¶</a></h1>
+<p>This is a place to get together a bunch of different analytical models and
+tabulated data sets for semiconductor properties. The main focus is Silicon, as
+that is what I work with.</p>
+<p>All the models are implemented in a similar way. A class is built that allows switching between model written by different authors through the author command. The values calcualted are expected to be the same result in the values from the authors published implementation.</p>
+<div class="section" id="examples">
+<span id="examples"></span><h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Here is an example of how to use calculate the band gap narrowing for silicon. We will look at two different band gap narrowing models. The default model is that from Yan in 2014.
+model.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">semiconductor.material.bandgap_narrowing</span> <span class="kn">import</span> <span class="n">BandGapNarrowing</span> <span class="k">as</span> <span class="n">BGN</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+    <span class="c1"># initialise the class</span>
+    <span class="n">BGN_class</span> <span class="o">=</span> <span class="n">BGN</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;Si&#39;</span><span class="p">)</span>
+    <span class="c1"># define the number of dopants</span>
+    <span class="n">Na</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">Nd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="c1"># Set the excess carriers to zero</span>
+    <span class="n">nxc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">bgn_yan</span> <span class="o">=</span> <span class="n">BGN_class</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Na</span><span class="o">=</span><span class="n">Na</span><span class="p">,</span> <span class="n">Nd</span><span class="o">=</span><span class="n">Nd</span><span class="p">,</span> <span class="n">nxc</span><span class="o">=</span><span class="n">nxc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Other inputs for the bandgap narrowing class can be also found and set with
+the calculationdetails function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>
+  <span class="n">BGN_class</span><span class="o">.</span><span class="n">calculationdetails</span>
+  <span class="o">&gt;</span> <span class="p">{</span><span class="s1">&#39;Na&#39;</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span>
+     <span class="s1">&#39;Nd&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span>  <span class="mf">1.00000000e+16</span><span class="p">,</span>   <span class="mf">1.20679264e+16</span><span class="p">,</span>   <span class="mf">1.45634848e+16</span><span class="p">,</span>
+              <span class="mf">1.75751062e+16</span><span class="p">,</span>   <span class="mf">2.12095089e+16</span><span class="p">,</span>   <span class="mf">2.55954792e+16</span><span class="p">,</span>
+              <span class="mf">3.08884360e+16</span><span class="p">,</span>   <span class="mf">3.72759372e+16</span><span class="p">,</span>   <span class="mf">4.49843267e+16</span><span class="p">,</span>
+              <span class="mf">5.42867544e+16</span><span class="p">,</span>   <span class="mf">6.55128557e+16</span><span class="p">,</span>   <span class="mf">7.90604321e+16</span><span class="p">,</span>
+              <span class="mf">9.54095476e+16</span><span class="p">,</span>   <span class="mf">1.15139540e+17</span><span class="p">,</span>   <span class="mf">1.38949549e+17</span><span class="p">,</span>
+              <span class="mf">1.67683294e+17</span><span class="p">,</span>   <span class="mf">2.02358965e+17</span><span class="p">,</span>   <span class="mf">2.44205309e+17</span><span class="p">,</span>
+              <span class="mf">2.94705170e+17</span><span class="p">,</span>   <span class="mf">3.55648031e+17</span><span class="p">,</span>   <span class="mf">4.29193426e+17</span><span class="p">,</span>
+              <span class="mf">5.17947468e+17</span><span class="p">,</span>   <span class="mf">6.25055193e+17</span><span class="p">,</span>   <span class="mf">7.54312006e+17</span><span class="p">,</span>
+              <span class="mf">9.10298178e+17</span><span class="p">,</span>   <span class="mf">1.09854114e+18</span><span class="p">,</span>   <span class="mf">1.32571137e+18</span><span class="p">,</span>
+              <span class="mf">1.59985872e+18</span><span class="p">,</span>   <span class="mf">1.93069773e+18</span><span class="p">,</span>   <span class="mf">2.32995181e+18</span><span class="p">,</span>
+              <span class="mf">2.81176870e+18</span><span class="p">,</span>   <span class="mf">3.39322177e+18</span><span class="p">,</span>   <span class="mf">4.09491506e+18</span><span class="p">,</span>
+              <span class="mf">4.94171336e+18</span><span class="p">,</span>   <span class="mf">5.96362332e+18</span><span class="p">,</span>   <span class="mf">7.19685673e+18</span><span class="p">,</span>
+              <span class="mf">8.68511374e+18</span><span class="p">,</span>   <span class="mf">1.04811313e+19</span><span class="p">,</span>   <span class="mf">1.26485522e+19</span><span class="p">,</span>
+              <span class="mf">1.52641797e+19</span><span class="p">,</span>   <span class="mf">1.84206997e+19</span><span class="p">,</span>   <span class="mf">2.22299648e+19</span><span class="p">,</span>
+              <span class="mf">2.68269580e+19</span><span class="p">,</span>   <span class="mf">3.23745754e+19</span><span class="p">,</span>   <span class="mf">3.90693994e+19</span><span class="p">,</span>
+              <span class="mf">4.71486636e+19</span><span class="p">,</span>   <span class="mf">5.68986603e+19</span><span class="p">,</span>   <span class="mf">6.86648845e+19</span><span class="p">,</span>
+              <span class="mf">8.28642773e+19</span><span class="p">,</span>   <span class="mf">1.00000000e+20</span><span class="p">]),</span>
+     <span class="s1">&#39;author&#39;</span><span class="p">:</span><span class="bp">None</span><span class="p">,</span>
+     <span class="s1">&#39;material&#39;</span><span class="p">:</span><span class="s1">&#39;Si&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;nxc&#39;</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span>
+     <span class="s1">&#39;temp&#39;</span><span class="p">:</span><span class="mf">300.0</span><span class="p">}</span>
+  <span class="n">BGN_class</span><span class="o">.</span><span class="n">calculationdetails</span> <span class="o">=</span> <span class="p">{</span><span class="n">nxc</span><span class="p">:</span><span class="n">nxc</span><span class="p">,</span> <span class="n">temp</span><span class="p">:</span><span class="mi">300</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>If a different band gap narrowing model is desired,
+pick from the available ones. The available ones can be found
+using the available_models() function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>    <span class="k">print</span> <span class="p">(</span><span class="n">BGN_class</span><span class="o">.</span><span class="n">available_models</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>For the band gap narrowing function it returns.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>    <span class="p">[</span><span class="s1">&#39;DelAlamo1985&#39;</span><span class="p">,</span> <span class="s1">&#39;Cuevas1996&#39;</span><span class="p">,</span> <span class="s1">&#39;Yan2013bz&#39;</span><span class="p">,</span> <span class="s1">&#39;Yan2014bz&#39;</span><span class="p">,</span> <span class="s1">&#39;Schenk1988fer&#39;</span><span class="p">,</span> <span class="s1">&#39;Schenk1988_reparamitisation_Yan2013&#39;</span><span class="p">,</span> <span class="s1">&#39;Yan2013fer&#39;</span><span class="p">,</span> <span class="s1">&#39;Yan2014fer&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Changing to a model by a different author is done using the author input in either
+the  initalisation of the class, or through the &quot;update&quot; function. Lets
+choose Schenk's from 1988 and set it through the &quot;update&quot; function. All classes
+have a similar update function. If we look at the models inputs, we see it also needs
+an input for temperature. This is just passed to the update function, which passes
+it to the appropriate places.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>    <span class="n">temp</span> <span class="o">=</span> <span class="mi">300</span>
+    <span class="n">bgn_sch</span> <span class="o">=</span> <span class="n">BGN_class</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Na</span><span class="o">=</span><span class="n">Na</span><span class="p">,</span> <span class="n">Nd</span><span class="o">=</span><span class="n">Nd</span><span class="p">,</span> <span class="n">nxc</span><span class="o">=</span><span class="n">nxc</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="s1">&#39;Schenk1988fer&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally we can plot, and compare the differences in the models.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>    <span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Nd</span><span class="p">,</span> <span class="n">bgn_yan</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Yan&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Nd</span><span class="p">,</span> <span class="n">bgn_sch</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Schenk&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Author&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Doping&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Band Gap Narrowing (eV)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="Comparison of Yan's and Schenk's band gap narrowing models" src="_images/comparison.png" /></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">semiconductor</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="material/material.html">Material properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="electrical/electrical.html">Electrical properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recombiation/recombination.html">Recombination properties</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to semiconductor’s documentation!</a></li>
+      <li>Next: <a href="material/material.html" title="next chapter">Material properties</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Mattias Klaus Juhl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/README.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

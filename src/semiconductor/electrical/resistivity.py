@@ -27,11 +27,11 @@ class Conductivity(BaseModelClass):
             The author of a model to be used for dopant ionisation
         6. dopant (str)
             The elemental name for the dopants
-        7. nxc: (array like cm^-3)
+        7. nxc: (array like |cm-3|)
             The number of excess carriers
-        8. Na: (array like cm^-3)
+        8. Na: (array like |cm-3|)
             The number of acceptor dopants
-        9. Nd: (array like cm^-3)
+        9. Nd: (array like |cm-3|)
             The number of donar dopants
     '''
 
@@ -137,11 +137,11 @@ class Resistivity(Conductivity):
             The author of a model to be used for dopant ionisation
         6. dopant (str)
             The elemental name for the dopants
-        7. nxc: (array like cm^-3)
+        7. nxc: (array like |cm-3|)
             The number of excess carriers
-        8. Na: (array like cm^-3)
+        8. Na: (array like |cm-3|)
             The number of acceptor dopants
-        9. Nd: (array like cm^-3)
+        9. Nd: (array like |cm-3|)
             The number of donar dopants
     '''
 

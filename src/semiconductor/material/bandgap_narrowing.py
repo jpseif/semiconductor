@@ -31,11 +31,11 @@ class BandGapNarrowing(BaseModelClass):
             The temperature of the material in Kelvin (300)
         3. author: (str)
             The author of the model to be used
-        4. nxc: (array like cm^-3)
+        4. nxc: (array like |cm-3|)
             The number of excess carriers
-        5. Na: (array like cm^-3)
+        5. Na: (array like |cm-3|)
             The number of acceptor dopants
-        6. Nd: (array like cm^-3)
+        6. Nd: (array like |cm-3|)
             The number of donar dopants
 
     '''

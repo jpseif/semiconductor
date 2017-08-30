@@ -132,4 +132,4 @@ Wieder1980:
 Wang2012:
     doi: 10.1063/1.4768900
     model: not_implimented
-    notes: The first temperature dependent model of auger for silicon. The model describes the temperature change in the Auger coefficient for holes. It was performed only at one injection level (5e16 cm^-3). There are many paramters still unknown for a full temperature dependent auger model.
+    notes: The first temperature dependent model of auger for silicon. The model describes the temperature change in the Auger coefficient for holes. It was performed only at one injection level (5e16 |cm-3|). There are many paramters still unknown for a full temperature dependent auger model.

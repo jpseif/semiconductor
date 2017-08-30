@@ -1,0 +1,217 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Intrinsic &#8212; semiconductor 0.2 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Shockley Read Hall" href="extrinsic.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="intrinsic">
+<h1>Intrinsic<a class="headerlink" href="#intrinsic" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="semiconductor.recombination.Intrinsic">
+<em class="property">class </em><code class="descclassname">semiconductor.recombination.</code><code class="descname">Intrinsic</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/intrinsic.html#Intrinsic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.Intrinsic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the intrinsic recombiation which includes both radiative and
+Auger recombiation</p>
+<dl class="docutils">
+<dt>inputs</dt>
+<dd><ol class="first last arabic simple">
+<li><dl class="first docutils">
+<dt>material: (str, Si)</dt>
+<dd>The elemental name for the material</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>temp: (float Kelvin, 300)</dt>
+<dd>The temperature of the material in</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Na: (array like cm<sup>-3</sup>)</dt>
+<dd>The number of acceptor dopants</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Nd: (array like cm<sup>-3</sup>)</dt>
+<dd>The number of donar dopants</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>ni_author: (str)</dt>
+<dd>Author for the intrinsic carrier density</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>rad_author: (str)</dt>
+<dd>Author to use for the radiative recombiation model</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>aug_author: (str)</dt>
+<dd>Author to use for the radiative recombiation model</dd>
+</dl>
+</li>
+</ol>
+</dd>
+</dl>
+<dl class="method">
+<dt id="semiconductor.recombination.Intrinsic.itau">
+<code class="descname">itau</code><span class="sig-paren">(</span><em>nxc</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/intrinsic.html#Intrinsic.itau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.Intrinsic.itau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the inverse of the intrinsic carrier lifetime in s^-1^</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="semiconductor.recombination.Intrinsic.tau">
+<code class="descname">tau</code><span class="sig-paren">(</span><em>nxc</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/intrinsic.html#Intrinsic.tau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.Intrinsic.tau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the intrinsic carrier lifetime in seconds</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="auger">
+<h2>Auger<a class="headerlink" href="#auger" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="semiconductor.recombination.Auger">
+<em class="property">class </em><code class="descclassname">semiconductor.recombination.</code><code class="descname">Auger</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/intrinsic.html#Auger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.Auger" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to allows the calculation of different Auger recombiation models</p>
+<dl class="method">
+<dt id="semiconductor.recombination.Auger.itau">
+<code class="descname">itau</code><span class="sig-paren">(</span><em>nxc</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/intrinsic.html#Auger.itau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.Auger.itau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the inverse of the intrinsic carrier lifetime in s^-1^</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="semiconductor.recombination.Auger.tau">
+<code class="descname">tau</code><span class="sig-paren">(</span><em>nxc</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/intrinsic.html#Auger.tau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.Auger.tau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the intrinsic carrier lifetime in seconds</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="radiative">
+<h2>Radiative<a class="headerlink" href="#radiative" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="semiconductor.recombination.Radiative">
+<em class="property">class </em><code class="descclassname">semiconductor.recombination.</code><code class="descname">Radiative</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/intrinsic.html#Radiative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.Radiative" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to allows the calculation of different radiative models</p>
+<dl class="method">
+<dt id="semiconductor.recombination.Radiative.itau">
+<code class="descname">itau</code><span class="sig-paren">(</span><em>nxc</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/intrinsic.html#Radiative.itau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.Radiative.itau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the inverse of the intrinsic carrier lifetime in s^-1^</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="semiconductor.recombination.Radiative.tau">
+<code class="descname">tau</code><span class="sig-paren">(</span><em>nxc</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/intrinsic.html#Radiative.tau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.Radiative.tau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the intrinsic carrier lifetime in seconds</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">semiconductor</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../material/material.html">Material properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../electrical/electrical.html">Electrical properties</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="recombination.html">Recombination properties</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="extrinsic.html">Shockley Read Hall</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Intrinsic</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="recombination.html">Recombination properties</a><ul>
+      <li>Previous: <a href="extrinsic.html" title="previous chapter">Shockley Read Hall</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Mattias Klaus Juhl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/recombiation/intrinsic.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -25,11 +25,11 @@ class BandGap(BaseModelClass):
             A multipler. This is a hack that people use to adjust the bandgap to achieve other desired values.
         5. BGN_author: (str)
             The author of the band gap narrowing.
-        4. nxc: (array like cm^-3)
+        4. nxc: (array like |cm-3|)
             The number of excess carriers
-        5. Na: (array like cm^-3)
+        5. Na: (array like |cm-3| )
             The number of acceptor dopants
-        6. Nd: (array like cm^-3)
+        6. Nd: (array like |cm-3|)
             The number of donar dopants
 
     '''

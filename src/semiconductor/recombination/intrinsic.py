@@ -20,9 +20,9 @@ class Intrinsic(BaseModelClass):
             The elemental name for the material
         2. temp: (float Kelvin, 300)
             The temperature of the material in
-        3. Na: (array like cm^-3)
+        3. Na: (array like |cm-3|)
             The number of acceptor dopants
-        4. Nd: (array like cm^-3)
+        4. Nd: (array like |cm-3|)
             The number of donar dopants
         5. ni_author: (str)
             Author for the intrinsic carrier density

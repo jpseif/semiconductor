@@ -37,8 +37,8 @@ def CaugheyThomas(vals, Na, Nd, nxc, **kwargs):
     2193 (Dec. 1977).
 
     inputs:
-        impurty: the number of impurities (cm^-3)
-        min_carr_den: the number of minoirty carrier densities (cm^-3)
+        impurty: the number of impurities (|cm-3|)
+        min_carr_den: the number of minoirty carrier densities (|cm-3|)
         maj_car:  the majority carrier type
         temp: temperature (K)
     output:
@@ -54,9 +54,9 @@ def CaugheyThomas(vals, Na, Nd, nxc, **kwargs):
 def dorkel(vals, Na, Nd, nxc, temp, carrier, **kwargs):
     '''
     inputs:
-        impurty: the number of impurities (cm^-3)
-        min_carr_den: the number of minoirty carrier densities (cm^-3)
-        maj_car_den: the number of majority carrier densities (cm^-3)
+        impurty: the number of impurities (|cm-3|)
+        min_carr_den: the number of minoirty carrier densities (|cm-3|)
+        maj_car_den: the number of majority carrier densities (|cm-3|)
         temp: temperature (K)
     output:
          electron mobility (cm^2 V^-1 s^-1)

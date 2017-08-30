@@ -28,13 +28,13 @@ class SRH(BaseModelClass):
             The temperature of the material in
         3. defect: (str)
             The author of the model to be used
-        4. Nt: (float cm^-3)
+        4. Nt: (float |cm-3|)
             The number of defects
-        5. nxc: (array like cm^-3)
+        5. nxc: (array like |cm-3|)
             The number of excess carriers
-        6. Na: (array like cm^-3)
+        6. Na: (array like |cm-3|)
             The number of acceptor dopants
-        7. Nd: (array like cm^-3)
+        7. Nd: (array like |cm-3|)
             The number of donar dopants
         8. vth_author: (str)
             Author for the thermal velocity model to be used

@@ -1,0 +1,201 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Shockley Read Hall &#8212; semiconductor 0.2 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Intrinsic" href="intrinsic.html" />
+    <link rel="prev" title="Recombination properties" href="recombination.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="shockley-read-hall">
+<h1>Shockley Read Hall<a class="headerlink" href="#shockley-read-hall" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="semiconductor.recombination.SRH">
+<em class="property">class </em><code class="descclassname">semiconductor.recombination.</code><code class="descname">SRH</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/extrinsic.html#SRH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.SRH" title="Permalink to this definition">¶</a></dt>
+<dd><p>This calculates the steady state shockley read hall recombiation that
+occurs for given defects.</p>
+<dl class="docutils">
+<dt>inputs:</dt>
+<dd><ol class="first last arabic simple">
+<li><dl class="first docutils">
+<dt>material: (str, Si)</dt>
+<dd>The elemental name for the material</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>temp: (float Kelvin, 300)</dt>
+<dd>The temperature of the material in</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>defect: (str)</dt>
+<dd>The author of the model to be used</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Nt: (float cm<sup>-3</sup>)</dt>
+<dd>The number of defects</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>nxc: (array like cm<sup>-3</sup>)</dt>
+<dd>The number of excess carriers</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Na: (array like cm<sup>-3</sup>)</dt>
+<dd>The number of acceptor dopants</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Nd: (array like cm<sup>-3</sup>)</dt>
+<dd>The number of donar dopants</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>vth_author: (str)</dt>
+<dd>Author for the thermal velocity model to be used</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>ni_author: (str)</dt>
+<dd>Author for the intrinsic carrier density</dd>
+</dl>
+</li>
+<li>BGN_author: (str)
+Author for the band gap narrowing model</li>
+</ol>
+</dd>
+</dl>
+<dl class="method">
+<dt id="semiconductor.recombination.SRH.tau">
+<code class="descname">tau</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/extrinsic.html#SRH.tau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.SRH.tau" title="Permalink to this definition">¶</a></dt>
+<dd><p>reports the lifetime of the current defect for the given
+excess carrier density.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="semiconductor.recombination.SRH.usr_vals">
+<code class="descname">usr_vals</code><span class="sig-paren">(</span><em>Et=None</em>, <em>sigma_e=None</em>, <em>sigma_h=None</em>, <em>tau_e=None</em>, <em>tau_h=None</em>, <em>Nt=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/semiconductor/recombination/extrinsic.html#SRH.usr_vals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#semiconductor.recombination.SRH.usr_vals" title="Permalink to this definition">¶</a></dt>
+<dd><p>a function to provide arbitory values for SRH lifetime.
+inputs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Et: (optional float)</dt>
+<dd>The energy level from the intrinsic level in eV</dd>
+<dt>sigma_e: (optional float)</dt>
+<dd>The capture cross section for electrons in seconds</dd>
+<dt>sigma_h: (optional float)</dt>
+<dd>The capture cross section for holes in seconds</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">semiconductor</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../material/material.html">Material properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../electrical/electrical.html">Electrical properties</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="recombination.html">Recombination properties</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Shockley Read Hall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intrinsic.html">Intrinsic</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="recombination.html">Recombination properties</a><ul>
+      <li>Previous: <a href="recombination.html" title="previous chapter">Recombination properties</a></li>
+      <li>Next: <a href="intrinsic.html" title="next chapter">Intrinsic</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Mattias Klaus Juhl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/recombiation/extrinsic.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

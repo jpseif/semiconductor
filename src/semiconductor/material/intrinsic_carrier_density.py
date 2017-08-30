@@ -69,7 +69,7 @@ class IntrinsicCarrierDensity(BaseModelClass):
                     If not provided the last provided author is used
                     If no author has been provided,  Couderc's model is used
         output:
-            The intrinsic carrier concentration in cm^-3.
+            The intrinsic carrier concentration in |cm-3|.
             Note this is not the effective intrinsic carrier concentration
         '''
         self.calculationdetails = kwargs

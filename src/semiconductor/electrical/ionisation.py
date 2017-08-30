@@ -130,9 +130,9 @@ class Ionisation(BaseModelClass):
         single dopant type.
 
         inputs:
-            N_dop: (float; cm^-3)
+            N_dop: (float; |cm-3|)
                 The dopant density
-            nxc: (float; cm^-3)
+            nxc: (float; |cm-3|)
                 The excess carrier density
             impurity: (str)
                 The name of the dopant used e.g. boron, phosphorous. The

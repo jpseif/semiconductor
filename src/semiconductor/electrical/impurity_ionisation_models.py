@@ -23,8 +23,8 @@ def complete(values, N_imp, *args):
 
 def E_dop(values, Ni, dopant):
     '''retuns the Dopant energy level in eV'''
-    return values['e_dop0_' + dopant] / (
-        1. + (Ni / values['n_ref_' + dopant])**values['c_' + dopant])
+    return values['E_dop0_' + dopant] / (
+        1. + (Ni / values['N_ref_' + dopant])**values['c_' + dopant])
 
 
 # def delta():
@@ -34,7 +34,7 @@ def E_dop(values, Ni, dopant):
 
 def b(values, Ni, dopant):
     '''fration of carriers in localised states'''
-    return 1. / (1. + (Ni / values['n_b_' + dopant])**values['d_' + dopant])
+    return 1. / (1. + (Ni / values['N_b_' + dopant])**values['d_' + dopant])
 
 
 def altermatt_2006(values, N_impurity, ne, nh, T, Nc, Nv, dopant):

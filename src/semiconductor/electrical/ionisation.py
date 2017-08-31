@@ -172,7 +172,7 @@ class Ionisation(BaseModelClass):
                     nxc,
                     temp=self._cal_dts['temp'],
                     material=self._cal_dts['material'],
-                    ni=self._cal_dts['ni_author'])
+                    ni_author=self._cal_dts['ni_author'])
 
                 N_idop = self.update(
                     N_imp=N_dop, ne=ne, nh=nh, impurity=impurity)

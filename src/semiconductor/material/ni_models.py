@@ -16,7 +16,7 @@ def ni_temp(vals, temp, **kargs):
     if np.all(temp == 0):
         ni = 0
     else:
-        ni = vals['a'] * (temp)**vals['power'] * \
+        ni = vals['A'] * (temp)**vals['power'] * \
             np.exp(- vals['eg'] / temp)
 
     return ni

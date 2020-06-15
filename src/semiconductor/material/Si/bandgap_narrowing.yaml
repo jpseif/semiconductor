@@ -62,7 +62,7 @@ Schenk_1988fer:
     ph: 0.233333333 # 7/30
     qe: 0.75
     qh: 0.25
-    Ryex: 0.01655 # eV
+    ryex: 0.01655 # eV
     udm: 0.1665
     dopant: phosphorous
     notes: To be used with Fermi direct statics, and only for phosphorous
